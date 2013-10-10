@@ -148,4 +148,10 @@ public interface ProtocolConnection {
      * Return the process ID (PID) of the backend server process handling this connection.
      */
     public int getBackendPID();
+    
+    /**
+     * Return true if the connection is to the FoundationDB SQL layer, 
+     * Return false otherwise. 
+     */
+    boolean isFoundationDBServer();
 }
