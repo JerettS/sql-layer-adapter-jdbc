@@ -35,8 +35,8 @@ public class ConnectionTest extends TestCase
     {
         con = TestUtil.openDB();
 
-        TestUtil.createTable(con, "test_a", "imagename name,image oid,id int4");
-        TestUtil.createTable(con, "test_c", "source text,cost money,imageid int4");
+        TestUtil.createTable(con, "test_a", "imagename varchar(64),image int unsigned,id int");
+        TestUtil.createTable(con, "test_c", "source text,cost numeric,imageid int");
 
         TestUtil.closeDB(con);
     }

@@ -109,7 +109,7 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         int indexMaxKeys = dbmd.getMaxColumnsInIndex();
         if (TestUtil.haveMinimumServerVersion(con, "7.3"))
         {
-            assertEquals(32, indexMaxKeys);
+            assertEquals(8, indexMaxKeys);
         }
         else
         {
