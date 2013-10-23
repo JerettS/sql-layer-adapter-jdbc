@@ -43,6 +43,9 @@ public abstract class AbstractJdbc2DatabaseMetaData
         if (INDEX_MAX_KEYS == 0)
         {
             String sql;
+            if (connection.isFoundationDBServer()) {
+                sql = "SELECT current_value FROM information_schema.server_parameters WHERE parameter_name = 'fdbsql.pgsql.max_index_keys'";
+            } else 
             if (connection.haveMinimumServerVersion("8.0")) {
                 sql = "SELECT setting FROM pg_catalog.pg_settings WHERE name='max_index_keys'";
             } else {
@@ -72,6 +75,9 @@ public abstract class AbstractJdbc2DatabaseMetaData
         if (NAMEDATALEN == 0)
         {
             String sql;
+            if (connection.isFoundationDBServer()) {
+                sql = "SELECT current_value FROM information_schema.server_parameters WHERE parameter_name = 'fdbsql.pgsql.max_name_length'";
+            } else
             if (connection.haveMinimumServerVersion("7.3"))
             {
                 sql = "SELECT t.typlen FROM pg_catalog.pg_type t, pg_catalog.pg_namespace n WHERE t.typnamespace=n.oid AND t.typname='name' AND n.nspname='pg_catalog'";
@@ -202,7 +208,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public String getDatabaseProductName() throws SQLException
     {
-        return "PostgreSQL";
+        return "FoundationDB SQL Layer";
     }
 
     /*
@@ -1995,6 +2001,24 @@ public abstract class AbstractJdbc2DatabaseMetaData
         String select;
         String orderby;
         String useSchemas;
+        
+        if (connection.isFoundationDBServer()) {
+            select = "SELECT NULL as TABLE_CAT, t.table_schema AS TABLE_SCHEM, t.table_name AS TABLE_NAME, t.table_type AS TABLE_TYPE, NULL AS REMARKS";
+            select += " FROM information_schema.tables t";
+    
+            if (schemaPattern != null && !"".equals(schemaPattern))
+            {
+                select += " AND t.table_schema LIKE " + escapeQuotes(schemaPattern);
+            }
+            if (tableNamePattern != null && !"".equals(tableNamePattern))
+            {
+                select += " AND TABLE_NAME LIKE " + escapeQuotes(tableNamePattern);
+            }
+    
+            orderby = " ORDER BY TABLE_TYPE,TABLE_SCHEM,TABLE_NAME ";
+            String sql = select + orderby;
+            return createMetaDataStatement().executeQuery(sql);
+        } else 
         if (connection.haveMinimumServerVersion("7.3"))
         {
             useSchemas = "SCHEMAS";
@@ -2127,6 +2151,16 @@ public abstract class AbstractJdbc2DatabaseMetaData
         String sql = select + orderby;
 
         return createMetaDataStatement().executeQuery(sql);
+    }
+ 
+    private static final Map fdbTableTypes;
+    static {
+        fdbTableTypes = new HashMap();
+        fdbTableTypes.put ("TABLE", "SELECT NULL as TABLE_CAT, table_schema as TABLE_SCHEM, table_name as TABLE_NAME, type_type as TABLE_TYPE, NULL as REMARKS from information_schema.tables where table_type = 'TABLE'");
+        fdbTableTypes.put("VIEW", "SELECT NULL as TABLE_CAT, schema_name as TABLE_SCHEM, table_name as TABLE_NAME, 'VIEW' as TABLE_TYPE, NULL as REMARKS from information_schema.views WHERE 1=1");
+        fdbTableTypes.put("DICTIONARY VIEW", "SELECT NULL as TABLE_CAT, table_schema as TABLE_SCHEM, table_name as TABLE_NAME, type_type as TABLE_TYPE, NULL as REMARKS from information_schema.tables where table_type = 'DICTIONARY VIEW'");
+        fdbTableTypes.put("INDEX", "SELECT NULL as TABLE_CAT, schema_name as TABLE_SCHEM, index_name as TABLE_NAME, 'INDEX' as TABLE_TYPE, NULL as REMARKS from information_schema.indexes WHERE 1=1");
+        fdbTableTypes.put("SEQUENCE", "SELECT NULL as TABLE_CAT, sequence_schema as TABLE_SCHEM, sequence_name as TABLE_NAME, 'SEQUENCE' as TABLE_TYPE, NULL as REMARKS from information_schema.sequences WHERE 1=1");
     }
 
     private static final Map tableTypeClauses;
@@ -2295,8 +2329,15 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public java.sql.ResultSet getTableTypes() throws SQLException
     {
-        String types[] = new String[tableTypeClauses.size()];
-        Iterator e = tableTypeClauses.keySet().iterator();
+        Iterator e = null;
+        String types[];
+        if (connection.isFoundationDBServer()) {
+            types = new String [fdbTableTypes.size()];
+            e = fdbTableTypes.keySet().iterator();
+        } else {
+            types = new String[tableTypeClauses.size()];
+            e = tableTypeClauses.keySet().iterator();
+        }
         int i = 0;
         while (e.hasNext())
         {

@@ -591,8 +591,12 @@ public class ConnectionFactoryImpl extends ConnectionFactory {
                 if (logger.logDebug())
                     logger.debug(" <=BE ParameterStatus(" + name + " = " + value + ")");
 
-                if (name.equals("server_version"))
+                if (name.equals("server_version")) {
                     protoConnection.setServerVersion(value);
+                    if (value.compareTo("8.5") >= 0 && value.compareTo("9.0") <= 0) {
+                        protoConnection.isFoundationDBServer(true);
+                    }
+                }
                 else if (name.equals("client_encoding"))
                 {
                     if (!value.equals("UTF8"))

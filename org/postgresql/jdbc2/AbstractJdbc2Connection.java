@@ -51,6 +51,8 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     private final String compatible;
     /* Actual server version */
     private final String dbVersionNumber;
+    /* */
+    private final boolean isFoundationDBServer;
 
     /* Query that runs COMMIT */
     private final Query commitQuery;
@@ -135,6 +137,7 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         // Now make the initial connection and set up local state
         this.protoConnection = ConnectionFactory.openConnection(hostSpecs, user, database, info, logger);
         this.dbVersionNumber = protoConnection.getServerVersion();
+        this.isFoundationDBServer = protoConnection.isFoundationDBServer();
         this.compatible = info.getProperty("compatible", Driver.MAJORVERSION + "." + Driver.MINORVERSION);
 
         // Set read-only early if requested
@@ -1029,6 +1032,10 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         return dbVersionNumber;
     }
 
+    public boolean isFoundationDBServer()
+    {
+        return isFoundationDBServer;
+    }
     // Parse a "dirty" integer surrounded by non-numeric characters
     private static int integerPart(String dirtyString)
     {
