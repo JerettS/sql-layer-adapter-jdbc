@@ -36,10 +36,16 @@ public class DatabaseMetaDataTest extends TestCase
         TestUtil.createTable( con, "metadatatest", "id int, name text, updated timestamp, colour text, quest text" );
         TestUtil.dropSequence( con, "sercoltest_b_seq");
         //TestUtil.dropSequence( con, "sercoltest_c_seq");
-        TestUtil.createTable( con, "sercoltest", "a int, b serial");
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable( con, "sercoltest", "a int, b serial");
+        } else {
+            TestUtil.createTable( con, "sercoltest", "a int, b serial, c bigserial");
+        }
         TestUtil.createTable( con, "\"a\\\"", "a int");
         TestUtil.createTable( con, "\"a'\"", "a int");
-        //TestUtil.createTable( con, "arraytable", "a numeric(5,2)[], b varchar(100)[]");
+        if (!TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable( con, "arraytable", "a numeric(5,2)[], b varchar(100)[]");
+        }
 
         Statement stmt = con.createStatement();
         //we add the following comments to ensure the joins to the comments
@@ -78,7 +84,9 @@ public class DatabaseMetaDataTest extends TestCase
         //TestUtil.dropSequence( con, "sercoltest_c_seq");
         TestUtil.dropTable( con, "\"a\\\"");
         TestUtil.dropTable( con, "\"a'\"");
-        //TestUtil.dropTable( con, "arraytable");
+        if (!TestUtil.isFoundationDBServer(con)) {
+            TestUtil.dropTable( con, "arraytable");
+        }
 
         /*
         stmt.execute("DROP FUNCTION f1(int, varchar)");
@@ -456,17 +464,22 @@ public class DatabaseMetaDataTest extends TestCase
             }
             else if (rownum == 1)
             {
-                assertEquals("serial", rs.getString("TYPE_NAME"));
+                if (TestUtil.isFoundationDBServer(con)) {
+                    assertEquals("int8", rs.getString("TYPE_NAME"));
+                } else {
+                    assertEquals("serial", rs.getString("TYPE_NAME"));
+                }
             }
-            /*
-            else if (rownum == 2)
+            else if (TestUtil.isFoundationDBServer(con) && rownum == 2)
             {
                 assertEquals("bigserial", rs.getString("TYPE_NAME"));
             }
-            */
             rownum++;
         }
-        assertEquals(3, rownum);
+        if (TestUtil.isFoundationDBServer(con))
+            assertEquals(2, rownum);
+        else
+            assertEquals(3, rownum);
         rs.close();
     }
 
@@ -857,7 +870,9 @@ public class DatabaseMetaDataTest extends TestCase
     {
         if (!TestUtil.haveMinimumServerVersion(con, "7.3"))
             return ;
-
+        if (TestUtil.isFoundationDBServer(con))
+            return;
+        
         Statement stmt = null;
         try
         {
@@ -915,7 +930,8 @@ public class DatabaseMetaDataTest extends TestCase
     {
         if (!TestUtil.haveMinimumServerVersion(con, "7.3"))
             return ;
-
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         try
         {
             Statement stmt = con.createStatement();
@@ -960,7 +976,8 @@ public class DatabaseMetaDataTest extends TestCase
     {
         if (!TestUtil.haveMinimumServerVersion(con, "7.3"))
             return ;
-
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         try
         {
             Statement stmt = con.createStatement();
@@ -1005,7 +1022,9 @@ public class DatabaseMetaDataTest extends TestCase
     {
         if (!TestUtil.haveMinimumServerVersion(con, "7.3"))
             return ;
-
+        if (TestUtil.isFoundationDBServer(con))
+            return;
+        
         try
         {
             Statement stmt = con.createStatement();
@@ -1050,7 +1069,9 @@ public class DatabaseMetaDataTest extends TestCase
     {
         if (!TestUtil.haveMinimumServerVersion(con, "7.3"))
             return ;
-
+        if (TestUtil.isFoundationDBServer(con))
+            return;
+        
         try
         {
             Statement stmt = con.createStatement();
@@ -1117,9 +1138,10 @@ public class DatabaseMetaDataTest extends TestCase
         }
     }
 
-    /*
     public void testInformationAboutArrayTypes() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         DatabaseMetaData dbmd = con.getMetaData();
         ResultSet rs = dbmd.getColumns("", "", "arraytable", "");
         assertTrue(rs.next());
@@ -1131,5 +1153,4 @@ public class DatabaseMetaDataTest extends TestCase
         assertEquals(100, rs.getInt("COLUMN_SIZE"));
         assertTrue(!rs.next());
     }
-    */
 }

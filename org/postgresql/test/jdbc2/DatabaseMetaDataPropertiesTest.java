@@ -214,7 +214,11 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         DatabaseMetaData dbmd = con.getMetaData();
         assertNotNull(dbmd);
 
-        assertTrue(dbmd.getDatabaseProductName().equals("PostgreSQL"));
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertTrue(dbmd.getDatabaseProductName().equals("FoundationDB SQL Layer"));
+        } else {
+            assertTrue(dbmd.getDatabaseProductName().equals("PostgreSQL"));
+        }
     }
 
     public void testDriverVersioning() throws SQLException

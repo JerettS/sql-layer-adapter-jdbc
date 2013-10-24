@@ -488,6 +488,13 @@ public class TestUtil
         }
         return false;
     }
+    
+    public static boolean isFoundationDBServer (Connection con) throws SQLException {
+        if (con instanceof org.postgresql.jdbc2.AbstractJdbc2Connection) {
+            return ((org.postgresql.jdbc2.AbstractJdbc2Connection)con).isFoundationDBServer();
+        }
+        return false;
+    }
 
     public static boolean haveMinimumJVMVersion(String version) {
         String jvm = java.lang.System.getProperty("java.version");

@@ -208,7 +208,11 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public String getDatabaseProductName() throws SQLException
     {
-        return "FoundationDB SQL Layer";
+        if (connection.isFoundationDBServer()) {
+            return "FoundationDB SQL Layer";
+        } else {
+            return "PostgreSQL";
+        }
     }
 
     /*
@@ -2003,21 +2007,43 @@ public abstract class AbstractJdbc2DatabaseMetaData
         String useSchemas;
         
         if (connection.isFoundationDBServer()) {
-            select = "SELECT NULL as TABLE_CAT, t.table_schema AS TABLE_SCHEM, t.table_name AS TABLE_NAME, t.table_type AS TABLE_TYPE, NULL AS REMARKS";
-            select += " FROM information_schema.tables t";
+            StringBuilder fdbSelect = new StringBuilder();
+            fdbSelect.append("SELECT NULL as TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, NULL AS REMARKS FROM ( ");
+            fdbSelect.append("SELECT t.table_schema AS TABLE_SCHEM, t.table_name AS TABLE_NAME, t.table_type AS TABLE_TYPE ");
+            fdbSelect.append(" FROM information_schema.tables t");
+            fdbSelect.append(" UNION ALL ");
+            fdbSelect.append("SELECT s.sequence_schema TABLE_SCHEM, s.sequence_name as TABLE_NAME, 'SEQUENCE' as TABLE_TYPE ");
+            fdbSelect.append("FROM information_schema.sequences s");
+            fdbSelect.append(" UNION ALL ");
+            fdbSelect.append("SELECT v.schema_name as TABLE_SCHEM, v.table_name AS TABLE_NAME, 'VIEW' as TABLE_TYPE ");
+            fdbSelect.append("FROM information_schema.views v");
+            fdbSelect.append(" UNION ALL ");
+            fdbSelect.append("SELECT i.schema_name AS TABLE_SCHEM, i.index_name as TABLE_NAME, 'INDEX' as TABLE_TYPE ");
+            fdbSelect.append("FROM information_schema.indexes i");
+            fdbSelect.append(") AS TABLES WHERE 1=1");
     
             if (schemaPattern != null && !"".equals(schemaPattern))
             {
-                select += " AND t.table_schema LIKE " + escapeQuotes(schemaPattern);
+                fdbSelect.append(" AND TABLE_SCHEMA LIKE ");
+                fdbSelect.append("'").append(connection.escapeString(schemaPattern)).append("'");
+                
+                fdbSelect.append(escapeQuotes(schemaPattern));
             }
             if (tableNamePattern != null && !"".equals(tableNamePattern))
             {
-                select += " AND TABLE_NAME LIKE " + escapeQuotes(tableNamePattern);
+                fdbSelect.append (" AND TABLE_NAME LIKE ");
+                fdbSelect.append("'").append(connection.escapeString(tableNamePattern)).append("'");
             }
-    
-            orderby = " ORDER BY TABLE_TYPE,TABLE_SCHEM,TABLE_NAME ";
-            String sql = select + orderby;
-            return createMetaDataStatement().executeQuery(sql);
+            if (types != null) 
+            {
+                fdbSelect.append (" AND TABLE_TYPE IN (");
+                for(String s : types) {
+                    fdbSelect.append("'").append(connection.escapeString(s)).append("',");
+                }
+                fdbSelect.replace(fdbSelect.length()-1, fdbSelect.length(), ")");
+            }
+            fdbSelect.append(" ORDER BY TABLE_TYPE,TABLE_SCHEM,TABLE_NAME ");
+            return createMetaDataStatement().executeQuery(fdbSelect.toString());
         } else 
         if (connection.haveMinimumServerVersion("7.3"))
         {
@@ -2368,6 +2394,12 @@ public abstract class AbstractJdbc2DatabaseMetaData
         } else {
             numberOfFields = 18;
         }
+        
+        if (connection.isFoundationDBServer()) {
+            
+        }
+        
+        
         List v = new ArrayList();  // The new ResultSet tuple stuff
         Field f[] = new Field[numberOfFields];  // The field descriptors for the new ResultSet
 
@@ -2785,9 +2817,9 @@ public abstract class AbstractJdbc2DatabaseMetaData
             }
         }
 	}
-        rs.close();
+    rs.close();
 
-        return (ResultSet) ((BaseStatement)createMetaDataStatement()).createDriverResultSet(f, v);
+    return (ResultSet) ((BaseStatement)createMetaDataStatement()).createDriverResultSet(f, v);
     }
 
     /*
@@ -3284,15 +3316,17 @@ public abstract class AbstractJdbc2DatabaseMetaData
          * only guaranteed change is to ctid. -KJ
          */
 
-        tuple[0] = null;
-        tuple[1] = connection.encodeString("ctid");
-        tuple[2] = connection.encodeString(Integer.toString(connection.getTypeInfo().getSQLType("tid")));
-        tuple[3] = connection.encodeString("tid");
-        tuple[4] = null;
-        tuple[5] = null;
-        tuple[6] = null;
-        tuple[7] = connection.encodeString(Integer.toString(java.sql.DatabaseMetaData.versionColumnPseudo));
-        v.add(tuple);
+        if (!connection.isFoundationDBServer()) {
+            tuple[0] = null;
+            tuple[1] = connection.encodeString("ctid");
+            tuple[2] = connection.encodeString(Integer.toString(connection.getTypeInfo().getSQLType("tid")));
+            tuple[3] = connection.encodeString("tid");
+            tuple[4] = null;
+            tuple[5] = null;
+            tuple[6] = null;
+            tuple[7] = connection.encodeString(Integer.toString(java.sql.DatabaseMetaData.versionColumnPseudo));
+            v.add(tuple);
+        }
 
         /* Perhaps we should check that the given
          * catalog.schema.table actually exists. -KJ
@@ -3982,6 +4016,10 @@ public abstract class AbstractJdbc2DatabaseMetaData
         f[17] = new Field("NUM_PREC_RADIX", Oid.INT4);
 
         String sql;
+        
+        if (connection.isFoundationDBServer()) {
+            sql =""; 
+        } else
         if (connection.haveMinimumServerVersion("7.3"))
         {
             sql = "SELECT t.typname,t.oid FROM pg_catalog.pg_type t"
