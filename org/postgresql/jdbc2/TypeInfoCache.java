@@ -181,12 +181,37 @@ public class TypeInfoCache implements TypeInfo {
         if (i != null)
             return i.intValue();
 
+        Integer type = null;
+
+            
+        if (((AbstractJdbc2Connection)_conn).isFoundationDBServer()) {
+            if (_getTypeInfoStatement == null) {
+                _getTypeInfoStatement = _conn.prepareStatement("SELECT jdbc_type_id FROM information_schema.types where type_name = ?");
+            }
+            _getTypeInfoStatement.setString(1, pgTypeName);
+            // Go through BaseStatement to avoid transaction start.
+            if (!((BaseStatement)_getTypeInfoStatement).executeWithFlags(QueryExecutor.QUERY_SUPPRESS_BEGIN))
+                throw new PSQLException(GT.tr("No results were returned by the query."), PSQLState.NO_DATA);
+
+            ResultSet rs = _getTypeInfoStatement.getResultSet();
+            if (rs.next()) {
+                type = rs.getInt(1);
+            }
+            rs.close();
+            if (type == null) {
+                type = new Integer(Types.OTHER);
+           }
+            _pgNameToSQLType.put(pgTypeName, type);
+
+            return type.intValue();
+        }
         if (_getTypeInfoStatement == null) {
             // There's no great way of telling what's an array type.
             // People can name their own types starting with _.
             // Other types use typelem that aren't actually arrays, like box.
             //
             String sql;
+            
             if (_conn.haveMinimumServerVersion("8.0")) {
                 // in case of multiple records (in different schemas) choose the one from the current schema,
                 // otherwise take the last version of a type that is at least more deterministic then before
@@ -221,7 +246,6 @@ public class TypeInfoCache implements TypeInfo {
 
         ResultSet rs = _getTypeInfoStatement.getResultSet();
 
-        Integer type = null;
         if (rs.next()) {
             boolean isArray = rs.getBoolean(1);
             String typtype = rs.getString(2);
