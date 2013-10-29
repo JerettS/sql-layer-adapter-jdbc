@@ -76,7 +76,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
         {
             String sql;
             if (connection.isFoundationDBServer()) {
-                sql = "SELECT current_value FROM information_schema.server_parameters WHERE parameter_name = 'fdbsql.pgsql.max_name_length'";
+                sql = "SELECT current_value as typelen FROM information_schema.server_parameters WHERE parameter_name = 'fdbsql.pgsql.max_name_length'";
             } else
             if (connection.haveMinimumServerVersion("7.3"))
             {
@@ -2987,7 +2987,6 @@ public abstract class AbstractJdbc2DatabaseMetaData
             {
                 sql += " AND table_schema LIKE "; 
                 sql += "'" + connection.escapeString(schemaPattern) + "'";
-
             }
             if (tableNamePattern != null && !"".equals(tableNamePattern))
             {
@@ -3507,6 +3506,27 @@ public abstract class AbstractJdbc2DatabaseMetaData
     public java.sql.ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException
     {
         String sql;
+        
+        if (connection.isFoundationDBServer()) {
+            sql = "SELECT NULL AS TABLE_CAT, schema_name AS TABLE_SCHEM, index_table_name AS TABLE_NAME," +
+                    " column_name as COLUMN_NAME, ordinal + 1 AS KEY_SEQ, index_name AS PK_NAME"+
+                    " FROM information_schema.index_columns ic"+
+                    " WHERE index_name = 'PRIMARY' ";
+            if (schema != null && !"".equals(schema))
+            {
+                sql += " AND schema_name = "; 
+                sql += "'" + connection.escapeString(schema) + "'";
+            }
+            if (table != null && !"".equals(table)) 
+            {
+                sql += " AND index_table_name = ";
+                sql += "'" + connection.escapeString(table) + "'";
+            }
+            sql += " ORDER BY index_table_name, index_name, ordinal";
+
+            return createMetaDataStatement().executeQuery(sql);
+                    
+        } else
         if (connection.haveMinimumServerVersion("8.1"))
         {
             sql = "SELECT NULL AS TABLE_CAT, n.nspname AS TABLE_SCHEM, "
