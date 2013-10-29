@@ -34,6 +34,11 @@ public abstract class AbstractJdbc2DatabaseMetaData
                                            "returns,rule,recipe,setof,stdin,stdout,store," +
                                            "vacuum,verbose,version";
 
+    private static final String fdbKeywords = "boolean, call, curdate, current_role, current_schema"+
+            "curtime, database, getCurrentConnection, grouping, explain, limit, long"+
+            "ltrim, none, over, returning,role, row_number, rtrim, straight_join"+
+            "substr, xml, xmlexists, xmlparse, xmlquery, xmlserialize, z_order_lat_lon";
+    
     protected final AbstractJdbc2Connection connection; // The connection association
 
     private int NAMEDATALEN = 0; // length for name datatype
@@ -163,6 +168,8 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public boolean nullsAreSortedHigh() throws SQLException
     {
+        if (connection.isFoundationDBServer()) 
+            return false;
         return connection.haveMinimumServerVersion("7.2");
     }
 
@@ -174,6 +181,8 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public boolean nullsAreSortedLow() throws SQLException
     {
+        if (connection.isFoundationDBServer()) 
+            return true;
         return false;
     }
 
@@ -417,6 +426,9 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public String getSQLKeywords() throws SQLException
     {
+        if (connection.isFoundationDBServer()) {
+            return fdbKeywords;
+        }
         return keywords;
     }
 
@@ -858,6 +870,8 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public boolean supportsFullOuterJoins() throws SQLException
     {
+        if (connection.isFoundationDBServer()) 
+            return false;
         return connection.haveMinimumServerVersion("7.1");
     }
 
@@ -1072,6 +1086,8 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public boolean supportsSelectForUpdate() throws SQLException
     {
+        if (connection.isFoundationDBServer()) 
+            return false;
         return connection.haveMinimumServerVersion("6.5");
     }
 
@@ -1478,6 +1494,8 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public int getDefaultTransactionIsolation() throws SQLException
     {
+        if (connection.isFoundationDBServer())
+            return Connection.TRANSACTION_SERIALIZABLE;
         return Connection.TRANSACTION_READ_COMMITTED;
     }
 
@@ -1525,6 +1543,8 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException
     {
+        if (connection.isFoundationDBServer()) 
+            return false;
         return true;
     }
 
