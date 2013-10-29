@@ -276,6 +276,13 @@ public class TypeInfoCache implements TypeInfo {
         if (oid != null)
             return oid.intValue();
 
+        
+        if (((AbstractJdbc2Connection)_conn).isFoundationDBServer()) {
+            if (_getOidStatement == null) {
+                _getOidStatement = _conn.prepareStatement("SELECT postgres_oid FROM information_schema.types where type_name = ?");
+            }
+            
+        }        
         if (_getOidStatement == null) {
             String sql;
             if (_conn.haveMinimumServerVersion("8.0")) {
@@ -329,6 +336,12 @@ public class TypeInfoCache implements TypeInfo {
         if (pgTypeName != null)
             return pgTypeName;
 
+        if (((AbstractJdbc2Connection)_conn).isFoundationDBServer()) {
+            if (_getNameStatement == null) {
+                _getNameStatement = _conn.prepareStatement("SELECT type_name FROM information_schema.types where postgres_oid = ?");
+            }
+            
+        }        
         if (_getNameStatement == null) {
             String sql;
             if (_conn.haveMinimumServerVersion("7.3")) {
