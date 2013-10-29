@@ -35,10 +35,10 @@ public class DatabaseMetaDataTest extends TestCase
         con = TestUtil.openDB();
         TestUtil.createTable( con, "metadatatest", "id int, name text, updated timestamp, colour text, quest text" );
         TestUtil.dropSequence( con, "sercoltest_b_seq");
-        //TestUtil.dropSequence( con, "sercoltest_c_seq");
         if (TestUtil.isFoundationDBServer(con)) {
             TestUtil.createTable( con, "sercoltest", "a int, b serial");
         } else {
+            TestUtil.dropSequence( con, "sercoltest_c_seq");
             TestUtil.createTable( con, "sercoltest", "a int, b serial, c bigserial");
         }
         TestUtil.createTable( con, "\"a\\\"", "a int");
@@ -50,24 +50,33 @@ public class DatabaseMetaDataTest extends TestCase
         Statement stmt = con.createStatement();
         //we add the following comments to ensure the joins to the comments
         //are done correctly. This ensures we correctly test that case.
-        //stmt.execute("comment on table metadatatest is 'this is a table comment'");
-        //stmt.execute("comment on column metadatatest.id is 'this is a column comment'");
-
-        /*
-        stmt.execute("CREATE OR REPLACE FUNCTION f1(int, varchar(1)) RETURNS int AS 'SELECT 1;' LANGUAGE SQL");
-        if (TestUtil.haveMinimumServerVersion(con, "8.0")) {
-            stmt.execute("CREATE OR REPLACE FUNCTION f2(a int, b varchar(1)) RETURNS int AS 'SELECT 1;' LANGUAGE SQL");
+        if (!TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("comment on table metadatatest is 'this is a table comment'");
+            stmt.execute("comment on column metadatatest.id is 'this is a column comment'");
         }
-        if (TestUtil.haveMinimumServerVersion(con, "8.1")) {
-            stmt.execute("CREATE OR REPLACE FUNCTION f3(IN a int, INOUT b varchar(1), OUT c timestamp) AS $f$ BEGIN b := 'a'; c := now(); return; END; $f$ LANGUAGE plpgsql");
+        
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("CREATE OR REPLACE FUNCTION f1 (x int, y varchar(1)) RETURNS INT AS '1' LANGUAGE javascript parameter style variables");
+            stmt.execute("CREATE OR REPLACE FUNCTION f2 (a int, b varchar(1)) RETURNS INT AS '1' LANGUAGE javascript PARAMETER STYLE variables");
+            stmt.execute("CREATE OR REPLACE PROCEDURE f3 (IN a int, INOUT b VARCHAR(1), OUT c TIMESTAMP) LANGUAGE javascript PARAMETER STYLE JAVA" +
+                    " EXTERNAL NAME 'f3' as $$" +
+                    " function f3 (a, b, c) { " +
+                    " b='a'; c = now(); }$$");
+        } else {
+            stmt.execute("CREATE OR REPLACE FUNCTION f1(int, varchar) RETURNS int AS 'SELECT 1;' LANGUAGE SQL");
+            if (TestUtil.haveMinimumServerVersion(con, "8.0")) {
+                stmt.execute("CREATE OR REPLACE FUNCTION f2(a int, b varchar) RETURNS int AS 'SELECT 1;' LANGUAGE SQL");
+            }
+            if (TestUtil.haveMinimumServerVersion(con, "8.1")) {
+                stmt.execute("CREATE OR REPLACE FUNCTION f3(IN a int, INOUT b varchar, OUT c timestamp) AS $f$ BEGIN b := 'a'; c := now(); return; END; $f$ LANGUAGE plpgsql");
+            }
+            stmt.execute("CREATE OR REPLACE FUNCTION f4(int) RETURNS metadatatest AS 'SELECT 1, ''a''::text, now(), ''c''::text, ''q''::text' LANGUAGE SQL");
+    
+            if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
+                stmt.execute("CREATE DOMAIN nndom AS int not null");
+                stmt.execute("CREATE TABLE domaintable (id nndom)");
+            }
         }
-        stmt.execute("CREATE OR REPLACE FUNCTION f4(int) RETURNS metadatatest AS 'SELECT 1, ''a''::text, now(), ''c''::text, ''q''::text' LANGUAGE SQL");
-
-        if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
-            stmt.execute("CREATE DOMAIN nndom AS int not null");
-            stmt.execute("CREATE TABLE domaintable (id nndom)");
-        }
-        */
         stmt.close();
     }
 
@@ -81,26 +90,31 @@ public class DatabaseMetaDataTest extends TestCase
         TestUtil.dropTable( con, "metadatatest" );
         TestUtil.dropTable( con, "sercoltest");
         TestUtil.dropSequence( con, "sercoltest_b_seq");
-        //TestUtil.dropSequence( con, "sercoltest_c_seq");
+        if (!TestUtil.isFoundationDBServer(con)) {
+            TestUtil.dropSequence( con, "sercoltest_c_seq");
+        }
         TestUtil.dropTable( con, "\"a\\\"");
         TestUtil.dropTable( con, "\"a'\"");
         if (!TestUtil.isFoundationDBServer(con)) {
             TestUtil.dropTable( con, "arraytable");
         }
 
-        /*
-        stmt.execute("DROP FUNCTION f1(int, varchar)");
-        if (TestUtil.haveMinimumServerVersion(con, "8.0")) {
-            stmt.execute("DROP FUNCTION f2(int, varchar)");
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("DROP FUNCTION f1");
+        } else {
+            stmt.execute("DROP FUNCTION f1(int, varchar)");
+            if (TestUtil.haveMinimumServerVersion(con, "8.0")) {
+                stmt.execute("DROP FUNCTION f2(int, varchar)");
+            }
+            if (TestUtil.haveMinimumServerVersion(con, "8.1")) {
+                stmt.execute("DROP FUNCTION f3(int, varchar)");
+            }
+            
+            if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
+                stmt.execute("DROP TABLE domaintable");
+                stmt.execute("DROP DOMAIN nndom");
+            }
         }
-        if (TestUtil.haveMinimumServerVersion(con, "8.1")) {
-            stmt.execute("DROP FUNCTION f3(int, varchar)");
-        }
-        if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
-            stmt.execute("DROP TABLE domaintable");
-            stmt.execute("DROP DOMAIN nndom");
-        }
-        */
         TestUtil.closeDB( con );
     }
 
@@ -139,6 +153,11 @@ public class DatabaseMetaDataTest extends TestCase
     public void testCrossReference() throws Exception
     {
         Connection con1 = TestUtil.openDB();
+        
+        if (TestUtil.isFoundationDBServer(con1)) {
+            TestUtil.closeDB(con1);
+            return;
+        }
 
         TestUtil.createTable( con1, "vv", "a int not null, b int not null, primary key ( a, b )" );
 
@@ -195,6 +214,11 @@ public class DatabaseMetaDataTest extends TestCase
     public void testForeignKeyActions() throws Exception
     {
         Connection conn = TestUtil.openDB();
+        if (TestUtil.isFoundationDBServer(conn)) {
+            TestUtil.closeDB(conn);
+            return;
+        }
+        
         TestUtil.createTable(conn, "pkt", "id int primary key");
         TestUtil.createTable(conn, "fkt1", "id int references pkt on update restrict on delete cascade");
         TestUtil.createTable(conn, "fkt2", "id int references pkt on update set null on delete set default");
@@ -224,6 +248,11 @@ public class DatabaseMetaDataTest extends TestCase
             return ;
 
         Connection con1 = TestUtil.openDB();
+        if (TestUtil.isFoundationDBServer(con1)) {
+            TestUtil.closeDB(con1);
+            return;
+        }
+        
         TestUtil.createTable( con1, "pkt", "a int not null, b int not null, CONSTRAINT pkt_pk_a PRIMARY KEY (a), CONSTRAINT pkt_un_b UNIQUE (b)");
         TestUtil.createTable( con1, "fkt", "c int, d int, CONSTRAINT fkt_fk_c FOREIGN KEY (c) REFERENCES pkt(b)");
 
@@ -247,6 +276,10 @@ public class DatabaseMetaDataTest extends TestCase
     public void testMultiColumnForeignKeys() throws Exception
     {
         Connection con1 = TestUtil.openDB();
+        if (TestUtil.isFoundationDBServer(con1)) {
+            TestUtil.closeDB(con1);
+            return;
+        }
         TestUtil.createTable( con1, "pkt", "a int not null, b int not null, CONSTRAINT pkt_pk PRIMARY KEY (a,b)");
         TestUtil.createTable( con1, "fkt", "c int, d int, CONSTRAINT fkt_fk_pkt FOREIGN KEY (c,d) REFERENCES pkt(b,a)");
 
@@ -279,7 +312,11 @@ public class DatabaseMetaDataTest extends TestCase
     public void testSameTableForeignKeys() throws Exception
     {
         Connection con1 = TestUtil.openDB();
-
+        if (TestUtil.isFoundationDBServer(con1)) {
+            TestUtil.closeDB(con1);
+            return;
+        }
+        
         TestUtil.createTable( con1, "person", "FIRST_NAME character varying(100) NOT NULL,"+
           "LAST_NAME character varying(100) NOT NULL,"+
           "FIRST_NAME_PARENT_1 character varying(100),"+
@@ -347,13 +384,16 @@ public class DatabaseMetaDataTest extends TestCase
     public void testForeignKeys() throws Exception
     {
         Connection con1 = TestUtil.openDB();
+        if (TestUtil.isFoundationDBServer(con1)) {
+            TestUtil.closeDB(con1);
+            return;
+        }
         TestUtil.createTable( con1, "people", "id int4 primary key, name text" );
         TestUtil.createTable( con1, "policy", "id int4 primary key, name text" );
 
         TestUtil.createTable( con1, "users", "id int4 primary key, people_id int4, policy_id int4," +
                               "CONSTRAINT people FOREIGN KEY (people_id) references people(id)," +
                               "constraint policy FOREIGN KEY (policy_id) references policy(id)" );
-
 
         DatabaseMetaData dbmd = con.getMetaData();
         assertNotNull(dbmd);
@@ -511,6 +551,9 @@ public class DatabaseMetaDataTest extends TestCase
 
     public void testNoTablePrivileges() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) {
+            return;
+        }
         Statement stmt = con.createStatement();
         stmt.execute("REVOKE ALL ON metadatatest FROM PUBLIC");
         stmt.execute("REVOKE ALL ON metadatatest FROM " + TestUtil.getUser());
@@ -532,13 +575,15 @@ public class DatabaseMetaDataTest extends TestCase
     {
         Statement stmt = con.createStatement();
         stmt.execute("create index idx_id on metadatatest (id)");
-        stmt.execute("create index idx_func_single on metadatatest (upper(colour))");
         stmt.execute("create unique index idx_un_id on metadatatest(id)");
-        if (TestUtil.haveMinimumServerVersion(con, "7.4")) {
-            stmt.execute("create index idx_func_multi on metadatatest (upper(colour), upper(quest))");
-            stmt.execute("create index idx_func_mixed on metadatatest (colour, upper(quest))");
-        }
 
+        if (!TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("create index idx_func_single on metadatatest (upper(colour))");
+            if (TestUtil.haveMinimumServerVersion(con, "7.4")) {
+                stmt.execute("create index idx_func_multi on metadatatest (upper(colour), upper(quest))");
+                stmt.execute("create index idx_func_mixed on metadatatest (colour, upper(quest))");
+            }
+        }
         DatabaseMetaData dbmd = con.getMetaData();
         assertNotNull(dbmd);
         ResultSet rs = dbmd.getIndexInfo(null, null, "metadatatest", false, false);
@@ -548,34 +593,34 @@ public class DatabaseMetaDataTest extends TestCase
         assertEquals(1, rs.getInt("ORDINAL_POSITION"));
         assertEquals("id", rs.getString("COLUMN_NAME"));
         assertTrue(!rs.getBoolean("NON_UNIQUE"));
-
-        if (TestUtil.haveMinimumServerVersion(con, "7.4")) {
+        if (!TestUtil.isFoundationDBServer(con)) {
+            if (TestUtil.haveMinimumServerVersion(con, "7.4")) {
+                assertTrue(rs.next());
+                assertEquals("idx_func_mixed", rs.getString("INDEX_NAME"));
+                assertEquals(1, rs.getInt("ORDINAL_POSITION"));
+                assertEquals("colour", rs.getString("COLUMN_NAME"));
+    
+                assertTrue(rs.next());
+                assertEquals("idx_func_mixed", rs.getString("INDEX_NAME"));
+                assertEquals(2, rs.getInt("ORDINAL_POSITION"));
+                assertEquals("upper(quest)", rs.getString("COLUMN_NAME"));
+    
+                assertTrue(rs.next());
+                assertEquals("idx_func_multi", rs.getString("INDEX_NAME"));
+                assertEquals(1, rs.getInt("ORDINAL_POSITION"));
+                assertEquals("upper(colour)", rs.getString("COLUMN_NAME"));
+    
+                assertTrue(rs.next());
+                assertEquals("idx_func_multi", rs.getString("INDEX_NAME"));
+                assertEquals(2, rs.getInt("ORDINAL_POSITION"));
+                assertEquals("upper(quest)", rs.getString("COLUMN_NAME"));
+            }
+    
             assertTrue(rs.next());
-            assertEquals("idx_func_mixed", rs.getString("INDEX_NAME"));
-            assertEquals(1, rs.getInt("ORDINAL_POSITION"));
-            assertEquals("colour", rs.getString("COLUMN_NAME"));
-
-            assertTrue(rs.next());
-            assertEquals("idx_func_mixed", rs.getString("INDEX_NAME"));
-            assertEquals(2, rs.getInt("ORDINAL_POSITION"));
-            assertEquals("upper(quest)", rs.getString("COLUMN_NAME"));
-
-            assertTrue(rs.next());
-            assertEquals("idx_func_multi", rs.getString("INDEX_NAME"));
+            assertEquals("idx_func_single", rs.getString("INDEX_NAME"));
             assertEquals(1, rs.getInt("ORDINAL_POSITION"));
             assertEquals("upper(colour)", rs.getString("COLUMN_NAME"));
-
-            assertTrue(rs.next());
-            assertEquals("idx_func_multi", rs.getString("INDEX_NAME"));
-            assertEquals(2, rs.getInt("ORDINAL_POSITION"));
-            assertEquals("upper(quest)", rs.getString("COLUMN_NAME"));
         }
-
-        assertTrue(rs.next());
-        assertEquals("idx_func_single", rs.getString("INDEX_NAME"));
-        assertEquals(1, rs.getInt("ORDINAL_POSITION"));
-        assertEquals("upper(colour)", rs.getString("COLUMN_NAME"));
-
         assertTrue(rs.next());
         assertEquals("idx_id", rs.getString("INDEX_NAME"));
         assertEquals(1, rs.getInt("ORDINAL_POSITION"));
@@ -592,6 +637,9 @@ public class DatabaseMetaDataTest extends TestCase
         if (!TestUtil.haveMinimumServerVersion(con, "7.3"))
             return;
 
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
+        
         DatabaseMetaData dbmd = con.getMetaData();
         ResultSet rs = dbmd.getColumns("", "", "domaintable", "");
         assertTrue(rs.next());
@@ -605,6 +653,10 @@ public class DatabaseMetaDataTest extends TestCase
         if (!TestUtil.haveMinimumServerVersion(con, "8.3"))
             return;
 
+        if (TestUtil.isFoundationDBServer(con)) {
+            return;
+        }
+        
         Statement stmt = con.createStatement();
         stmt.execute("CREATE INDEX idx_a_d ON metadatatest (id ASC, quest DESC)");
         stmt.close();
@@ -625,6 +677,10 @@ public class DatabaseMetaDataTest extends TestCase
 
     public void testPartialIndexInfo() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) {
+            return;
+        }
+        
         Statement stmt = con.createStatement();
         stmt.execute("create index idx_p_name_id on metadatatest (name) where id > 5");
         stmt.close();
@@ -662,12 +718,14 @@ public class DatabaseMetaDataTest extends TestCase
         assertEquals(DatabaseMetaData.procedureColumnReturn, rs.getInt(5));
 
         assertTrue(rs.next());
-        assertEquals("$1", rs.getString(4));
+        if (!TestUtil.isFoundationDBServer(con))
+            assertEquals("$1", rs.getString(4));
         assertEquals(DatabaseMetaData.procedureColumnIn, rs.getInt(5));
         assertEquals(Types.INTEGER, rs.getInt(6));
 
         assertTrue(rs.next());
-        assertEquals("$2", rs.getString(4));
+        if (!TestUtil.isFoundationDBServer(con))
+            assertEquals("$2", rs.getString(4));
         assertEquals(DatabaseMetaData.procedureColumnIn, rs.getInt(5));
         assertEquals(Types.VARCHAR, rs.getInt(6));
 
@@ -725,6 +783,8 @@ public class DatabaseMetaDataTest extends TestCase
 
     public void testFuncReturningComposite() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         DatabaseMetaData dbmd = con.getMetaData();
         ResultSet rs = dbmd.getProcedureColumns(null, null, "f4", null);
 
