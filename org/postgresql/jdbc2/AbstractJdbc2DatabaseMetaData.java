@@ -3529,7 +3529,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
         
         if (connection.isFoundationDBServer()) {
             sql = "SELECT NULL AS TABLE_CAT, schema_name AS TABLE_SCHEM, index_table_name AS TABLE_NAME," +
-                    " column_name as COLUMN_NAME, ordinal + 1 AS KEY_SEQ, index_name AS PK_NAME"+
+                    " column_name as COLUMN_NAME, ordinal_position + 1 AS KEY_SEQ, index_name AS PK_NAME"+
                     " FROM information_schema.index_columns ic"+
                     " WHERE index_name = 'PRIMARY' ";
             if (schema != null && !"".equals(schema))
@@ -3542,7 +3542,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
                 sql += " AND index_table_name = ";
                 sql += "'" + connection.escapeString(table) + "'";
             }
-            sql += " ORDER BY index_table_name, index_name, ordinal";
+            sql += " ORDER BY index_table_name, index_name, ordinal_position";
 
             return createMetaDataStatement().executeQuery(sql);
                     
