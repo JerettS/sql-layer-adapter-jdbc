@@ -89,7 +89,11 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         assertNotNull(dbmd);
 
         assertTrue(dbmd.supportsOuterJoins());
-        assertTrue(dbmd.supportsFullOuterJoins());
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertFalse(dbmd.supportsFullOuterJoins());
+        } else {
+            assertTrue(dbmd.supportsFullOuterJoins());
+        }
         assertTrue(dbmd.supportsLimitedOuterJoins());
     }
 
@@ -124,9 +128,13 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
 
         assertTrue(!dbmd.nullsAreSortedAtStart());
         assertTrue( dbmd.nullsAreSortedAtEnd() != TestUtil.haveMinimumServerVersion(con, "7.2"));
-        assertTrue( dbmd.nullsAreSortedHigh() == TestUtil.haveMinimumServerVersion(con, "7.2"));
-        assertTrue(!dbmd.nullsAreSortedLow());
-
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertTrue(dbmd.nullsAreSortedHigh());
+            assertTrue(dbmd.nullsAreSortedLow());
+        } else {
+            assertTrue( dbmd.nullsAreSortedHigh() == TestUtil.haveMinimumServerVersion(con, "7.2"));
+            assertTrue(!dbmd.nullsAreSortedLow());
+        }
         assertTrue(dbmd.nullPlusNonNullIsNull());
 
         assertTrue(dbmd.supportsNonNullableColumns());
