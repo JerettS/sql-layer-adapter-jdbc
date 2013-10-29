@@ -25,6 +25,7 @@ public class Jdbc2TestSuite extends TestSuite
     public static TestSuite suite() throws Exception
     {
         TestSuite suite = new TestSuite();
+        Connection conn = TestUtil.openDB();
 
         //
         // Add one line per class in our test cases. These should be in order of
@@ -40,7 +41,9 @@ public class Jdbc2TestSuite extends TestSuite
         suite.addTestSuite(ConnectionTest.class);
         suite.addTestSuite(DatabaseMetaDataTest.class);
         suite.addTestSuite(DatabaseMetaDataPropertiesTest.class);
-        suite.addTestSuite(SearchPathLookupTest.class);
+        if (!TestUtil.isFoundationDBServer(conn)) {
+            suite.addTestSuite(SearchPathLookupTest.class);
+        }
         suite.addTestSuite(EncodingTest.class);
 
         // Connectivity/Protocols
@@ -48,7 +51,9 @@ public class Jdbc2TestSuite extends TestSuite
         // ResultSet
         suite.addTestSuite(ResultSetTest.class);
         suite.addTestSuite(ResultSetMetaDataTest.class);
-        suite.addTestSuite(ArrayTest.class);
+        if (!TestUtil.isFoundationDBServer(conn)) { 
+            suite.addTestSuite(ArrayTest.class);
+        }
         suite.addTestSuite(RefCursorTest.class);
 
         // Time, Date, Timestamp
@@ -59,7 +64,9 @@ public class Jdbc2TestSuite extends TestSuite
 
         // PreparedStatement
         suite.addTestSuite(PreparedStatementTest.class);
-        suite.addTestSuite(StatementTest.class);
+        if (!TestUtil.isFoundationDBServer(conn)) {
+            suite.addTestSuite(StatementTest.class);
+        }
 
         // ServerSide Prepared Statements
         suite.addTestSuite(ServerPreparedStmtTest.class);
@@ -86,12 +93,12 @@ public class Jdbc2TestSuite extends TestSuite
         suite.addTestSuite(ServerCursorTest.class);
 
         suite.addTestSuite(IntervalTest.class);
-        suite.addTestSuite(GeometricTest.class);
-
+        if (!TestUtil.isFoundationDBServer(conn)) {
+            suite.addTestSuite(GeometricTest.class);
+        }
         suite.addTestSuite(LoginTimeoutTest.class);
         suite.addTestSuite(TestACL.class);
         
-        Connection conn = TestUtil.openDB();
         if (TestUtil.isProtocolVersion(conn, 3)) {
             suite.addTestSuite(CopyTest.class);
         }
