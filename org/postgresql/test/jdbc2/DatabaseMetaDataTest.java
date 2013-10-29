@@ -869,36 +869,61 @@ public class DatabaseMetaDataTest extends TestCase
         boolean foundPGCatalog = false;
         int count;
 
-        for (count = 0; rs.next(); count++)
-        {
-            String schema = rs.getString("TABLE_SCHEM");
-            if ("public".equals(schema))
-            {
-                foundPublic = true;
+        if (TestUtil.isFoundationDBServer(con)) {
+            boolean foundInformationSchema = false;
+            boolean foundSecuritySchema = false;
+            boolean foundSqlJSchema = false;
+            boolean foundSysSchema = false;
+            for (count = 0; rs.next(); count++) {
+                String schema = rs.getString("TABLE_SCHEM");
+                if ("information_schema".equals(schema)) {
+                    foundInformationSchema = true;
+                } else if ("security_schema".equals(schema)) {
+                    foundSecuritySchema = true;
+                } else if ("sqlj".equals(schema)) {
+                    foundSqlJSchema = true;
+                } else if ("sys".equals(schema)) {
+                    foundSysSchema = true;
+                }
             }
-            else if ("".equals(schema))
+            rs.close();
+            assertTrue (count >=4);
+            assertTrue(foundInformationSchema);
+            assertTrue(foundSecuritySchema);
+            assertTrue(foundSqlJSchema);
+            assertTrue(foundSysSchema);
+        } else {
+            for (count = 0; rs.next(); count++)
             {
-                foundEmpty = true;
+                String schema = rs.getString("TABLE_SCHEM");
+                if ("public".equals(schema))
+                {
+                    foundPublic = true;
+                }
+                else if ("".equals(schema))
+                {
+                    foundEmpty = true;
+                }
+                else if ("pg_catalog".equals(schema))
+                {
+                    foundPGCatalog = true;
+                }
             }
-            else if ("pg_catalog".equals(schema))
+            rs.close();
+            if (TestUtil.haveMinimumServerVersion(con, "7.3"))
             {
-                foundPGCatalog = true;
+                assertTrue(count >= 2);
+                assertTrue(foundPublic);
+                assertTrue(foundPGCatalog);
+                assertTrue(!foundEmpty);
             }
-        }
-        rs.close();
-        if (TestUtil.haveMinimumServerVersion(con, "7.3"))
-        {
-            assertTrue(count >= 2);
-            assertTrue(foundPublic);
-            assertTrue(foundPGCatalog);
-            assertTrue(!foundEmpty);
-        }
-        else
-        {
-            assertEquals(count, 1);
-            assertTrue(foundEmpty);
-            assertTrue(!foundPublic);
-            assertTrue(!foundPGCatalog);
+            else
+            {
+                assertEquals(count, 1);
+                assertTrue(foundEmpty);
+                assertTrue(!foundPublic);
+                assertTrue(!foundPGCatalog);
+            }
         }
     }
 

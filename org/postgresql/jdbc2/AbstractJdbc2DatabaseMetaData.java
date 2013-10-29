@@ -2332,6 +2332,18 @@ public abstract class AbstractJdbc2DatabaseMetaData
 
     protected ResultSet getSchemas(int jdbcVersion, String catalog, String schemaPattern) throws SQLException {
         String sql;
+        
+        if (connection.isFoundationDBServer()) {
+            sql = "SELECT s.schema_name as TABLE_SCHEM, NULL AS TABLE_CATALOG " +
+                    " FROM information_schema.schemata s ";
+            
+            if (schemaPattern != null && !"".equals(schemaPattern))
+            {
+                sql += " WHERE schema_name LIKE "; 
+                sql += "'" + connection.escapeString(schemaPattern) + "'";
+            }
+            sql += " ORDER BY schema_name";
+        } else 
         // Show only the users temp schemas, but not other peoples
         // because they can't access any objects in them.
         if (connection.haveMinimumServerVersion("7.3"))
