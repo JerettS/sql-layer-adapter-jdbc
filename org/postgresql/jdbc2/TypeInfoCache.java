@@ -327,6 +327,9 @@ public class TypeInfoCache implements TypeInfo {
         return oid.intValue();
     }
 
+    private void createFDBNameStatement () throws SQLException {
+        _getNameStatement = _conn.prepareStatement("SELECT type_name FROM information_schema.types where postgres_oid = ?");
+    }
     public synchronized String getPGType(int oid) throws SQLException
     {
         if (oid == Oid.UNSPECIFIED)
@@ -338,7 +341,7 @@ public class TypeInfoCache implements TypeInfo {
 
         if (((AbstractJdbc2Connection)_conn).isFoundationDBServer()) {
             if (_getNameStatement == null) {
-                _getNameStatement = _conn.prepareStatement("SELECT type_name FROM information_schema.types where postgres_oid = ?");
+                createFDBNameStatement();
             }
             
         }        
@@ -353,12 +356,31 @@ public class TypeInfoCache implements TypeInfo {
             _getNameStatement = _conn.prepareStatement(sql);
         }
 
-        _getNameStatement.setInt(1, oid);
-
-        // Go through BaseStatement to avoid transaction start.
-        if (!((BaseStatement)_getNameStatement).executeWithFlags(QueryExecutor.QUERY_SUPPRESS_BEGIN))
-            throw new PSQLException(GT.tr("No results were returned by the query."), PSQLState.NO_DATA);
-
+        boolean retryable = false;
+        do {
+            retryable = false;
+            boolean results = true;
+            _getNameStatement.setInt(1, oid);
+            try {
+                // Go through BaseStatement to avoid transaction start.
+                results = ((BaseStatement)_getNameStatement).executeWithFlags(QueryExecutor.QUERY_SUPPRESS_BEGIN);
+            } catch (PSQLException ex) {
+                // The FDBServer return the STALE_STATEMENT error on DDL. 
+                // clear and recreate the statement for further execution. 
+                if ("0A50A".equals(ex.getSQLState())) {
+                    _getNameStatement.close();
+                    _getNameStatement = null;
+                    createFDBNameStatement();
+                    retryable = true;
+                    results = true;
+                } else {
+                    throw ex;
+                }
+            }
+            if (!results) {
+                throw new PSQLException(GT.tr("No results were returned by the query."), PSQLState.NO_DATA);
+            }
+        } while (retryable);
         ResultSet rs = _getNameStatement.getResultSet();
         if (rs.next()) {
             pgTypeName = rs.getString(1);
