@@ -22,13 +22,8 @@ public class LOBTest extends TestCase {
     protected void setUp() throws Exception {
         _conn = TestUtil.openDB();
         Statement stmt = _conn.createStatement();
-        if (TestUtil.isFoundationDBServer(_conn)) {
-            stmt.execute("CREATE TABLE lotest(lo int)");
-            stmt.execute("INSERT INTO lotest VALUES (1)");
-        } else {
-            stmt.execute("CREATE TEMP TABLE lotest(lo oid)");
-            stmt.execute("INSERT INTO lotest VALUES(lo_creat(-1))");
-        }
+        stmt.execute("CREATE TEMP TABLE lotest(lo oid)");
+        stmt.execute("INSERT INTO lotest VALUES(lo_creat(-1))");
         stmt.close();
     }
 

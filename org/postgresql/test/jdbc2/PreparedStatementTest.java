@@ -35,9 +35,15 @@ public class PreparedStatementTest extends TestCase
     protected void setUp() throws Exception
     {
         conn = TestUtil.openDB();
-        TestUtil.createTable(conn, "streamtable", "bin bytea, str text");
-        TestUtil.createTable(conn, "texttable", "ch char(3), te text, vc varchar(3)");
-        TestUtil.createTable(conn, "intervaltable", "i interval");
+        if (TestUtil.isFoundationDBServer(conn)) {
+            TestUtil.createTable(conn, "streamtable", "bin tinyblob, str text");
+            TestUtil.createTable(conn, "texttable", "ch char(3), te text, vc varchar(3)");
+            TestUtil.createTable(conn, "intervaltable", "i int");
+        } else {
+            TestUtil.createTable(conn, "streamtable", "bin bytea, str text");
+            TestUtil.createTable(conn, "texttable", "ch char(3), te text, vc varchar(3)");
+            TestUtil.createTable(conn, "intervaltable", "i interval");
+        }
     }
 
     protected void tearDown() throws SQLException

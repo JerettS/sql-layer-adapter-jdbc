@@ -1549,7 +1549,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
     }
 
     /*
-     * Are only data manipulation statements withing a transaction
+     * Are only data manipulation statements within a transaction
      * supported?
      *
      * @return true if so
@@ -1663,13 +1663,13 @@ public abstract class AbstractJdbc2DatabaseMetaData
             sql += " FROM information_schema.routines r WHERE TRUE";
             if (schemaPattern != null && !"".equals(schemaPattern))
             {
-                sql += " AND r.routine_name LIKE ";
+                sql += " AND r.routine_schema LIKE ";
                 sql += "'" + connection.escapeString(schemaPattern) + "'";
 
             }
             if (procedureNamePattern != null)
             {
-                sql += " AND p.proname LIKE "; 
+                sql += " AND r.routine_name LIKE "; 
                 sql += "'" + connection.escapeString(procedureNamePattern) + "'";
             }
             sql += " ORDER BY routine_schema,routine_name";
@@ -2518,13 +2518,23 @@ public abstract class AbstractJdbc2DatabaseMetaData
 
         String sql;
         if (connection.isFoundationDBServer()) {
-            sql = "SELECT c.schema_name as nspname, c.table_name as relname, c.column_name as attname, t.postgres_oid as atttypid," +
-                    " case when nullable = 'NO' THEN 1 ELSE 0 END as attnotnull," +
-                    " case when length is not null then length + 4 when precision is not null then (precision) * 65535 + scale + 4 else 0 END as atttypmod," +
-                    " 0 as attlen, position + 1 as attnum,"+
-                    " null as adsrc, null as description, 0 as typbasetype, null as typtype" +
-                    " FROM information_schema.columns c, information_schema.types t" +
-                    " WHERE t.type_name = c.type";
+            sql = "SELECT NULL AS TABLE_CAT, c.schema_name as TABLE_SCHEM, c.table_name as TABLE_NAME, c.column_name AS COLUMN_NAME," +
+                    " t.postgres_oid AS DATA_TYPE, t.type_name AS TYPE_NAME, " +
+                    " CASE WHEN t.attribute_1 = 'MAX LENGTH' THEN c.length WHEN t.attribute_1 = 'PRECISION' THEN c.precision ELSE 32 END as COLUMN_SIZE,"+
+                    " NULL AS BUFFER_LENGTH, "+ 
+                    " CASE WHEN t.attribute_2 = 'SCALE' THEN c.scale ELSE NULL END as DECIMAL_DIGITS, NULL as NUM_PREC_RADIX, " +
+                    " CASE WHEN c.nullable = 'NO' THEN " + java.sql.DatabaseMetaData.columnNoNulls  + " ELSE " + java.sql.DatabaseMetaData.columnNullable + " END AS NULLABLE," +
+                    " NULL AS REMARKS, c.column_default AS COLUMN_DEF, " +
+                    " NULL AS SQL_DATA_TYPE, NULL AS SQL_DATETIME_SUB, " +
+                    " CASE WHEN t.attribute_1 = 'MAX_LENGTH' THEN c.length ELSE NULL END as CHAR_OCTET_LENGTH," +
+                    " c.position+1 AS ORDINAL_POSITION, c.nullable AS IS_NULLABLE";
+            if (jdbcVersion >= 3) {
+                sql +=", NULL AS SCOPE_CATALOG, NULL AS SCOPE_SCHEMA, NULL AS SCOPE_TABLE, NULL AS SOURCE_DATA_TYPE";
+            }
+            if (jdbcVersion >= 4) {
+                sql += ", CASE WHEN c.sequence_name IS NOT NULL THEN 'YES' ELSE 'NO' END AS IS_AUTOINCREMENT";
+            }
+            sql += " FROM information_schema.columns c INNER JOIN information_schema.types t ON (c.type = t.type_name) WHERE true";
 
             if (schemaPattern != null && !"".equals(schemaPattern))
             {
@@ -2543,6 +2553,9 @@ public abstract class AbstractJdbc2DatabaseMetaData
                 sql += "'" + connection.escapeString(columnNamePattern) + "'";
             }
             sql += " ORDER BY c.schema_name,c.table_name, position ";
+            
+            return createMetaDataStatement().executeQuery(sql);
+
         } else {
             if (connection.haveMinimumServerVersion("7.3"))
             {

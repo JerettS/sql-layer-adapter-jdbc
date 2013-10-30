@@ -47,7 +47,11 @@ public abstract class BaseDataSourceTest extends TestCase
     protected void setUp() throws Exception
     {
         con = TestUtil.openDB();
-        TestUtil.createTable(con, "poolingtest", "id int4 not null primary key, name varchar(50)");
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, "poolingtest", "id int not null primary key, name varchar(50)");
+        } else {
+            TestUtil.createTable(con, "poolingtest", "id int4 not null primary key, name varchar(50)");
+        }
         Statement stmt = con.createStatement();
         stmt.executeUpdate("INSERT INTO poolingtest VALUES (1, 'Test Row 1')");
         stmt.executeUpdate("INSERT INTO poolingtest VALUES (2, 'Test Row 2')");
@@ -168,7 +172,11 @@ public abstract class BaseDataSourceTest extends TestCase
         try
         {
             con = getDataSourceConnection();
-            TestUtil.createTable(con, "poolingtest", "id int4 not null primary key, name varchar(50)");
+            if (TestUtil.isFoundationDBServer(con)) {
+                TestUtil.createTable(con, "poolingtest", "id int not null primary key, name varchar(50)");
+            } else {
+                TestUtil.createTable(con, "poolingtest", "id int4 not null primary key, name varchar(50)");
+            }
             con.close();
         }
         catch (SQLException e)

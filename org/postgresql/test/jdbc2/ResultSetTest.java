@@ -483,7 +483,12 @@ public class ResultSetTest extends TestCase
     public void testZeroRowResultPositioning() throws SQLException
     {
         Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet rs = stmt.executeQuery("SELECT * FROM pg_database WHERE datname='nonexistantdatabase'");
+        ResultSet rs = null;
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = stmt.executeQuery("SELECT * FROM information_schema.schemata WHERE schema_name = 'nonexistantdatabase'");
+        } else {
+            rs = stmt.executeQuery("SELECT * FROM pg_database WHERE datname='nonexistantdatabase'");
+        }
         assertTrue(!rs.previous());
         assertTrue(!rs.previous());
         assertTrue(!rs.next());
@@ -509,7 +514,12 @@ public class ResultSetTest extends TestCase
     {
         Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         // Create a one row result set.
-        ResultSet rs = stmt.executeQuery("SELECT * FROM pg_database WHERE datname='template1'");
+        ResultSet rs = null;
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = stmt.executeQuery("SELECT * FROM information_schema.schemata WHERE schema_name = 'information_schema'");
+        } else {
+            rs = stmt.executeQuery("SELECT * FROM pg_database WHERE datname='template1'");
+        }
 
         assertTrue(rs.isBeforeFirst());
         assertTrue(!rs.isAfterLast());

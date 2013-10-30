@@ -25,25 +25,37 @@ public class ResultSetMetaDataTest extends TestCase
     protected void setUp() throws Exception
     {
         conn = TestUtil.openDB();
-        TestUtil.createTable(conn, "rsmd1", "a int primary key, b text, c decimal(10,2)", true);
-        TestUtil.createTable(conn, "timetest", "tm time(3), tmtz timetz, ts timestamp without time zone, tstz timestamp(6) with time zone");
+        if (TestUtil.isFoundationDBServer(conn)) {
+            TestUtil.createTable(conn, "rsmd1", "a int not null primary key, b text, c decimal(10,2), oid integer unsigned");
+            TestUtil.createTable(conn, "timetest", "tm time, tmtz time, ts timestamp, tstz timestamp");
+        } else {
+            TestUtil.createTable(conn, "rsmd1", "a int primary key, b text, c decimal(10,2)", true);
+            TestUtil.createTable(conn, "timetest", "tm time(3), tmtz timetz, ts timestamp without time zone, tstz timestamp(6) with time zone");
+        }
 
         TestUtil.dropSequence( conn, "serialtest_a_seq");
         TestUtil.dropSequence( conn, "serialtest_b_seq");
-        TestUtil.createTable(conn, "serialtest", "a serial, b bigserial, c int");
-        TestUtil.createTable(conn, "alltypes", "bool boolean, i2 int2, i4 int4, i8 int8, num numeric(10,2), re real, fl float, ch char(3), vc varchar(3), tx text, d date, t time without time zone, tz time with time zone, ts timestamp without time zone, tsz timestamp with time zone, bt bytea");
-        TestUtil.createTable(conn, "sizetest", "fixedchar char(5), fixedvarchar varchar(5), unfixedvarchar varchar, txt text, bytearr bytea, num64 numeric(6,4), num60 numeric(6,0), num numeric, ip inet");
-        TestUtil.createTable(conn, "compositetest", "col rsmd1");
+        if (TestUtil.isFoundationDBServer(conn)) {
+            TestUtil.createTable(conn, "serialtest", "a serial, b bigint, c int");
+            TestUtil.createTable(conn, "alltypes", "bool boolean, i2 smallint, i4 int, i8 bigint, num numeric(10,2), re real, fl float, ch char(3), vc varchar(3), tx text, d date, t time, tz time, ts timestamp, tsz timestamp, bt tinyblob");
+        } else {
+            TestUtil.createTable(conn, "serialtest", "a serial, b bigserial, c int");
+            TestUtil.createTable(conn, "alltypes", "bool boolean, i2 int2, i4 int4, i8 int8, num numeric(10,2), re real, fl float, ch char(3), vc varchar(3), tx text, d date, t time without time zone, tz time with time zone, ts timestamp without time zone, tsz timestamp with time zone, bt bytea");
+            TestUtil.createTable(conn, "sizetest", "fixedchar char(5), fixedvarchar varchar(5), unfixedvarchar varchar, txt text, bytearr bytea, num64 numeric(6,4), num60 numeric(6,0), num numeric, ip inet");
+            TestUtil.createTable(conn, "compositetest", "col rsmd1");
+        }
     }
 
     protected void tearDown() throws Exception
     {
-        TestUtil.dropTable(conn, "compositetest");
+        if (!TestUtil.isFoundationDBServer(conn)) { 
+            TestUtil.dropTable(conn, "compositetest");
+            TestUtil.dropTable(conn, "sizetest");
+        }
         TestUtil.dropTable(conn, "rsmd1");
         TestUtil.dropTable(conn, "timetest");
         TestUtil.dropTable(conn, "serialtest");
         TestUtil.dropTable(conn, "alltypes");
-        TestUtil.dropTable(conn, "sizetest");
         TestUtil.dropSequence( conn, "serialtest_a_seq");
         TestUtil.dropSequence( conn, "serialtest_b_seq");
         TestUtil.closeDB(conn);
@@ -156,12 +168,20 @@ public class ResultSetMetaDataTest extends TestCase
         // For reference:
         // TestUtil.createTable(conn, "timetest", "tm time(3), tmtz timetz, ts timestamp without time zone, tstz timestamp(6) with time zone");
 
-        assertEquals(3, rsmd.getScale(1));
+        if (TestUtil.isFoundationDBServer(conn)) {
+            assertEquals(6, rsmd.getScale(1));
+        } else {
+            assertEquals(3, rsmd.getScale(1));
+        }
         assertEquals(6, rsmd.getScale(2));
         assertEquals(6, rsmd.getScale(3));
         assertEquals(6, rsmd.getScale(4));
 
-        assertEquals(12, rsmd.getColumnDisplaySize(1));
+        if (TestUtil.isFoundationDBServer(conn)) {
+            assertEquals(15, rsmd.getColumnDisplaySize(1));
+        } else {
+            assertEquals(12, rsmd.getColumnDisplaySize(1));
+        }
         assertEquals(21, rsmd.getColumnDisplaySize(2));
         assertEquals(29, rsmd.getColumnDisplaySize(3));
         assertEquals(35, rsmd.getColumnDisplaySize(4));
@@ -216,6 +236,8 @@ public class ResultSetMetaDataTest extends TestCase
     }
 
     public void testComposite() throws Exception {
+        if (TestUtil.isFoundationDBServer(conn)) 
+            return;
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT col FROM compositetest");
         ResultSetMetaData rsmd = rs.getMetaData();
