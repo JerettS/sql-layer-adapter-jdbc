@@ -36,6 +36,16 @@ public class Jdbc3TestSuite extends TestSuite
             {
                 suite.addTestSuite(GeneratedKeysTest.class);
             }
+            suite.addTestSuite(TypesTest.class);
+            suite.addTestSuite(ResultSetTest.class);
+            suite.addTestSuite(ParameterMetaDataTest.class);
+            suite.addTestSuite(SendRecvBufferSizeTest.class);
+            if (!TestUtil.isFoundationDBServer(con)) {
+                suite.addTestSuite(Jdbc3BlobTest.class);
+                suite.addTestSuite(Jdbc3SavepointTest.class);
+                suite.addTestSuite(DatabaseMetaDataTest.class);
+                suite.addTestSuite(StringTypeParameterTest.class);
+            }
             con.close();
         }
         catch (Exception ex )
@@ -43,14 +53,6 @@ public class Jdbc3TestSuite extends TestSuite
             ex.printStackTrace();
         }
         
-        suite.addTestSuite(Jdbc3SavepointTest.class);
-        suite.addTestSuite(TypesTest.class);
-        suite.addTestSuite(ResultSetTest.class);
-        suite.addTestSuite(ParameterMetaDataTest.class);
-        suite.addTestSuite(Jdbc3BlobTest.class);
-        suite.addTestSuite(DatabaseMetaDataTest.class);
-		suite.addTestSuite(SendRecvBufferSizeTest.class);
-        suite.addTestSuite(StringTypeParameterTest.class);
         return suite;
     }
 }

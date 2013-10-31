@@ -22,6 +22,9 @@ public class XATestSuite extends TestSuite {
 
         try
         {
+            if (TestUtil.isFoundationDBServer(connection)) 
+                return suite;
+            
             if (TestUtil.haveMinimumServerVersion(connection, "8.1"))
             {
                 Statement stmt = connection.createStatement();

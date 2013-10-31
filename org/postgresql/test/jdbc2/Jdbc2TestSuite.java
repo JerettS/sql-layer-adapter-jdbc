@@ -53,8 +53,8 @@ public class Jdbc2TestSuite extends TestSuite
         suite.addTestSuite(ResultSetMetaDataTest.class);
         if (!TestUtil.isFoundationDBServer(conn)) { 
             suite.addTestSuite(ArrayTest.class);
+            suite.addTestSuite(RefCursorTest.class);
         }
-        suite.addTestSuite(RefCursorTest.class);
 
         // Time, Date, Timestamp
         suite.addTestSuite(DateTest.class);

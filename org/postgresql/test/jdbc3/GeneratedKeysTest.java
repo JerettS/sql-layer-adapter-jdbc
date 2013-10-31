@@ -24,7 +24,11 @@ public class GeneratedKeysTest extends TestCase {
     protected void setUp() throws Exception {
         _conn = TestUtil.openDB();
         Statement stmt = _conn.createStatement();
-        stmt.execute("CREATE TEMP TABLE genkeys(a serial, b text, c int)");
+        if (TestUtil.isFoundationDBServer(_conn)) {
+            stmt.execute("CREATE TABLE genkeys(a serial, b text, c int)");
+        } else {
+            stmt.execute("CREATE TEMP TABLE genkeys(a serial, b text, c int)");
+        }
         stmt.close();
     }
 

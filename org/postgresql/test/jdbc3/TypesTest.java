@@ -30,13 +30,22 @@ public class TypesTest extends TestCase {
     protected void setUp() throws Exception {
         _conn = TestUtil.openDB();
         Statement stmt = _conn.createStatement();
-        stmt.execute("CREATE OR REPLACE FUNCTION return_bool(boolean) RETURNS boolean AS 'BEGIN RETURN $1; END;' LANGUAGE plpgsql");
+        
+        if (TestUtil.isFoundationDBServer(_conn)) {
+            stmt.execute("CREATE OR REPLACE FUNCTION return_bool (a boolean) RETURNS boolean LANGUAGE javascript PARAMETER STYLE variables AS 'a'");  
+        }else {
+            stmt.execute("CREATE OR REPLACE FUNCTION return_bool(boolean) RETURNS boolean AS 'BEGIN RETURN $1; END;' LANGUAGE plpgsql");
+        }
         stmt.close();
     }
 
     protected void tearDown() throws SQLException {
         Statement stmt = _conn.createStatement();
-        stmt.execute("DROP FUNCTION return_bool(boolean)");
+        if (TestUtil.isFoundationDBServer(_conn)) {
+            stmt.execute("DROP FUNCTION return_bool");
+        } else {
+            stmt.execute("DROP FUNCTION return_bool(boolean)");
+        }
         stmt.close();
         TestUtil.closeDB(_conn);
     }
