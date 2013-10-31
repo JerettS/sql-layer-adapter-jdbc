@@ -350,6 +350,9 @@ public class TestUtil
         try
         {
             String sql = "DROP SEQUENCE " + sequence;
+            if (isFoundationDBServer(con)) {
+                sql = "DROP SEQUENCE IF EXISTS " + sequence + " RESTRICT";
+            }
             stmt.executeUpdate(sql);
         }
         catch (SQLException sqle)

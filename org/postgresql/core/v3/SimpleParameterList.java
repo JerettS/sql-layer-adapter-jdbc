@@ -11,6 +11,7 @@ package org.postgresql.core.v3;
 import java.io.InputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Arrays;
 
 import org.postgresql.core.*;
@@ -49,6 +50,9 @@ class SimpleParameterList implements V3ParameterList {
             throw new PSQLException(GT.tr("The column index is out of range: {0}, number of columns: {1}.", new Object[]{new Integer(index), new Integer(paramValues.length)}), PSQLState.INVALID_PARAMETER_VALUE);
 
         flags[index-1] |= OUT;
+        
+        setResolvedType (index, SqlTypeToOID(sqlType));
+        paramValues[index-1] = NULL_OBJECT;
     }
 
     private void bind(int index, Object value, int oid, int binary) throws SQLException {
@@ -337,7 +341,71 @@ class SimpleParameterList implements V3ParameterList {
         pgStream.Send(encoded[index]);
     }
 
-    
+    private int SqlTypeToOID (int sqlType) throws PSQLException {
+        int oid = Oid.UNSPECIFIED;
+        
+        switch (sqlType)
+        {
+        case Types.INTEGER:
+            oid = Oid.INT4;
+            break;
+        case Types.TINYINT:
+        case Types.SMALLINT:
+            oid = Oid.INT2;
+            break;
+        case Types.BIGINT:
+            oid = Oid.INT8;
+            break;
+        case Types.REAL:
+            oid = Oid.FLOAT4;
+            break;
+        case Types.DOUBLE:
+        case Types.FLOAT:               
+            oid = Oid.FLOAT8;
+            break;
+        case Types.DECIMAL:
+        case Types.NUMERIC:
+            oid = Oid.NUMERIC;
+            break;
+        case Types.CHAR:
+            oid = Oid.BPCHAR;
+            break;
+        case Types.VARCHAR:
+        case Types.LONGVARCHAR:
+            oid = Oid.VARCHAR;
+            break;
+        case Types.DATE:
+            oid = Oid.DATE;
+            break;
+        case Types.TIME:
+        case Types.TIMESTAMP:
+            oid = Oid.UNSPECIFIED;
+            break;
+        case Types.BIT:
+            oid = Oid.BOOL;
+            break;
+        case Types.BINARY:
+        case Types.VARBINARY:
+        case Types.LONGVARBINARY:
+                oid = Oid.BYTEA;
+            break;
+        case Types.BLOB:
+        case Types.CLOB:
+            oid = Oid.OID;
+            break;
+        case Types.ARRAY:
+        case Types.DISTINCT:
+        case Types.STRUCT:
+        case Types.NULL:
+        case Types.OTHER:
+            oid = Oid.UNSPECIFIED;
+            break;
+        default:
+            // Bad Types value.
+            throw new PSQLException(GT.tr("Unknown Types value."), PSQLState.INVALID_PARAMETER_TYPE);
+        }
+        return oid;
+    }
     
     public ParameterList copy() {
         SimpleParameterList newCopy = new SimpleParameterList(paramValues.length, protoConnection);
