@@ -2519,7 +2519,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
         String sql;
         if (connection.isFoundationDBServer()) {
             sql = "SELECT NULL AS TABLE_CAT, c.schema_name as TABLE_SCHEM, c.table_name as TABLE_NAME, c.column_name AS COLUMN_NAME," +
-                    " t.postgres_oid AS DATA_TYPE, t.type_name AS TYPE_NAME, " +
+                    " t.jdbc_type_id AS DATA_TYPE, t.type_name AS TYPE_NAME, " +
                     " CASE WHEN t.attribute_1 = 'MAX LENGTH' THEN c.length WHEN t.attribute_1 = 'PRECISION' THEN c.precision ELSE 32 END as COLUMN_SIZE,"+
                     " NULL AS BUFFER_LENGTH, "+ 
                     " CASE WHEN t.attribute_2 = 'SCALE' THEN c.scale ELSE NULL END as DECIMAL_DIGITS, NULL as NUM_PREC_RADIX, " +
