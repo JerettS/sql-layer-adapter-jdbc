@@ -33,7 +33,11 @@ public class DatabaseMetaDataTest extends TestCase
     protected void setUp() throws Exception
     {
         con = TestUtil.openDB();
-        TestUtil.createTable( con, "metadatatest", "id int, name text, updated timestamp, colour text, quest text" );
+        if(TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable( con, "metadatatest", "id int, name text, updated timestamp, colour text, quest text" );
+        } else {
+            TestUtil.createTable( con, "metadatatest", "id int4, name text, updated timestamptz, colour text, quest text" );
+        }
         TestUtil.dropSequence( con, "sercoltest_b_seq");
         if (TestUtil.isFoundationDBServer(con)) {
             TestUtil.createTable( con, "sercoltest", "a int, b serial");
@@ -500,12 +504,16 @@ public class DatabaseMetaDataTest extends TestCase
             assertEquals(rownum + 1, rs.getInt("ORDINAL_POSITION"));
             if (rownum == 0)
             {
-                assertEquals("int4", rs.getString("TYPE_NAME"));
+                if (TestUtil.isFoundationDBServer(con)) {
+                    assertEquals("int", rs.getString("TYPE_NAME"));
+                }else {
+                    assertEquals("int4", rs.getString("TYPE_NAME"));
+                }
             }
             else if (rownum == 1)
             {
                 if (TestUtil.isFoundationDBServer(con)) {
-                    assertEquals("int8", rs.getString("TYPE_NAME"));
+                    assertEquals("bigint", rs.getString("TYPE_NAME"));
                 } else {
                     assertEquals("serial", rs.getString("TYPE_NAME"));
                 }

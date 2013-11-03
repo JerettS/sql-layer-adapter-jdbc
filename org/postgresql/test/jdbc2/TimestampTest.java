@@ -37,9 +37,15 @@ public class TimestampTest extends TestCase
     protected void setUp() throws Exception
     {
         con = TestUtil.openDB();
-        TestUtil.createTable(con, TSWTZ_TABLE, "ts timestamp with time zone");
-        TestUtil.createTable(con, TSWOTZ_TABLE, "ts timestamp without time zone");
-        TestUtil.createTable(con, DATE_TABLE, "ts date");
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, TSWTZ_TABLE, "ts timestamp");
+            TestUtil.createTable(con, TSWOTZ_TABLE, "ts timestamp");
+            TestUtil.createTable(con, DATE_TABLE, "ts date");
+        } else {
+            TestUtil.createTable(con, TSWTZ_TABLE, "ts timestamp with time zone");
+            TestUtil.createTable(con, TSWOTZ_TABLE, "ts timestamp without time zone");
+            TestUtil.createTable(con, DATE_TABLE, "ts date");
+        }
     }
 
     protected void tearDown() throws Exception

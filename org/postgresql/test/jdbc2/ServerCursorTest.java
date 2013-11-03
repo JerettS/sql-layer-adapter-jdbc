@@ -28,7 +28,11 @@ public class ServerCursorTest extends TestCase
     protected void setUp() throws Exception
     {
         con = TestUtil.openDB();
-        TestUtil.createTable(con, "test_fetch", "value integer,data bytea");
+        if(TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, "test_fetch", "value integer, data tinyblob");
+        } else {
+            TestUtil.createTable(con, "test_fetch", "value integer,data bytea");
+        }
         con.setAutoCommit(false);
     }
 

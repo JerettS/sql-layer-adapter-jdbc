@@ -111,9 +111,12 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         DatabaseMetaData dbmd = con.getMetaData();
         assertNotNull(dbmd);
         int indexMaxKeys = dbmd.getMaxColumnsInIndex();
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertEquals(8, indexMaxKeys);
+        }
         if (TestUtil.haveMinimumServerVersion(con, "7.3"))
         {
-            assertEquals(8, indexMaxKeys);
+            assertEquals(32, indexMaxKeys);
         }
         else
         {
@@ -129,7 +132,7 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         assertTrue(!dbmd.nullsAreSortedAtStart());
         assertTrue( dbmd.nullsAreSortedAtEnd() != TestUtil.haveMinimumServerVersion(con, "7.2"));
         if (TestUtil.isFoundationDBServer(con)) {
-            assertTrue(dbmd.nullsAreSortedHigh());
+            assertTrue(!dbmd.nullsAreSortedHigh());
             assertTrue(dbmd.nullsAreSortedLow());
         } else {
             assertTrue( dbmd.nullsAreSortedHigh() == TestUtil.haveMinimumServerVersion(con, "7.2"));
@@ -236,7 +239,7 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
 
         assertTrue(dbmd.getDriverVersion().equals(org.postgresql.Driver.getVersion()));
         assertTrue(dbmd.getDriverMajorVersion() == org.postgresql.Driver.MAJORVERSION);
-        assertTrue(dbmd.getDriverMinorVersion() == org.postgresql.Driver.MINORVERSION);
+        assertTrue("dbmd minor version is: " + dbmd.getDriverMinorVersion() , dbmd.getDriverMinorVersion() == org.postgresql.Driver.MINORVERSION);
     }
 }
 

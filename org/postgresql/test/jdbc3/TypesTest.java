@@ -93,6 +93,17 @@ public class TypesTest extends TestCase {
         assertEquals(true, cs.getBoolean(1));
         cs.close();
     }
+
+    /*
+    public void testCallableInteger() throws SQLException {
+        CallableStatement cs = _conn.prepareCall("{? = call return_bool(?)}");
+        cs.registerOutParameter(1, Types.INTEGER);
+        cs.setBoolean(2, true);
+        cs.execute();
+        assertEquals(true, cs.getBoolean(1));
+        cs.close();
+    }
+    */
     public void testUnknownType() throws SQLException {
         Statement stmt = _conn.createStatement();
         

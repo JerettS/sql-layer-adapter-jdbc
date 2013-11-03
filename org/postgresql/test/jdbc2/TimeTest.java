@@ -32,7 +32,11 @@ public class TimeTest extends TestCase
     protected void setUp() throws Exception
     {
         con = TestUtil.openDB();
-        TestUtil.createTempTable(con, "testtime", "tm time, tz time with time zone");
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, "testtime", "tm time, tz time");
+        } else {
+            TestUtil.createTempTable(con, "testtime", "tm time, tz time with time zone");
+        }
     }
 
     protected void tearDown() throws Exception

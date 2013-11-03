@@ -83,8 +83,10 @@ public class Jdbc2TestSuite extends TestSuite
         suite.addTestSuite(DatabaseEncodingTest.class);
 
         // Fastpath/LargeObject
-        suite.addTestSuite(BlobTest.class);
-        suite.addTestSuite(OID74Test.class);
+        if (!TestUtil.isFoundationDBServer(conn)) {
+            suite.addTestSuite(BlobTest.class);
+            suite.addTestSuite(OID74Test.class);
+        }
 
         suite.addTestSuite(UpdateableResultTest.class );
 
@@ -92,8 +94,8 @@ public class Jdbc2TestSuite extends TestSuite
         suite.addTestSuite(CursorFetchTest.class);
         suite.addTestSuite(ServerCursorTest.class);
 
-        suite.addTestSuite(IntervalTest.class);
         if (!TestUtil.isFoundationDBServer(conn)) {
+            suite.addTestSuite(IntervalTest.class);
             suite.addTestSuite(GeometricTest.class);
         }
         suite.addTestSuite(LoginTimeoutTest.class);
