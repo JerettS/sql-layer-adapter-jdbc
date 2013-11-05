@@ -593,9 +593,6 @@ public class ConnectionFactoryImpl extends ConnectionFactory {
 
                 if (name.equals("server_version")) {
                     protoConnection.setServerVersion(value);
-                    if (value.compareTo("8.5") >= 0 && value.compareTo("9.0") <= 0) {
-                        protoConnection.isFoundationDBServer(true);
-                    }
                 }
                 else if (name.equals("client_encoding"))
                 {
@@ -620,6 +617,13 @@ public class ConnectionFactoryImpl extends ConnectionFactory {
                         protoConnection.setIntegerDateTimes(false);
                     else
                         throw new PSQLException(GT.tr("Protocol error.  Session setup failed."), PSQLState.PROTOCOL_VIOLATION);
+                } 
+                else if (name.equals("foundationdb_server"))
+                {
+                    
+                    if (value.equals("on"))
+                        protoConnection.isFoundationDBServer(true);
+                    // default is off/false, leave it that way.     
                 }
 
                 break;
