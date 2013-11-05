@@ -41,16 +41,18 @@ public class TimestampUtils {
 
     private final boolean min74;
     private final boolean min82;
+    private final boolean isFoundationDBServer;
 
     /**
      * True if the backend uses doubles for time values. False if long is used.
      */
     private final boolean usesDouble;
 
-    TimestampUtils(boolean min74, boolean min82, boolean usesDouble) {
+    TimestampUtils(boolean min74, boolean min82, boolean usesDouble, boolean isFoundationDBServer) {
         this.min74 = min74;
         this.min82 = min82;
         this.usesDouble = usesDouble;
+        this.isFoundationDBServer = isFoundationDBServer;
     }
 
     private Calendar getCalendar(int sign, int hr, int min, int sec) {
@@ -267,22 +269,24 @@ public class TimestampUtils {
     //
 
     private static void showParse(String type, String what, Calendar cal, java.util.Date result, Calendar resultCal) {
-//         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd G HH:mm:ss Z");
-//         sdf.setTimeZone(resultCal.getTimeZone());
+/*        
+         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd G HH:mm:ss Z");
+         sdf.setTimeZone(resultCal.getTimeZone());
 
-//         StringBuffer sb = new StringBuffer("Parsed ");
-//         sb.append(type);
-//         sb.append(" '");
-//         sb.append(what);
-//         sb.append("' in zone ");
-//         sb.append(cal.getTimeZone().getID());
-//         sb.append(" as ");
-//         sb.append(sdf.format(result));
-//         sb.append(" (millis=");
-//         sb.append(result.getTime());
-//         sb.append(")");
+         StringBuffer sb = new StringBuffer("Parsed ");
+         sb.append(type);
+         sb.append(" '");
+         sb.append(what);
+         sb.append("' in zone ");
+         sb.append(cal.getTimeZone().getID());
+         sb.append(" as ");
+         sb.append(sdf.format(result));
+         sb.append(" (millis=");
+         sb.append(result.getTime());
+         sb.append(")");
         
-//         System.err.println(sb.toString());
+         System.err.println(sb.toString());
+*/
     }
     
     private static void showString(String type, Calendar cal, java.util.Date value, String result) {
@@ -496,6 +500,11 @@ public class TimestampUtils {
         // The 'time' parser for <= 7.3 doesn't like timezones.
         if (min74)
             appendTimeZone(sbuf, cal);
+        
+        // FoundationDB time parser has no fractional seconds. 
+        if (isFoundationDBServer) {
+            sbuf.delete(sbuf.length()-7, sbuf.length());
+        }
         
         showString("time", cal, x, sbuf.toString());
         

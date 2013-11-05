@@ -238,8 +238,13 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         }
 
         // Initialize timestamp stuff
-        timestampUtils = new TimestampUtils(haveMinimumServerVersion("7.4"), haveMinimumServerVersion("8.2"),
-                                            !protoConnection.getIntegerDateTimes());
+        if (isFoundationDBServer()) {
+            // false to timezones on times, false to seconds on time zones 
+            timestampUtils = new TimestampUtils(false, false, !protoConnection.getIntegerDateTimes(), isFoundationDBServer());
+        } else {
+            timestampUtils = new TimestampUtils(haveMinimumServerVersion("7.4"), haveMinimumServerVersion("8.2"),
+                                            !protoConnection.getIntegerDateTimes(), isFoundationDBServer());
+        }
 
         // Initialize common queries.
         commitQuery = getQueryExecutor().createSimpleQuery("COMMIT");
