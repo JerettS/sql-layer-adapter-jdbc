@@ -37,7 +37,12 @@ public class MiscTest extends TestCase
         Connection con = TestUtil.openDB();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("select datname from pg_database");
+        ResultSet rs = null;
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = st.executeQuery("select schema_name from information_schema.schemata");
+        } else {
+            rs = st.executeQuery("select datname from pg_database");
+        }
         assertNotNull(rs);
 
         while (rs.next())

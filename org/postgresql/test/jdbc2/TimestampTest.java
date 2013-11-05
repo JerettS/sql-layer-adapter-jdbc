@@ -99,6 +99,10 @@ public class TimestampTest extends TestCase
 
     public void testInfinity() throws SQLException
     {
+        // unsupported
+        if (TestUtil.isFoundationDBServer(con))
+            return;
+                    
         runInfinityTests(TSWTZ_TABLE, PGStatement.DATE_POSITIVE_INFINITY);
         runInfinityTests(TSWTZ_TABLE, PGStatement.DATE_NEGATIVE_INFINITY);
         runInfinityTests(TSWOTZ_TABLE, PGStatement.DATE_POSITIVE_INFINITY);
@@ -162,6 +166,8 @@ public class TimestampTest extends TestCase
      */
     public void testGetTimestampWTZ() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         Statement stmt = con.createStatement();
         TimestampUtils tsu = ((BaseConnection)con).getTimestampUtils();
 
@@ -204,6 +210,8 @@ public class TimestampTest extends TestCase
      */
     public void testSetTimestampWTZ() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         Statement stmt = con.createStatement();
         PreparedStatement pstmt = con.prepareStatement(TestUtil.insertSQL(TSWTZ_TABLE, "?"));
 
@@ -274,6 +282,8 @@ public class TimestampTest extends TestCase
      */
     public void testGetTimestampWOTZ() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         Statement stmt = con.createStatement();
         TimestampUtils tsu = ((BaseConnection)con).getTimestampUtils();
 
@@ -325,6 +335,8 @@ public class TimestampTest extends TestCase
      */
     public void testSetTimestampWOTZ() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         Statement stmt = con.createStatement();
         PreparedStatement pstmt = con.prepareStatement(TestUtil.insertSQL(TSWOTZ_TABLE, "?"));
 

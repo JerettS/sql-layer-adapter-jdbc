@@ -79,6 +79,8 @@ public class ServerCursorTest extends TestCase
     //Test binary cursor fetching
     public void testBinaryFetch() throws Exception
     {
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         createRows(1);
 
         PreparedStatement stmt = con.prepareStatement("declare test_cursor binary cursor for select * from test_fetch");

@@ -303,32 +303,36 @@ public class PreparedStatementTest extends TestCase
         }
         else
         {
-            boolean oldStdStrings = TestUtil.getStandardConformingStrings(conn);
+            
             Statement stmt = conn.createStatement();
+            boolean oldStdStrings = false;
+            if (!TestUtil.isFoundationDBServer(conn)) {
+                oldStdStrings = TestUtil.getStandardConformingStrings(conn);
+    
+                // Test with standard_conforming_strings turned off.
+                stmt.execute("SET standard_conforming_strings TO off");
+                for (int i = 0; i < testStrings.length; ++i)
+                {
+                    PreparedStatement pstmt = conn.prepareStatement("SELECT '" + testStrings[i] + "'");
+                    ResultSet rs = pstmt.executeQuery();
+                    assertTrue(rs.next());
+                    assertEquals(expected[i], rs.getString(1));
+                    rs.close();
+                    pstmt.close();
+                }
 
-            // Test with standard_conforming_strings turned off.
-            stmt.execute("SET standard_conforming_strings TO off");
-            for (int i = 0; i < testStrings.length; ++i)
-            {
-                PreparedStatement pstmt = conn.prepareStatement("SELECT '" + testStrings[i] + "'");
-                ResultSet rs = pstmt.executeQuery();
-                assertTrue(rs.next());
-                assertEquals(expected[i], rs.getString(1));
-                rs.close();
-                pstmt.close();
-            }
-
-            // Test with standard_conforming_strings turned off...
-            // ... using the escape string syntax (E'').
-            stmt.execute("SET standard_conforming_strings TO on");
-            for (int i = 0; i < testStrings.length; ++i)
-            {
-                PreparedStatement pstmt = conn.prepareStatement("SELECT E'" + testStrings[i] + "'");
-                ResultSet rs = pstmt.executeQuery();
-                assertTrue(rs.next());
-                assertEquals(expected[i], rs.getString(1));
-                rs.close();
-                pstmt.close();
+                // Test with standard_conforming_strings turned off...
+                // ... using the escape string syntax (E'').
+                stmt.execute("SET standard_conforming_strings TO on");
+                for (int i = 0; i < testStrings.length; ++i)
+                {
+                    PreparedStatement pstmt = conn.prepareStatement("SELECT E'" + testStrings[i] + "'");
+                    ResultSet rs = pstmt.executeQuery();
+                    assertTrue(rs.next());
+                    assertEquals(expected[i], rs.getString(1));
+                    rs.close();
+                    pstmt.close();
+                }
             }
             // ... using standard conforming input strings.
             for (int i = 0; i < testStrings.length; ++i)
@@ -341,7 +345,9 @@ public class PreparedStatementTest extends TestCase
                 pstmt.close();
             }
             
-            stmt.execute("SET standard_conforming_strings TO " + (oldStdStrings ? "on" : "off"));
+            if (!TestUtil.isFoundationDBServer(conn)) {
+                stmt.execute("SET standard_conforming_strings TO " + (oldStdStrings ? "on" : "off"));
+            }
             stmt.close();
         }
     }
@@ -372,6 +378,10 @@ public class PreparedStatementTest extends TestCase
         if (!TestUtil.haveMinimumServerVersion(conn, "8.0"))
             return;
 
+        // no Dollar quote support
+        if (TestUtil.isFoundationDBServer(conn)) 
+            return;
+        
         PreparedStatement st;
         ResultSet rs;
         
@@ -416,6 +426,9 @@ public class PreparedStatementTest extends TestCase
         if (!TestUtil.haveMinimumServerVersion(conn, "8.0"))
             return;
         
+        if (TestUtil.isFoundationDBServer(conn)) 
+            return;
+        
         PreparedStatement st;
         
         conn.createStatement().execute("CREATE TEMP TABLE a$b$c(a varchar, b varchar)");
@@ -433,6 +446,8 @@ public class PreparedStatementTest extends TestCase
     }
     
     public void testComments() throws SQLException {
+        if (TestUtil.isFoundationDBServer(conn)) 
+            return;
         PreparedStatement st;
         ResultSet rs;
 
@@ -454,7 +469,12 @@ public class PreparedStatementTest extends TestCase
     
     public void testDouble() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE TEMP TABLE double_tab (max_double float, min_double float, null_value float)");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE double_tab (max_double float, min_double float, null_value float)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE TEMP TABLE double_tab (max_double float, min_double float, null_value float)");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -475,12 +495,21 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
-        
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE double_tab");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
     }
     
     public void testFloat() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE TEMP TABLE float_tab (max_float real, min_float real, null_value real)");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE float_tab (max_float real, min_float real, null_value real)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE TEMP TABLE float_tab (max_float real, min_float real, null_value real)");
+        }
         pstmt.executeUpdate();
         pstmt.close();
        
@@ -501,15 +530,25 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE float_tab");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
         
     }
     
     public void testBoolean() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE TEMP TABLE bool_tab (max_val boolean, min_val boolean, null_val boolean)");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE bool_tab (max_val boolean, min_val boolean, null_val boolean)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE TEMP TABLE bool_tab (max_val boolean, min_val boolean, null_val boolean)");
+        }       
         pstmt.executeUpdate();
         pstmt.close();
-       
+
         pstmt = conn.prepareStatement( "insert into bool_tab values (?,?,?)");
         pstmt.setBoolean(1,true );
         pstmt.setBoolean(2, false);
@@ -527,12 +566,23 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE bool_tab");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
+        
         
     }
     
     public void testSetFloatInteger() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE temp TABLE float_tab (max_val float8, min_val float, null_val float8)");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE float_tab (max_val float, min_val float, null_val float)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE temp TABLE float_tab (max_val float8, min_val float, null_val float8)");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -558,10 +608,21 @@ public class PreparedStatementTest extends TestCase
         rs.close();
         pstmt.close();
         
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE float_tab");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
+
     }
     public void testSetFloatString() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE temp TABLE float_tab (max_val float8, min_val float8, null_val float8)");
+        PreparedStatement pstmt; 
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE float_tab (max_val float, min_val float, null_val float)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE temp TABLE float_tab (max_val float8, min_val float8, null_val float8)");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -585,12 +646,22 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
-        
+
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE float_tab");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
     }
     
     public void testSetFloatBigDecimal() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE temp TABLE float_tab (max_val float8, min_val float8, null_val float8)");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE float_tab (max_val float, min_val float, null_val float)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE temp TABLE float_tab (max_val float8, min_val float8, null_val float8)");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -614,11 +685,21 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
-        
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE float_tab");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
     }
     public void testSetTinyIntFloat() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE temp TABLE tiny_int (max_val int4, min_val int4, null_val int4)");
+        
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE tiny_int (max_val int, min_val int, null_val int)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE temp TABLE tiny_int (max_val int4, min_val int4, null_val int4)");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -642,12 +723,21 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
-        
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE tiny_int");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
     }   
 
     public void testSetSmallIntFloat() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE temp TABLE small_int (max_val int4, min_val int4, null_val int4)");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE small_int (max_val int, min_val int, null_val int)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE temp TABLE small_int (max_val int4, min_val int4, null_val int4)");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -671,11 +761,20 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
-        
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE small_int");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
     }   
     public void testSetIntFloat() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE temp TABLE int_TAB (max_val int4, min_val int4, null_val int4)");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE int_TAB (max_val int, min_val int, null_val int)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE temp TABLE int_TAB (max_val int4, min_val int4, null_val int4)");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -699,11 +798,21 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE int_TAB");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
         
     }
     public void testSetBooleanDouble() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE temp TABLE double_tab (max_val float, min_val float, null_val float)");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE double_tab (max_val float, min_val float, null_val float)");
+        } else {
+            pstmt = conn.prepareStatement("CREATE temp TABLE double_tab (max_val float, min_val float, null_val float)");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -727,11 +836,20 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
-        
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE double_tab");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
     }
     public void testSetBooleanNumeric() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE temp TABLE numeric_tab (max_val numeric(30,15), min_val numeric(30,15), null_val numeric(30,15))");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE numeric_tab (max_val numeric(30,15), min_val numeric(30,15), null_val numeric(30,15))");
+        } else {
+            pstmt = conn.prepareStatement("CREATE temp TABLE numeric_tab (max_val numeric(30,15), min_val numeric(30,15), null_val numeric(30,15))");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -755,11 +873,20 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
-        
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE numeric_tab");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
     }
     public void testSetBooleanDecimal() throws SQLException
     {
-        PreparedStatement pstmt = conn.prepareStatement("CREATE temp TABLE DECIMAL_TAB (max_val numeric(30,15), min_val numeric(30,15), null_val numeric(30,15))");
+        PreparedStatement pstmt;
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("CREATE TABLE DECIMAL_TAB (max_val numeric(30,15), min_val numeric(30,15), null_val numeric(30,15))");
+        } else {
+            pstmt = conn.prepareStatement("CREATE temp TABLE DECIMAL_TAB (max_val numeric(30,15), min_val numeric(30,15), null_val numeric(30,15))");
+        }
         pstmt.executeUpdate();
         pstmt.close();
         
@@ -783,6 +910,11 @@ public class PreparedStatementTest extends TestCase
         assertTrue( rs.wasNull() );
         rs.close();
         pstmt.close();
+        if (TestUtil.isFoundationDBServer(conn)) {
+            pstmt = conn.prepareStatement("DROP TABLE decimal_tab");
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
         
     }
 

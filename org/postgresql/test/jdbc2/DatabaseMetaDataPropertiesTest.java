@@ -114,7 +114,7 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         if (TestUtil.isFoundationDBServer(con)) {
             assertEquals(8, indexMaxKeys);
         }
-        if (TestUtil.haveMinimumServerVersion(con, "7.3"))
+        else if (TestUtil.haveMinimumServerVersion(con, "7.3"))
         {
             assertEquals(32, indexMaxKeys);
         }

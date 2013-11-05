@@ -34,7 +34,7 @@ public class DatabaseMetaDataTest extends TestCase
     {
         con = TestUtil.openDB();
         if(TestUtil.isFoundationDBServer(con)) {
-            TestUtil.createTable( con, "metadatatest", "id int, name text, updated timestamp, colour text, quest text" );
+            TestUtil.createTable( con, "metadatatest", "id int, name varchar(100), updated timestamp, colour text, quest text" );
         } else {
             TestUtil.createTable( con, "metadatatest", "id int4, name text, updated timestamptz, colour text, quest text" );
         }
@@ -939,10 +939,18 @@ public class DatabaseMetaDataTest extends TestCase
         DatabaseMetaData dbmd = con.getMetaData();
         ResultSet rs = dbmd.getTables( null, null, "a'", new String[] {"TABLE"});
         assertTrue(rs.next());
-        rs = dbmd.getTables( null, null, "a\\\\", new String[] {"TABLE"});
-        assertTrue(rs.next());
-        rs = dbmd.getTables( null, null, "a\\", new String[] {"TABLE"});
-        assertTrue(!rs.next());
+        
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = dbmd.getTables( null, null, "a\\\\", new String[] {"TABLE"});
+            assertTrue(!rs.next());
+            rs = dbmd.getTables( null, null, "a\\", new String[] {"TABLE"});
+            assertTrue(rs.next());
+        } else {
+            rs = dbmd.getTables( null, null, "a\\\\", new String[] {"TABLE"});
+            assertTrue(rs.next());
+            rs = dbmd.getTables( null, null, "a\\", new String[] {"TABLE"});
+            assertTrue(!rs.next());
+        }
     }
 
     public void testSearchStringEscape() throws Exception {

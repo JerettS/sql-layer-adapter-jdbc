@@ -60,7 +60,9 @@ public class Jdbc2TestSuite extends TestSuite
         suite.addTestSuite(DateTest.class);
         suite.addTestSuite(TimeTest.class);
         suite.addTestSuite(TimestampTest.class);
-        suite.addTestSuite(TimezoneTest.class);
+        if (!TestUtil.isFoundationDBServer(conn)) {
+            suite.addTestSuite(TimezoneTest.class);
+        }
 
         // PreparedStatement
         suite.addTestSuite(PreparedStatementTest.class);
@@ -79,16 +81,18 @@ public class Jdbc2TestSuite extends TestSuite
         // features some applications require.
         suite.addTestSuite(JBuilderTest.class);
         suite.addTestSuite(MiscTest.class);
-        suite.addTestSuite(NotifyTest.class);
-        suite.addTestSuite(DatabaseEncodingTest.class);
+        if (!TestUtil.isFoundationDBServer(conn)) {
+            suite.addTestSuite(NotifyTest.class);
+            suite.addTestSuite(DatabaseEncodingTest.class);
+        }
 
         // Fastpath/LargeObject
         if (!TestUtil.isFoundationDBServer(conn)) {
             suite.addTestSuite(BlobTest.class);
             suite.addTestSuite(OID74Test.class);
+            // needs table OIDs returned in RowDescription message.
+            suite.addTestSuite(UpdateableResultTest.class );
         }
-
-        suite.addTestSuite(UpdateableResultTest.class );
 
         suite.addTestSuite(CallableStmtTest.class );
         suite.addTestSuite(CursorFetchTest.class);

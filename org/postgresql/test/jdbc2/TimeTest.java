@@ -65,8 +65,13 @@ public class TimeTest extends TestCase
 
         // set the time to midnight to make this easy
         assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testtime", "'00:00:00','00:00:00'")));
-        assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testtime", "'00:00:00.1','00:00:00.01'")));
-        assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testtime", "CAST(CAST(now() AS timestamp without time zone) AS time),now()")));
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testtime", "'00:00:01','00:00:01'")));
+            assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testtime", "CAST(CAST(now() AS timestamp) AS time),now()")));
+        } else {
+            assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testtime", "'00:00:00.1','00:00:00.01'")));
+            assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testtime", "CAST(CAST(now() AS timestamp without time zone) AS time),now()")));
+        }
         ResultSet rs = stmt.executeQuery(TestUtil.selectSQL("testtime", "tm,tz"));
         assertNotNull(rs);
         assertTrue(rs.next());
@@ -89,40 +94,47 @@ public class TimeTest extends TestCase
 
         time = rs.getTime(1);
         assertNotNull(time);
-        assertEquals(100, extractMillis(time.getTime()));
+        if (!TestUtil.isFoundationDBServer(con)) {
+            assertEquals(100, extractMillis(time.getTime()));
+        }
         timestamp = rs.getTimestamp(1);
         assertNotNull(timestamp);
 
         // Pre 1.4 JVM's considered the nanos field completely separate
         // and wouldn't return it in getTime()
-        if (TestUtil.haveMinimumJVMVersion("1.4"))
-        {
-            assertEquals(100, extractMillis(timestamp.getTime()));
+        if (!TestUtil.isFoundationDBServer(con)) {
+            if (TestUtil.haveMinimumJVMVersion("1.4"))
+            {
+                assertEquals(100, extractMillis(timestamp.getTime()));
+            }
+            else
+            {
+                assertEquals(100, extractMillis(timestamp.getTime() + timestamp.getNanos() / 1000000));
+            }
+            assertEquals(100000000, timestamp.getNanos());
         }
-        else
-        {
-            assertEquals(100, extractMillis(timestamp.getTime() + timestamp.getNanos() / 1000000));
-        }
-        assertEquals(100000000, timestamp.getNanos());
-
         timetz = rs.getTime(2);
         assertNotNull(timetz);
-        assertEquals(10, extractMillis(timetz.getTime()));
+        if (!TestUtil.isFoundationDBServer(con)) {
+            assertEquals(10, extractMillis(timetz.getTime()));
+        }
         timestamptz = rs.getTimestamp(2);
         assertNotNull(timestamptz);
 
         // Pre 1.4 JVM's considered the nanos field completely separate
         // and wouldn't return it in getTime()
-        if (TestUtil.haveMinimumJVMVersion("1.4"))
-        {
-            assertEquals(10, extractMillis(timestamptz.getTime()));
-        }
-        else
-        {
-            assertEquals(10, extractMillis(timestamptz.getTime() + timestamptz.getNanos() / 1000000));
-        }
-        assertEquals(10000000, timestamptz.getNanos());
+        if (!TestUtil.isFoundationDBServer(con)) {
 
+            if (TestUtil.haveMinimumJVMVersion("1.4"))
+            {
+                assertEquals(10, extractMillis(timestamptz.getTime()));
+            }
+            else
+            {
+                assertEquals(10, extractMillis(timestamptz.getTime() + timestamptz.getNanos() / 1000000));
+            }
+            assertEquals(10000000, timestamptz.getNanos());
+        }
         assertTrue(rs.next());
 
         time = rs.getTime(1);

@@ -41,7 +41,8 @@ public class CallableStmtTest extends TestCase
             
             stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getInt (a int) RETURNS int" +
                     " LANGUAGE javascript PARAMETER STYLE variables AS '42'");
-            
+            stmt.execute("CREATE OR REPLACE FUNCTION testspg__getShort (a smallint) RETURNS smallint" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS '42'");
             stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getNumeric (a numeric) RETURNS numeric" +
                     " LANGUAGE javascript PARAMETER STYLE variables AS '42'");
             
@@ -89,7 +90,7 @@ public class CallableStmtTest extends TestCase
             stmt.execute("drop FUNCTION testspg__getString");
             stmt.execute("drop FUNCTION testspg__getDouble");
             stmt.execute("drop PROCEDURE testspg__getVoid");
-            stmt.execute("drop FUNCTION testsgp__getInt");
+            stmt.execute("drop FUNCTION testspg__getInt");
             stmt.execute("drop FUNCTION testspg__getShort");
             stmt.execute("DROP FUNCTION testspg__getNumeric");
             stmt.execute("drop FUNCTION testspg__getNumericWithoutArg");
@@ -212,6 +213,8 @@ public class CallableStmtTest extends TestCase
 
     public void testGetArray() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         CallableStatement call = con.prepareCall(func + pkgName + "getarray()}");
         call.registerOutParameter(1, Types.ARRAY);
         call.execute();
@@ -226,6 +229,8 @@ public class CallableStmtTest extends TestCase
 
     public void testRaiseNotice() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         CallableStatement call = con.prepareCall(func + pkgName + "raisenotice()}");
         call.registerOutParameter(1, Types.INTEGER);
         call.execute();
