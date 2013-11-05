@@ -249,7 +249,7 @@ public class BatchExecuteTest extends TestCase
     {
         Statement stmt = con.createStatement();
         if (TestUtil.isFoundationDBServer(con)) {
-            stmt.addBatch ("select cast ('00:00:00.1' as time) as time;");
+            stmt.addBatch ("select 1/0;");
         } else {
             stmt.addBatch("CREATE TEMP TABLE unused (a int primary key)");
         }

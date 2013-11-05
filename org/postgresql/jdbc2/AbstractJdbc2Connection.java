@@ -881,6 +881,9 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
 
         String level = null;
 
+        if (isFoundationDBServer) {
+            return Connection.TRANSACTION_SERIALIZABLE;
+        }
         if (haveMinimumServerVersion("7.3"))
         {
             // 7.3+ returns the level as a query result.
@@ -952,7 +955,11 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         if (isolationLevelName == null)
             throw new PSQLException(GT.tr("Transaction isolation level {0} not supported.", new Integer(level)), PSQLState.NOT_IMPLEMENTED);
 
-        String isolationLevelSQL = "SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL " + isolationLevelName;
+        String isolationLevelSQL;
+        if (isFoundationDBServer)
+            isolationLevelSQL = "SET TRANSACTION ISOLATION LEVEL " + isolationLevelName;
+        else
+            isolationLevelSQL = "SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL " + isolationLevelName;
         execSQLUpdate(isolationLevelSQL); // nb: no BEGIN triggered
     }
 
@@ -960,6 +967,9 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     {
         boolean pg80 = haveMinimumServerVersion("8.0");
 
+        if (isFoundationDBServer && level != Connection.TRANSACTION_SERIALIZABLE) 
+            return null;
+        
         if (level == Connection.TRANSACTION_READ_COMMITTED)
         {
             return "READ COMMITTED";
