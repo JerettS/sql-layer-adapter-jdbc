@@ -112,7 +112,7 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         assertNotNull(dbmd);
         int indexMaxKeys = dbmd.getMaxColumnsInIndex();
         if (TestUtil.isFoundationDBServer(con)) {
-            assertEquals(0, indexMaxKeys);
+            assertEquals(64, indexMaxKeys);
         }
         else if (TestUtil.haveMinimumServerVersion(con, "7.3"))
         {

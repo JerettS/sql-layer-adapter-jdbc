@@ -49,7 +49,8 @@ public abstract class AbstractJdbc2DatabaseMetaData
         {
             String sql;
             if (connection.isFoundationDBServer()) {
-                sql = "SELECT current_value FROM information_schema.server_parameters WHERE parameter_name = 'fdbsql.pgsql.max_index_keys'";
+                INDEX_MAX_KEYS = 64;
+                return INDEX_MAX_KEYS;
             } else 
             if (connection.haveMinimumServerVersion("8.0")) {
                 sql = "SELECT setting FROM pg_catalog.pg_settings WHERE name='max_index_keys'";
@@ -81,7 +82,8 @@ public abstract class AbstractJdbc2DatabaseMetaData
         {
             String sql;
             if (connection.isFoundationDBServer()) {
-                sql = "SELECT current_value as typelen FROM information_schema.server_parameters WHERE parameter_name = 'fdbsql.pgsql.max_name_length'";
+                NAMEDATALEN=129;
+                return NAMEDATALEN - 1;
             } else
             if (connection.haveMinimumServerVersion("7.3"))
             {
