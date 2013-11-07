@@ -249,7 +249,7 @@ public class BatchExecuteTest extends TestCase
     {
         Statement stmt = con.createStatement();
         if (TestUtil.isFoundationDBServer(con)) {
-            stmt.addBatch ("select 1/0;");
+            stmt.addBatch ("CREATE TABLE unused (a int not null primary key)");
         } else {
             stmt.addBatch("CREATE TEMP TABLE unused (a int primary key)");
         }
@@ -257,6 +257,9 @@ public class BatchExecuteTest extends TestCase
         // Execute an empty batch to clear warnings.
         stmt.executeBatch();
         assertNull(stmt.getWarnings());
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.executeUpdate("DROP TABLE unused");
+        }
         stmt.close();
     }
 

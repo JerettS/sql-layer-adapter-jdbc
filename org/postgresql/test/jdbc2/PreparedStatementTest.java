@@ -911,11 +911,8 @@ public class PreparedStatementTest extends TestCase
         rs.close();
         pstmt.close();
         if (TestUtil.isFoundationDBServer(conn)) {
-            pstmt = conn.prepareStatement("DROP TABLE decimal_tab");
-            pstmt.executeUpdate();
-            pstmt.close();
+            conn.createStatement().executeUpdate("DROP TABLE DECIMAL_TAB");
         }
-        
     }
 
     public void testUnknownSetObject() throws SQLException
