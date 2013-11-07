@@ -2529,6 +2529,16 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
             throw new PSQLException (GT.tr("Malformed function or procedure escape syntax at offset {0}.", new Integer(i)),
                                      PSQLState.STATEMENT_NOT_ALLOWED_IN_FUNCTION_CALL);
 
+        if (((AbstractJdbc2Connection)connection).isFoundationDBServer()) {
+            StringBuffer sb = new StringBuffer();
+            if (outParmBeforeFunc) {
+                sb.append("? = ");
+            }
+            sb.append("call ");
+            sb.append(p_sql.substring(startIndex,endIndex));
+            return sb.toString();
+        } else 
+            
         if (connection.haveMinimumServerVersion("8.1") && ((AbstractJdbc2Connection)connection).getProtocolVersion() == 3)
         {
             String s = p_sql.substring(startIndex, endIndex );

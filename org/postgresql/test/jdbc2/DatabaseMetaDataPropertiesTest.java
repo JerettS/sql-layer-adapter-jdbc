@@ -89,7 +89,11 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         assertNotNull(dbmd);
 
         assertTrue(dbmd.supportsOuterJoins());
-        assertTrue(dbmd.supportsFullOuterJoins());
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertFalse(dbmd.supportsFullOuterJoins());
+        } else {
+            assertTrue(dbmd.supportsFullOuterJoins());
+        }
         assertTrue(dbmd.supportsLimitedOuterJoins());
     }
 
@@ -107,7 +111,10 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         DatabaseMetaData dbmd = con.getMetaData();
         assertNotNull(dbmd);
         int indexMaxKeys = dbmd.getMaxColumnsInIndex();
-        if (TestUtil.haveMinimumServerVersion(con, "7.3"))
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertEquals(64, indexMaxKeys);
+        }
+        else if (TestUtil.haveMinimumServerVersion(con, "7.3"))
         {
             assertEquals(32, indexMaxKeys);
         }
@@ -124,9 +131,13 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
 
         assertTrue(!dbmd.nullsAreSortedAtStart());
         assertTrue( dbmd.nullsAreSortedAtEnd() != TestUtil.haveMinimumServerVersion(con, "7.2"));
-        assertTrue( dbmd.nullsAreSortedHigh() == TestUtil.haveMinimumServerVersion(con, "7.2"));
-        assertTrue(!dbmd.nullsAreSortedLow());
-
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertTrue(!dbmd.nullsAreSortedHigh());
+            assertTrue(dbmd.nullsAreSortedLow());
+        } else {
+            assertTrue( dbmd.nullsAreSortedHigh() == TestUtil.haveMinimumServerVersion(con, "7.2"));
+            assertTrue(!dbmd.nullsAreSortedLow());
+        }
         assertTrue(dbmd.nullPlusNonNullIsNull());
 
         assertTrue(dbmd.supportsNonNullableColumns());
@@ -214,7 +225,11 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         DatabaseMetaData dbmd = con.getMetaData();
         assertNotNull(dbmd);
 
-        assertTrue(dbmd.getDatabaseProductName().equals("PostgreSQL"));
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertTrue(dbmd.getDatabaseProductName().equals("FoundationDB SQL Layer"));
+        } else {
+            assertTrue(dbmd.getDatabaseProductName().equals("PostgreSQL"));
+        }
     }
 
     public void testDriverVersioning() throws SQLException
@@ -224,7 +239,7 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
 
         assertTrue(dbmd.getDriverVersion().equals(org.postgresql.Driver.getVersion()));
         assertTrue(dbmd.getDriverMajorVersion() == org.postgresql.Driver.MAJORVERSION);
-        assertTrue(dbmd.getDriverMinorVersion() == org.postgresql.Driver.MINORVERSION);
+        assertTrue("dbmd minor version is: " + dbmd.getDriverMinorVersion() , dbmd.getDriverMinorVersion() == org.postgresql.Driver.MINORVERSION);
     }
 }
 

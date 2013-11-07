@@ -37,48 +37,65 @@ public class Jdbc3CallableStatementTest extends TestCase
     {
         con = TestUtil.openDB();
         Statement stmt = con.createStatement ();
-        stmt.execute("create temp table numeric_tab (MAX_VAL NUMERIC(30,15), MIN_VAL NUMERIC(30,15), NULL_VAL NUMERIC(30,15) NULL)");
-        stmt.execute("insert into numeric_tab values ( 999999999999999,0.000000000000001, null)");
-        stmt.execute("CREATE OR REPLACE FUNCTION myiofunc(a INOUT int, b OUT int) AS 'BEGIN b := a; a := 1; END;' LANGUAGE plpgsql");
-        stmt.execute("CREATE OR REPLACE FUNCTION myif(a INOUT int, b IN int) AS 'BEGIN a := b; END;' LANGUAGE plpgsql");
-
-        stmt.execute("create or replace function "
-                    			 + "Numeric_Proc( OUT IMAX NUMERIC(30,15), OUT IMIN NUMERIC(30,15), OUT INUL NUMERIC(30,15))  as "
-                    			 + "'begin " 
-                    			 + 	"select max_val into imax from numeric_tab;"
-                    			 + 	"select min_val into imin from numeric_tab;"
-                    			 + 	"select null_val into inul from numeric_tab;"
-                    			 		
-                    			 + " end;' "
-                    			 + "language plpgsql;");
-        
-        stmt.execute( "CREATE OR REPLACE FUNCTION test_somein_someout("
-                + "pa IN int4,"
-                + "pb OUT varchar,"  
-                + "pc OUT int8)"
-                + " AS "
-                
-                + "'begin "
-                + "pb := ''out'';"
-                + "pc := pa + 1;"
-                + "end;'"
-
-                + "LANGUAGE plpgsql VOLATILE;"
-
-                 );  
-        stmt.execute("CREATE OR REPLACE FUNCTION test_allinout("
-                + "pa INOUT int4,"
-                + "pb INOUT varchar," 
-                + "pc INOUT int8)"
-                + " AS " 
-                + "'begin "
-                + "pa := pa + 1;"
-                + "pb := ''foo out'';"
-                + "pc := pa + 1;"
-                + "end;'"
-                + "LANGUAGE plpgsql VOLATILE;"
-            );
-        
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("drop table if exists numeric_tab");
+            stmt.execute("create table numeric_tab (MAX_VAL NUMERIC(30,15), MIN_VAL NUMERIC(30,15), NULL_VAL NUMERIC(30,15) NULL)");
+            stmt.execute("insert into numeric_tab values ( 999999999999999,0.000000000000001, null)");
+            
+            stmt.execute("create or replace procedure myiofunc (INOUT a int, OUT b int) LANGUAGE javascript PARAMETER STYLE variables AS 'b = a; a = 1;'");
+            stmt.execute("create or replace procedure myif (INOUT a int, IN b int) LANGUAGE javascript PARAMETER STYLE variables AS 'a = b'");
+            stmt.execute("create or replace procedure test_somein_someout(IN pa INT, OUT pb VARCHAR(10), OUT pc BIGINT)" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS $$ " +
+                    " pb = 'out'; pc = pa + 1; " +
+                    " $$");
+            stmt.execute("create or replace procedure test_allinout (INOUT pa int, INOUT pb VARCHAR(10), INOUT pc BIGINT)" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS $$" +
+                    " pa = pa +1; pb = 'foo.out'; pc = pa + 1;" +
+                    " $$");
+            
+        } else {
+            stmt.execute("create temp table numeric_tab (MAX_VAL NUMERIC(30,15), MIN_VAL NUMERIC(30,15), NULL_VAL NUMERIC(30,15) NULL)");
+            stmt.execute("insert into numeric_tab values ( 999999999999999,0.000000000000001, null)");
+            stmt.execute("CREATE OR REPLACE FUNCTION myiofunc(a INOUT int, b OUT int) AS 'BEGIN b := a; a := 1; END;' LANGUAGE plpgsql");
+            stmt.execute("CREATE OR REPLACE FUNCTION myif(a INOUT int, b IN int) AS 'BEGIN a := b; END;' LANGUAGE plpgsql");
+    
+            stmt.execute("create or replace function "
+                        			 + "Numeric_Proc( OUT IMAX NUMERIC(30,15), OUT IMIN NUMERIC(30,15), OUT INUL NUMERIC(30,15))  as "
+                        			 + "'begin " 
+                        			 + 	"select max_val into imax from numeric_tab;"
+                        			 + 	"select min_val into imin from numeric_tab;"
+                        			 + 	"select null_val into inul from numeric_tab;"
+                        			 		
+                        			 + " end;' "
+                        			 + "language plpgsql;");
+            
+            stmt.execute( "CREATE OR REPLACE FUNCTION test_somein_someout("
+                    + "pa IN int4,"
+                    + "pb OUT varchar,"  
+                    + "pc OUT int8)"
+                    + " AS "
+                    
+                    + "'begin "
+                    + "pb := ''out'';"
+                    + "pc := pa + 1;"
+                    + "end;'"
+    
+                    + "LANGUAGE plpgsql VOLATILE;"
+    
+                     );  
+            stmt.execute("CREATE OR REPLACE FUNCTION test_allinout("
+                    + "pa INOUT int4,"
+                    + "pb INOUT varchar," 
+                    + "pc INOUT int8)"
+                    + " AS " 
+                    + "'begin "
+                    + "pa := pa + 1;"
+                    + "pb := ''foo out'';"
+                    + "pc := pa + 1;"
+                    + "end;'"
+                    + "LANGUAGE plpgsql VOLATILE;"
+                );
+        }
         
     }
     /* (non-Javadoc)
@@ -87,18 +104,30 @@ public class Jdbc3CallableStatementTest extends TestCase
     protected void tearDown() throws Exception
     {
         Statement stmt = con.createStatement();
-        stmt.execute("drop function Numeric_Proc(out decimal, out decimal, out decimal)");
-        stmt.execute("drop function test_somein_someout(int4)");
-        stmt.execute("drop function test_allinout( inout int4, inout varchar, inout int8)");
-        stmt.execute("drop function myiofunc(a INOUT int, b OUT int) ");
-        stmt.execute("drop function myif(a INOUT int, b IN int)");
+        
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("DROP TABLE if exists numeric_tab");
+            
+            stmt.execute("drop procedure test_somein_someout");
+            stmt.execute("drop procedure test_allinout");
+            stmt.execute("drop procedure myiofunc");
+            stmt.execute("drop procedure myif;");
+            
+        } else {
+            stmt.execute("drop function Numeric_Proc(out decimal, out decimal, out decimal)");
+            stmt.execute("drop function test_somein_someout(int4)");
+            stmt.execute("drop function test_allinout( inout int4, inout varchar, inout int8)");
+            stmt.execute("drop function myiofunc(a INOUT int, b OUT int) ");
+            stmt.execute("drop function myif(a INOUT int, b IN int)");
+        }
         stmt.close();
         TestUtil.closeDB(con);
     }
 
     public void testSomeInOut() throws Throwable
     {
-        CallableStatement call = con.prepareCall( "{ call test_somein_someout(?,?,?) }" ) ;
+        CallableStatement call = null;
+        call = con.prepareCall( "{ call test_somein_someout(?,?,?) }" ) ;
         
         call.registerOutParameter(2,Types.VARCHAR);
         call.registerOutParameter(3,Types.BIGINT);
@@ -162,7 +191,10 @@ public class Jdbc3CallableStatementTest extends TestCase
 
     public void testNumeric() throws Throwable
     {
-        
+        if (TestUtil.isFoundationDBServer(con)) {
+            // https://trello.com/c/izukbykc
+            return; 
+        }
         CallableStatement call = con.prepareCall( "{ call Numeric_Proc(?,?,?) }" ) ;
     
         call.registerOutParameter(1,Types.NUMERIC,15);
@@ -193,6 +225,11 @@ public class Jdbc3CallableStatementTest extends TestCase
         try
         {
             Statement stmt = con.createStatement();
+            if (TestUtil.isFoundationDBServer(con)) {
+                // https://trello.com/c/izukbykc
+                return;
+            }
+            
             stmt.execute("create temp table decimal_tab ( max_val numeric(30,15), min_val numeric(30,15), nul_val numeric(30,15) )");
             stmt.execute("insert into decimal_tab values (999999999999999.000000000000000,0.000000000000001,null)");
     
@@ -245,17 +282,34 @@ public class Jdbc3CallableStatementTest extends TestCase
         try
         {
 	        Statement stmt = con.createStatement();
-	        stmt.execute("create temp table vartab( max_val text, min_val text)");
-	        stmt.execute("insert into vartab values ('a','b')");
-	        boolean ret = stmt.execute("create or replace function "
-	   			 + "updatevarchar( in imax text, in imin text)  returns int as "
-	   			 + "'begin " 
-	   			 + 	"update vartab set max_val = imax;"
-	   			 + 	"update vartab set min_val = imin;"
-	   			 +  "return 0;"
-	   			 + " end;' "
-	   			 + "language plpgsql;");
-	        stmt.close();
+	        if (TestUtil.isFoundationDBServer(con)) {
+	            stmt.execute ("create table vartab (max_val text, min_val text)");
+	            stmt.execute ("insert into vartab values ('a', 'b')");
+	            stmt.execute("create or replace function" + 
+	                    " updatevarchar(imax text, imin text) RETURNS int"+
+	                    " language javascript parameter style variables as $$"+
+	                    "  stmt = java.sql.DriverManager.getConnection('jdbc:default:connection').prepareStatement('UPDATE vartab SET max_val = ?');" +
+	                    "  stmt.setString(1,imax);"+
+	                    "  stmt.executeUpdate();" +
+	                    "  stmt.close();" +
+                        "  stmt = java.sql.DriverManager.getConnection('jdbc:default:connection').prepareStatement('UPDATE vartab SET min_val = ?');" +
+                        "  stmt.setString(1,imin);"+
+                        "  stmt.executeUpdate();" +
+                        "  stmt.close();" +
+	                    "  0; $$");
+	        } else {
+                stmt.execute("create temp table vartab( max_val text, min_val text)");
+                stmt.execute("insert into vartab values ('a','b')");
+                boolean ret = stmt.execute("create or replace function "
+           			 + "updatevarchar( in imax text, in imin text)  returns int as "
+           			 + "'begin " 
+           			 + 	"update vartab set max_val = imax;"
+           			 + 	"update vartab set min_val = imin;"
+           			 +  "return 0;"
+           			 + " end;' "
+           			 + "language plpgsql;");
+	        }
+            stmt.close();
         }
         catch (Exception ex)
         {
@@ -287,7 +341,12 @@ public class Jdbc3CallableStatementTest extends TestCase
             try
             {
                 Statement dstmt = con.createStatement();
-                dstmt.execute("drop function updatevarchar(text,text)");
+                if (TestUtil.isFoundationDBServer(con)) {
+                    dstmt.execute("drop function updatevarchar");
+                    dstmt.execute("drop table vartab");
+                } else {
+                    dstmt.execute("drop function updatevarchar(text,text)");
+                }
             }
             catch (Exception ex){}
         }
@@ -296,7 +355,11 @@ public class Jdbc3CallableStatementTest extends TestCase
     {
         try
         {
-	        Statement stmt = con.createStatement();
+            if (TestUtil.isFoundationDBServer(con)) {
+                // https://trello.com/c/izukbykc
+                return;
+            }
+            Statement stmt = con.createStatement();
 	        stmt.execute(createBitTab);
 	        stmt.execute(insertBitTab);
 	        boolean ret = stmt.execute("create or replace function "

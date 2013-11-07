@@ -100,4 +100,13 @@ public class PSQLState implements java.io.Serializable
 
     public final static PSQLState UNEXPECTED_ERROR = new PSQLState("99999");
 
+    /* SQL States returned by the FoudationDB SQL layer */
+    /**
+     * Prepared statement has been invalidated by DDL
+     */
+    public final static PSQLState FDB_STALE_STATEMENT = new PSQLState("0A50A");
+    /**
+     * FDB SQL syntanx error.
+     */
+    public final static PSQLState FDB_SQL_PARSE_EXCEPTION = new PSQLState ("42000");
 }

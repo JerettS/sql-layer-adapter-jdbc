@@ -22,13 +22,19 @@ public class ResultSetTest extends TestCase {
     protected void setUp() throws Exception {
         _conn = TestUtil.openDB();
         Statement stmt = _conn.createStatement();
-        stmt.execute("CREATE TEMP TABLE hold(a int)");
+        if (TestUtil.isFoundationDBServer(_conn)) {
+            stmt.execute("DROP TABLE IF EXISTS hold");
+            stmt.execute("create TABLE hold (a int)");
+        } else {
+            stmt.execute("CREATE TEMP TABLE hold(a int)");
+        }
         stmt.execute("INSERT INTO hold VALUES (1)");
         stmt.execute("INSERT INTO hold VALUES (2)");
         stmt.close();
     }
 
     protected void tearDown() throws SQLException {
+        _conn.setAutoCommit(true);
         Statement stmt = _conn.createStatement();
         stmt.execute("DROP TABLE hold");
         stmt.close();

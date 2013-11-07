@@ -64,7 +64,11 @@ public class ResultSetTest extends TestCase
         stmt.executeUpdate(
             "INSERT INTO testboolstring VALUES('this is not true')");
 
-        TestUtil.createTable(con, "testnumeric", "a numeric");
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, "testnumeric", "a numeric (30,6)");
+        } else {
+            TestUtil.createTable(con, "testnumeric", "a numeric");
+        }
         stmt.executeUpdate("INSERT INTO testnumeric VALUES('1.0')");
         stmt.executeUpdate("INSERT INTO testnumeric VALUES('0.0')");
         stmt.executeUpdate("INSERT INTO testnumeric VALUES('-1.0')");
@@ -207,32 +211,32 @@ public class ResultSetTest extends TestCase
             assertEquals(true, rs.getBoolean(1));
         }
 
-        /*
-        pstmt = con.prepareStatement("insert into testbit values (?)");
+        // no bit support
+        if (!TestUtil.isFoundationDBServer(con)) {
+            pstmt = con.prepareStatement("insert into testbit values (?)");
 
-                      pstmt.setObject(1, new Float(0), java.sql.Types.BIT);
-                      pstmt.executeUpdate();
-
-                      pstmt.setObject(1, new Float(1), java.sql.Types.BIT);
-                      pstmt.executeUpdate();
-
-                      pstmt.setObject(1, "false", java.sql.Types.BIT);
-                      pstmt.executeUpdate();
-
-                      pstmt.setObject(1, "true", java.sql.Types.BIT);
-                      pstmt.executeUpdate();
-
-        rs = con.createStatement().executeQuery("select * from testbit");
-
-                      for (int i = 0;i<2; i++)
-                      {
+            pstmt.setObject(1, new Float(0), java.sql.Types.BIT);
+            pstmt.executeUpdate();
+            
+            pstmt.setObject(1, new Float(1), java.sql.Types.BIT);
+            pstmt.executeUpdate();
+            
+            pstmt.setObject(1, "false", java.sql.Types.BIT);
+            pstmt.executeUpdate();
+            
+            pstmt.setObject(1, "true", java.sql.Types.BIT);
+            pstmt.executeUpdate();
+    
+            rs = con.createStatement().executeQuery("select * from testbit");
+    
+            for (int i = 0;i<2; i++)
+            {
                 assertTrue(rs.next());
-                       assertEquals(false, rs.getBoolean(1));
-                              assertTrue(rs.next());
-                              assertEquals(true, rs.getBoolean(1));
-                      }
-        */
-
+                assertEquals(false, rs.getBoolean(1));
+                assertTrue(rs.next());
+                assertEquals(true, rs.getBoolean(1));
+            }
+        }
         rs = con.createStatement().executeQuery("select * from testboolstring");
 
         for (int i = 0;i < 4; i++)
@@ -268,7 +272,13 @@ public class ResultSetTest extends TestCase
         assertEquals(1, rs.getByte(1));
 
         assertTrue(rs.next());
-        assertEquals( -2, rs.getByte(1));
+        // Because FDB returns fields as text (always currently),
+        // getByte() -> BigDecimal().getBigInteger() -> Rounds Down = -3
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertEquals(-2, rs.getByte(1));
+        } else {
+            assertEquals( -2, rs.getByte(1));
+        }
 
         while (rs.next())
         {
@@ -302,7 +312,13 @@ public class ResultSetTest extends TestCase
         assertEquals(1, rs.getShort(1));
 
         assertTrue(rs.next());
-        assertEquals( -2, rs.getShort(1));
+        // Because FDB returns fields as text (always currently),
+        // getShort() -> BigDecimal().getBigInteger() -> Rounds Down = -3
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertEquals(-2, rs.getShort(1));
+        } else {
+            assertEquals( -2, rs.getShort(1));
+        }
 
         while (rs.next())
         {
@@ -336,7 +352,13 @@ public class ResultSetTest extends TestCase
         assertEquals(1, rs.getInt(1));
 
         assertTrue(rs.next());
-        assertEquals( -2, rs.getInt(1));
+        // Because FDB returns fields as text (always currently),
+        // getInt() -> BigDecimal().getBigInteger() -> Rounds Down = -3
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertEquals(-2, rs.getInt(1));
+        } else {
+            assertEquals( -2, rs.getInt(1));
+        }
 
         assertTrue(rs.next());
         assertEquals(99999, rs.getInt(1));
@@ -388,7 +410,13 @@ public class ResultSetTest extends TestCase
         assertEquals(1, rs.getLong(1));
 
         assertTrue(rs.next());
-        assertEquals( -2, rs.getLong(1));
+        // Because FDB returns fields as text (always currently),
+        // getLong() -> BigDecimal().getBigInteger() -> Rounds Down = -3
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertEquals(-2, rs.getLong(1));
+        } else {
+            assertEquals( -2, rs.getLong(1));
+        }
 
         assertTrue(rs.next());
         assertEquals(99999, rs.getLong(1));
@@ -459,7 +487,12 @@ public class ResultSetTest extends TestCase
     public void testZeroRowResultPositioning() throws SQLException
     {
         Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet rs = stmt.executeQuery("SELECT * FROM pg_database WHERE datname='nonexistantdatabase'");
+        ResultSet rs = null;
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = stmt.executeQuery("SELECT * FROM information_schema.schemata WHERE schema_name = 'nonexistantdatabase'");
+        } else {
+            rs = stmt.executeQuery("SELECT * FROM pg_database WHERE datname='nonexistantdatabase'");
+        }
         assertTrue(!rs.previous());
         assertTrue(!rs.previous());
         assertTrue(!rs.next());
@@ -485,7 +518,12 @@ public class ResultSetTest extends TestCase
     {
         Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         // Create a one row result set.
-        ResultSet rs = stmt.executeQuery("SELECT * FROM pg_database WHERE datname='template1'");
+        ResultSet rs = null;
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = stmt.executeQuery("SELECT * FROM information_schema.schemata WHERE schema_name = 'information_schema'");
+        } else {
+            rs = stmt.executeQuery("SELECT * FROM pg_database WHERE datname='template1'");
+        }
 
         assertTrue(rs.isBeforeFirst());
         assertTrue(!rs.isAfterLast());

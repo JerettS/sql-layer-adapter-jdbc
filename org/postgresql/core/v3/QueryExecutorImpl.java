@@ -237,7 +237,8 @@ public class QueryExecutorImpl implements QueryExecutor {
 
         boolean describeOnly = (QUERY_DESCRIBE_ONLY & flags) != 0;
 
-        ((V3ParameterList)parameters).convertFunctionOutParameters();
+        if (!protoConnection.isFoundationDBServer())
+            ((V3ParameterList)parameters).convertFunctionOutParameters();
 
         // Check parameters are all set..
         if (!describeOnly)

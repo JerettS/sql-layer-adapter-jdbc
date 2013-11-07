@@ -51,6 +51,8 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     private final String compatible;
     /* Actual server version */
     private final String dbVersionNumber;
+    /* */
+    private final boolean isFoundationDBServer;
 
     /* Query that runs COMMIT */
     private final Query commitQuery;
@@ -135,6 +137,7 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         // Now make the initial connection and set up local state
         this.protoConnection = ConnectionFactory.openConnection(hostSpecs, user, database, info, logger);
         this.dbVersionNumber = protoConnection.getServerVersion();
+        this.isFoundationDBServer = protoConnection.isFoundationDBServer();
         this.compatible = info.getProperty("compatible", Driver.MAJORVERSION + "." + Driver.MINORVERSION);
 
         // Set read-only early if requested
@@ -235,8 +238,13 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         }
 
         // Initialize timestamp stuff
-        timestampUtils = new TimestampUtils(haveMinimumServerVersion("7.4"), haveMinimumServerVersion("8.2"),
-                                            !protoConnection.getIntegerDateTimes());
+        if (isFoundationDBServer()) {
+            // false to timezones on times, false to seconds on time zones 
+            timestampUtils = new TimestampUtils(false, false, !protoConnection.getIntegerDateTimes(), isFoundationDBServer());
+        } else {
+            timestampUtils = new TimestampUtils(haveMinimumServerVersion("7.4"), haveMinimumServerVersion("8.2"),
+                                            !protoConnection.getIntegerDateTimes(), isFoundationDBServer());
+        }
 
         // Initialize common queries.
         commitQuery = getQueryExecutor().createSimpleQuery("COMMIT");
@@ -873,6 +881,9 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
 
         String level = null;
 
+        if (isFoundationDBServer) {
+            return Connection.TRANSACTION_SERIALIZABLE;
+        }
         if (haveMinimumServerVersion("7.3"))
         {
             // 7.3+ returns the level as a query result.
@@ -944,7 +955,11 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         if (isolationLevelName == null)
             throw new PSQLException(GT.tr("Transaction isolation level {0} not supported.", new Integer(level)), PSQLState.NOT_IMPLEMENTED);
 
-        String isolationLevelSQL = "SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL " + isolationLevelName;
+        String isolationLevelSQL;
+        if (isFoundationDBServer)
+            isolationLevelSQL = "SET TRANSACTION ISOLATION LEVEL " + isolationLevelName;
+        else
+            isolationLevelSQL = "SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL " + isolationLevelName;
         execSQLUpdate(isolationLevelSQL); // nb: no BEGIN triggered
     }
 
@@ -952,6 +967,9 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     {
         boolean pg80 = haveMinimumServerVersion("8.0");
 
+        if (isFoundationDBServer && level != Connection.TRANSACTION_SERIALIZABLE) 
+            return null;
+        
         if (level == Connection.TRANSACTION_READ_COMMITTED)
         {
             return "READ COMMITTED";
@@ -1029,6 +1047,10 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         return dbVersionNumber;
     }
 
+    public boolean isFoundationDBServer()
+    {
+        return isFoundationDBServer;
+    }
     // Parse a "dirty" integer surrounded by non-numeric characters
     private static int integerPart(String dirtyString)
     {

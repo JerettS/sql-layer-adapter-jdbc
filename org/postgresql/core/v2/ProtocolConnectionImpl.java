@@ -229,4 +229,10 @@ class ProtocolConnectionImpl implements ProtocolConnection {
     private final String database;
     private final QueryExecutorImpl executor;
     private final Logger logger;
-}
+    
+    private boolean foundationDBServer = false;
+
+    public final boolean isFoundationDBServer() {
+        return foundationDBServer;
+    }
+ }

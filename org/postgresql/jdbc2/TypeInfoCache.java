@@ -12,11 +12,11 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Collections;
+import java.util.Map.Entry;
 import java.sql.Types;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
-import org.postgresql.Driver;
 import org.postgresql.core.Oid;
 import org.postgresql.core.BaseStatement;
 import org.postgresql.core.BaseConnection;
@@ -181,12 +181,37 @@ public class TypeInfoCache implements TypeInfo {
         if (i != null)
             return i.intValue();
 
+        Integer type = null;
+
+            
+        if (((AbstractJdbc2Connection)_conn).isFoundationDBServer()) {
+            if (_getTypeInfoStatement == null) {
+                _getTypeInfoStatement = _conn.prepareStatement("SELECT jdbc_type_id FROM information_schema.types where type_name = ?");
+            }
+            _getTypeInfoStatement.setString(1, pgTypeName);
+            // Go through BaseStatement to avoid transaction start.
+            if (!((BaseStatement)_getTypeInfoStatement).executeWithFlags(QueryExecutor.QUERY_SUPPRESS_BEGIN))
+                throw new PSQLException(GT.tr("No results were returned by the query."), PSQLState.NO_DATA);
+
+            ResultSet rs = _getTypeInfoStatement.getResultSet();
+            if (rs.next()) {
+                type = rs.getInt(1);
+            }
+            rs.close();
+            if (type == null) {
+                type = new Integer(Types.OTHER);
+           }
+            _pgNameToSQLType.put(pgTypeName, type);
+
+            return type.intValue();
+        }
         if (_getTypeInfoStatement == null) {
             // There's no great way of telling what's an array type.
             // People can name their own types starting with _.
             // Other types use typelem that aren't actually arrays, like box.
             //
             String sql;
+            
             if (_conn.haveMinimumServerVersion("8.0")) {
                 // in case of multiple records (in different schemas) choose the one from the current schema,
                 // otherwise take the last version of a type that is at least more deterministic then before
@@ -221,7 +246,6 @@ public class TypeInfoCache implements TypeInfo {
 
         ResultSet rs = _getTypeInfoStatement.getResultSet();
 
-        Integer type = null;
         if (rs.next()) {
             boolean isArray = rs.getBoolean(1);
             String typtype = rs.getString(2);
@@ -252,6 +276,13 @@ public class TypeInfoCache implements TypeInfo {
         if (oid != null)
             return oid.intValue();
 
+        
+        if (((AbstractJdbc2Connection)_conn).isFoundationDBServer()) {
+            if (_getOidStatement == null) {
+                _getOidStatement = _conn.prepareStatement("SELECT postgres_oid FROM information_schema.types where type_name = ?");
+            }
+            
+        }        
         if (_getOidStatement == null) {
             String sql;
             if (_conn.haveMinimumServerVersion("8.0")) {
@@ -296,6 +327,9 @@ public class TypeInfoCache implements TypeInfo {
         return oid.intValue();
     }
 
+    private void createFDBNameStatement () throws SQLException {
+        _getNameStatement = _conn.prepareStatement("SELECT type_name FROM information_schema.types where postgres_oid = ?");
+    }
     public synchronized String getPGType(int oid) throws SQLException
     {
         if (oid == Oid.UNSPECIFIED)
@@ -305,6 +339,12 @@ public class TypeInfoCache implements TypeInfo {
         if (pgTypeName != null)
             return pgTypeName;
 
+        if (((AbstractJdbc2Connection)_conn).isFoundationDBServer()) {
+            if (_getNameStatement == null) {
+                createFDBNameStatement();
+            }
+            
+        }        
         if (_getNameStatement == null) {
             String sql;
             if (_conn.haveMinimumServerVersion("7.3")) {
@@ -316,12 +356,31 @@ public class TypeInfoCache implements TypeInfo {
             _getNameStatement = _conn.prepareStatement(sql);
         }
 
-        _getNameStatement.setInt(1, oid);
-
-        // Go through BaseStatement to avoid transaction start.
-        if (!((BaseStatement)_getNameStatement).executeWithFlags(QueryExecutor.QUERY_SUPPRESS_BEGIN))
-            throw new PSQLException(GT.tr("No results were returned by the query."), PSQLState.NO_DATA);
-
+        boolean retryable = false;
+        do {
+            retryable = false;
+            boolean results = true;
+            _getNameStatement.setInt(1, oid);
+            try {
+                // Go through BaseStatement to avoid transaction start.
+                results = ((BaseStatement)_getNameStatement).executeWithFlags(QueryExecutor.QUERY_SUPPRESS_BEGIN);
+            } catch (PSQLException ex) {
+                // The FDBServer return the STALE_STATEMENT error on DDL. 
+                // clear and recreate the statement for further execution. 
+                if ("0A50A".equals(ex.getSQLState())) {
+                    _getNameStatement.close();
+                    _getNameStatement = null;
+                    createFDBNameStatement();
+                    retryable = true;
+                    results = true;
+                } else {
+                    throw ex;
+                }
+            }
+            if (!results) {
+                throw new PSQLException(GT.tr("No results were returned by the query."), PSQLState.NO_DATA);
+            }
+        } while (retryable);
         ResultSet rs = _getNameStatement.getResultSet();
         if (rs.next()) {
             pgTypeName = rs.getString(1);

@@ -248,7 +248,11 @@ public class BatchExecuteTest extends TestCase
     public void testWarningsAreCleared() throws SQLException
     {
         Statement stmt = con.createStatement();
-        stmt.addBatch("CREATE TEMP TABLE unused (a int primary key)");
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.addBatch ("select 1/0;");
+        } else {
+            stmt.addBatch("CREATE TEMP TABLE unused (a int primary key)");
+        }
         stmt.executeBatch();
         // Execute an empty batch to clear warnings.
         stmt.executeBatch();
@@ -259,7 +263,11 @@ public class BatchExecuteTest extends TestCase
     public void testBatchEscapeProcessing() throws SQLException
     {
         Statement stmt = con.createStatement();
-        stmt.execute("CREATE TEMP TABLE batchescape (d date)");
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("CREATE TABLE batchescape(d date)");
+        } else {
+            stmt.execute("CREATE TEMP TABLE batchescape (d date)");
+        }
 
         stmt.addBatch("INSERT INTO batchescape (d) VALUES ({d '2007-11-20'})");
         stmt.executeBatch();
@@ -276,13 +284,21 @@ public class BatchExecuteTest extends TestCase
         assertEquals("2007-11-20", rs.getString(1));
         assertTrue(!rs.next());
         rs.close();
+        
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("DROP TABLE batchescape");
+        }
         stmt.close();
     }
 
     public void testBatchWithEmbeddedNulls() throws SQLException
     {
         Statement stmt = con.createStatement();
-        stmt.execute("CREATE TEMP TABLE batchstring (a text)");
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("CREATE TABLE batchstring (a text)");
+        } else {
+            stmt.execute("CREATE TEMP TABLE batchstring (a text)");
+        }
 
         con.commit();
 
@@ -306,7 +322,10 @@ public class BatchExecuteTest extends TestCase
         assertTrue(rs.next());
         assertEquals(0, rs.getInt(1));
         rs.close();
+        
+        if(TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("DROP TABLE batchstring");
+        }
         stmt.close();
     }
-
 }

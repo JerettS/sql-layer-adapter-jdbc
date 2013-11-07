@@ -62,12 +62,17 @@ public class DateTest extends TestCase
         assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testdate", "'1984-12-03'")));
         assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testdate", "'2000-01-01'")));
         assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testdate", "'3456-01-01'")));
-        assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testdate", "'0101-01-01 BC'")));
+        if (!TestUtil.isFoundationDBServer(con)) {
+            assertEquals(1, stmt.executeUpdate(TestUtil.insertSQL("testdate", "'0101-01-01 BC'")));
+        }
 
         /* dateTest() contains all of the tests */
         dateTest();
-
-        assertEquals(18, stmt.executeUpdate("DELETE FROM " + "testdate"));
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertEquals(17, stmt.executeUpdate("DELETE FROM testdate"));
+        } else {
+            assertEquals(18, stmt.executeUpdate("DELETE FROM " + "testdate"));
+        }
         stmt.close();
     }
 
@@ -130,15 +135,21 @@ public class DateTest extends TestCase
         ps.setObject(1, java.sql.Date.valueOf("3456-01-01"), java.sql.Types.DATE);
         assertEquals(1, ps.executeUpdate());
 
-        // We can't use valueOf on BC dates.
-        ps.setObject(1, makeDate(-100,1,1));
-        assertEquals(1, ps.executeUpdate());
-
+        if (!TestUtil.isFoundationDBServer(con)) {
+            // We can't use valueOf on BC dates.
+            ps.setObject(1, makeDate(-100,1,1));
+            assertEquals(1, ps.executeUpdate());
+        }
+        
         ps.close();
 
         dateTest();
 
-        assertEquals(18, stmt.executeUpdate("DELETE FROM testdate"));
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertEquals(17, stmt.executeUpdate("DELETE FROM testdate"));
+        } else {
+            assertEquals(18, stmt.executeUpdate("DELETE FROM testdate"));
+        }
         stmt.close();
     }
 
@@ -240,11 +251,13 @@ public class DateTest extends TestCase
         assertNotNull(d);
         assertEquals(makeDate(3456, 1, 1), d);
 
-        assertTrue(rs.next());
-        d = rs.getDate(1);
-        assertNotNull(d);
-        assertEquals(makeDate(-100, 1, 1), d);
-
+        if (!TestUtil.isFoundationDBServer(con)) {
+            assertTrue(rs.next());
+            d = rs.getDate(1);
+            assertNotNull(d);
+            assertEquals(makeDate(-100, 1, 1), d);
+        }
+        
         assertTrue(!rs.next());
 
         rs.close();

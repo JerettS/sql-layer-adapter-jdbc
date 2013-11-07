@@ -591,8 +591,9 @@ public class ConnectionFactoryImpl extends ConnectionFactory {
                 if (logger.logDebug())
                     logger.debug(" <=BE ParameterStatus(" + name + " = " + value + ")");
 
-                if (name.equals("server_version"))
+                if (name.equals("server_version")) {
                     protoConnection.setServerVersion(value);
+                }
                 else if (name.equals("client_encoding"))
                 {
                     if (!value.equals("UTF8"))
@@ -616,6 +617,13 @@ public class ConnectionFactoryImpl extends ConnectionFactory {
                         protoConnection.setIntegerDateTimes(false);
                     else
                         throw new PSQLException(GT.tr("Protocol error.  Session setup failed."), PSQLState.PROTOCOL_VIOLATION);
+                } 
+                else if (name.equals("foundationdb_server"))
+                {
+                    
+                    if (value.equals("on"))
+                        protoConnection.isFoundationDBServer(true);
+                    // default is off/false, leave it that way.     
                 }
 
                 break;

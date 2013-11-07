@@ -69,16 +69,25 @@ public class DatabaseMetaDataTest extends TestCase
     {
         DatabaseMetaData dbmd = _conn.getMetaData();
 
-        ResultSet rs = dbmd.getSchemas("", "publ%");
-
-        if (!TestUtil.haveMinimumServerVersion(_conn, "7.3")) {
+        if (TestUtil.isFoundationDBServer(_conn)) {
+            ResultSet rs = dbmd.getSchemas("", "security%");
+            assertTrue(rs.next());
+            assertEquals("security_schema", rs.getString("TABLE_SCHEM"));
+            assertNull(rs.getString("TABLE_CATALOG"));
             assertTrue(!rs.next());
-            return;
+        } else {
+        
+            ResultSet rs = dbmd.getSchemas("", "publ%");
+    
+            if (!TestUtil.haveMinimumServerVersion(_conn, "7.3")) {
+                assertTrue(!rs.next());
+                return;
+            }
+    
+            assertTrue(rs.next());
+            assertEquals("public", rs.getString("TABLE_SCHEM"));
+            assertNull(rs.getString("TABLE_CATALOG"));
+            assertTrue(!rs.next());
         }
-
-        assertTrue(rs.next());
-        assertEquals("public", rs.getString("TABLE_SCHEM"));
-        assertNull(rs.getString("TABLE_CATALOG"));
-        assertTrue(!rs.next());
     }
 }

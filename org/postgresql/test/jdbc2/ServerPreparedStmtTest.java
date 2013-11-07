@@ -223,8 +223,11 @@ public class ServerPreparedStmtTest extends TestCase
         // Verify we can use setBytes() with a server-prepared update.
         try
         {
-            TestUtil.createTable(con, "testsps_bytea", "data bytea");
-
+            if (TestUtil.isFoundationDBServer(con)){
+                TestUtil.createTable(con, "testsps_bytea", "data tinyblob");
+            } else {
+                TestUtil.createTable(con, "testsps_bytea", "data bytea");
+            }
             PreparedStatement pstmt = con.prepareStatement("INSERT INTO testsps_bytea(data) VALUES (?)");
             ((PGStatement)pstmt).setUseServerPrepare(true);
             pstmt.setBytes(1, new byte[100]);

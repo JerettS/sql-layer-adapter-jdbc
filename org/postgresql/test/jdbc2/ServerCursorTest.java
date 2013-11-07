@@ -28,7 +28,11 @@ public class ServerCursorTest extends TestCase
     protected void setUp() throws Exception
     {
         con = TestUtil.openDB();
-        TestUtil.createTable(con, "test_fetch", "value integer,data bytea");
+        if(TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, "test_fetch", "value integer, data tinyblob");
+        } else {
+            TestUtil.createTable(con, "test_fetch", "value integer,data bytea");
+        }
         con.setAutoCommit(false);
     }
 
@@ -75,6 +79,8 @@ public class ServerCursorTest extends TestCase
     //Test binary cursor fetching
     public void testBinaryFetch() throws Exception
     {
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         createRows(1);
 
         PreparedStatement stmt = con.prepareStatement("declare test_cursor binary cursor for select * from test_fetch");

@@ -24,7 +24,7 @@ public class DatabaseMetaDataTest extends TestCase
     protected void setUp() throws Exception
     {
         _conn = TestUtil.openDB();
-        if (TestUtil.haveMinimumServerVersion(_conn, "7.3")) {
+        if (TestUtil.haveMinimumServerVersion(_conn, "7.3") && !TestUtil.isFoundationDBServer(_conn)) {
             Statement stmt = _conn.createStatement();
             stmt.execute("CREATE DOMAIN mydom AS int");
             stmt.execute("CREATE TABLE domtab (a mydom)");
@@ -33,7 +33,7 @@ public class DatabaseMetaDataTest extends TestCase
 
     protected void tearDown() throws Exception
     {
-        if (TestUtil.haveMinimumServerVersion(_conn, "7.3")) {
+        if (TestUtil.haveMinimumServerVersion(_conn, "7.3") && !TestUtil.isFoundationDBServer(_conn)) {
             Statement stmt = _conn.createStatement();
             stmt.execute("DROP TABLE domtab");
             stmt.execute("DROP DOMAIN mydom");

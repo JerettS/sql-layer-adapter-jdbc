@@ -30,13 +30,22 @@ public class TypesTest extends TestCase {
     protected void setUp() throws Exception {
         _conn = TestUtil.openDB();
         Statement stmt = _conn.createStatement();
-        stmt.execute("CREATE OR REPLACE FUNCTION return_bool(boolean) RETURNS boolean AS 'BEGIN RETURN $1; END;' LANGUAGE plpgsql");
+        
+        if (TestUtil.isFoundationDBServer(_conn)) {
+            stmt.execute("CREATE OR REPLACE FUNCTION return_bool (a boolean) RETURNS boolean LANGUAGE javascript PARAMETER STYLE variables AS 'a'");  
+        }else {
+            stmt.execute("CREATE OR REPLACE FUNCTION return_bool(boolean) RETURNS boolean AS 'BEGIN RETURN $1; END;' LANGUAGE plpgsql");
+        }
         stmt.close();
     }
 
     protected void tearDown() throws SQLException {
         Statement stmt = _conn.createStatement();
-        stmt.execute("DROP FUNCTION return_bool(boolean)");
+        if (TestUtil.isFoundationDBServer(_conn)) {
+            stmt.execute("DROP FUNCTION return_bool");
+        } else {
+            stmt.execute("DROP FUNCTION return_bool(boolean)");
+        }
         stmt.close();
         TestUtil.closeDB(_conn);
     }
@@ -84,6 +93,17 @@ public class TypesTest extends TestCase {
         assertEquals(true, cs.getBoolean(1));
         cs.close();
     }
+
+    /*
+    public void testCallableInteger() throws SQLException {
+        CallableStatement cs = _conn.prepareCall("{? = call return_bool(?)}");
+        cs.registerOutParameter(1, Types.INTEGER);
+        cs.setBoolean(2, true);
+        cs.execute();
+        assertEquals(true, cs.getBoolean(1));
+        cs.close();
+    }
+    */
     public void testUnknownType() throws SQLException {
         Statement stmt = _conn.createStatement();
         

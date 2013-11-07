@@ -1587,6 +1587,10 @@ public abstract class AbstractJdbc2ResultSet implements BaseResultSet, org.postg
 
         connection.getLogger().debug("checking if rs is updateable");
 
+        // not supported because we don't return the base table information in the result set description
+        if (((AbstractJdbc2Connection)connection).isFoundationDBServer()) {
+            return false;
+        }
         parseQuery();
 
         if ( singleTable == false )

@@ -37,9 +37,15 @@ public class TimestampTest extends TestCase
     protected void setUp() throws Exception
     {
         con = TestUtil.openDB();
-        TestUtil.createTable(con, TSWTZ_TABLE, "ts timestamp with time zone");
-        TestUtil.createTable(con, TSWOTZ_TABLE, "ts timestamp without time zone");
-        TestUtil.createTable(con, DATE_TABLE, "ts date");
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, TSWTZ_TABLE, "ts timestamp");
+            TestUtil.createTable(con, TSWOTZ_TABLE, "ts timestamp");
+            TestUtil.createTable(con, DATE_TABLE, "ts date");
+        } else {
+            TestUtil.createTable(con, TSWTZ_TABLE, "ts timestamp with time zone");
+            TestUtil.createTable(con, TSWOTZ_TABLE, "ts timestamp without time zone");
+            TestUtil.createTable(con, DATE_TABLE, "ts date");
+        }
     }
 
     protected void tearDown() throws Exception
@@ -93,6 +99,10 @@ public class TimestampTest extends TestCase
 
     public void testInfinity() throws SQLException
     {
+        // unsupported
+        if (TestUtil.isFoundationDBServer(con))
+            return;
+                    
         runInfinityTests(TSWTZ_TABLE, PGStatement.DATE_POSITIVE_INFINITY);
         runInfinityTests(TSWTZ_TABLE, PGStatement.DATE_NEGATIVE_INFINITY);
         runInfinityTests(TSWOTZ_TABLE, PGStatement.DATE_POSITIVE_INFINITY);
@@ -156,6 +166,8 @@ public class TimestampTest extends TestCase
      */
     public void testGetTimestampWTZ() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         Statement stmt = con.createStatement();
         TimestampUtils tsu = ((BaseConnection)con).getTimestampUtils();
 
@@ -198,6 +210,8 @@ public class TimestampTest extends TestCase
      */
     public void testSetTimestampWTZ() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         Statement stmt = con.createStatement();
         PreparedStatement pstmt = con.prepareStatement(TestUtil.insertSQL(TSWTZ_TABLE, "?"));
 
@@ -268,6 +282,8 @@ public class TimestampTest extends TestCase
      */
     public void testGetTimestampWOTZ() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         Statement stmt = con.createStatement();
         TimestampUtils tsu = ((BaseConnection)con).getTimestampUtils();
 
@@ -319,6 +335,8 @@ public class TimestampTest extends TestCase
      */
     public void testSetTimestampWOTZ() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         Statement stmt = con.createStatement();
         PreparedStatement pstmt = con.prepareStatement(TestUtil.insertSQL(TSWOTZ_TABLE, "?"));
 

@@ -25,17 +25,19 @@ public class Jdbc4TestSuite extends TestSuite
     {
         Class.forName("org.postgresql.Driver");
         TestSuite suite = new TestSuite();
+        Connection connection = TestUtil.openDB();
         
-        suite.addTestSuite(LOBTest.class);
         suite.addTestSuite(DatabaseMetaDataTest.class);
-        suite.addTestSuite(ArrayTest.class);
+        if (!TestUtil.isFoundationDBServer(connection)) {
+            suite.addTestSuite(LOBTest.class);
+            suite.addTestSuite(ArrayTest.class);
+        }
         suite.addTestSuite(ConnectionTest.class);
         suite.addTestSuite(WrapperTest.class);
 
-        Connection connection = TestUtil.openDB();
         try
         {
-            if (TestUtil.haveMinimumServerVersion(connection, "8.3"))
+            if (TestUtil.haveMinimumServerVersion(connection, "8.3") && !TestUtil.isFoundationDBServer(connection))
             {
                 suite.addTestSuite(UUIDTest.class);
                 if (isXmlEnabled(connection)) {

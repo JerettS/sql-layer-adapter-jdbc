@@ -30,8 +30,12 @@ public class JBuilderTest extends TestCase
     {
         Connection con = TestUtil.openDB();
 
-        TestUtil.createTable( con, "test_c",
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, "test_c", "source varchar(20), cost numeric, imageid int");
+        } else {
+            TestUtil.createTable( con, "test_c",
                               "source text,cost money,imageid int4" );
+        }
 
         TestUtil.closeDB(con);
     }

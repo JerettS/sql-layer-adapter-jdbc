@@ -27,7 +27,7 @@ public class SendRecvBufferSizeTest extends TestCase {
 		
         _conn = TestUtil.openDB();
         Statement stmt = _conn.createStatement();
-        stmt.execute("CREATE TEMP TABLE hold(a int)");
+        stmt.execute("CREATE TABLE hold(a int)");
         stmt.execute("INSERT INTO hold VALUES (1)");
         stmt.execute("INSERT INTO hold VALUES (2)");
         stmt.close();

@@ -72,8 +72,12 @@ public class TimezoneTest extends TestCase
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+01")); // Arbitary timezone that doesn't match our test timezones
 
         con = TestUtil.openDB();
-        TestUtil.createTable(con, "testtimezone",
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, "testtimezone", "seq int, tstz timestamp, ts timestamp, t time, tz time, d date");
+        } else {
+            TestUtil.createTable(con, "testtimezone",
                              "seq int4, tstz timestamp with time zone, ts timestamp without time zone, t time without time zone, tz time with time zone, d date");
+        }
         
         // This is not obvious, but the "gmt-3" timezone is actually 3 hours *ahead* of GMT
         // so will produce +03 timestamptz output

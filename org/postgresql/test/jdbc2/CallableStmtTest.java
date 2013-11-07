@@ -30,33 +30,55 @@ public class CallableStmtTest extends TestCase
         con = TestUtil.openDB();
         TestUtil.createTable(con, "int_table", "id int");
         Statement stmt = con.createStatement ();
-        stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getString (varchar) " +
-                      "RETURNS varchar AS ' DECLARE inString alias for $1; begin " +
-                      "return ''bob''; end; ' LANGUAGE plpgsql;");
-        stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getDouble (float) " +
-                      "RETURNS float AS ' DECLARE inString alias for $1; begin " +
-                      "return 42.42; end; ' LANGUAGE plpgsql;");
-        if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
-            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getVoid (float) " +
-                "RETURNS void AS ' DECLARE inString alias for $1; begin " +
-                " return; end; ' LANGUAGE plpgsql;");
-        }
-        stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getInt (int) RETURNS int " +
-                      " AS 'DECLARE inString alias for $1; begin " +
-                      "return 42; end;' LANGUAGE plpgsql;");      
-        stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getShort (int2) RETURNS int2 " +
-                " AS 'DECLARE inString alias for $1; begin " +
-                "return 42; end;' LANGUAGE plpgsql;");
-        stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getNumeric (numeric) " +
-                      "RETURNS numeric AS ' DECLARE inString alias for $1; " +
-                      "begin return 42; end; ' LANGUAGE plpgsql;");
         
-        stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getNumericWithoutArg() " +
-                "RETURNS numeric AS '  " +
-                "begin return 42; end; ' LANGUAGE plpgsql;");
-        stmt.execute("CREATE OR REPLACE FUNCTION testspg__getarray() RETURNS int[] as 'SELECT ''{1,2}''::int[];' LANGUAGE sql");
-        stmt.execute("CREATE OR REPLACE FUNCTION testspg__raisenotice() RETURNS int as 'BEGIN RAISE NOTICE ''hello'';  RAISE NOTICE ''goodbye''; RETURN 1; END;' LANGUAGE plpgsql");
-        stmt.execute("CREATE OR REPLACE FUNCTION testspg__insertInt(int) RETURNS int as 'BEGIN INSERT INTO int_table(id) VALUES ($1); RETURN 1; END;' LANGUAGE plpgsql");
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getString(a varchar(20)) RETURNS VARCHAR(20)" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS $$ 'bob' $$");
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getDouble(a float) RETURNS float" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS $$ 42.42 $$");
+            stmt.execute ("CREATE OR REPLACE PROCEDURE testspg__getVoid (IN a float) " +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS ''");
+            
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getInt (a int) RETURNS int" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS '42'");
+            stmt.execute("CREATE OR REPLACE FUNCTION testspg__getShort (a smallint) RETURNS smallint" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS '42'");
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getNumeric (a numeric) RETURNS numeric" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS '42'");
+            
+            stmt.execute("CREATE OR REPLACE FUNCTION testspg__getNumericWIthoutArg() RETURNS numeric" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS '42'");
+            
+        } else {
+            
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getString (varchar) " +
+                          "RETURNS varchar AS ' DECLARE inString alias for $1; begin " +
+                          "return ''bob''; end; ' LANGUAGE plpgsql;");
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getDouble (float) " +
+                          "RETURNS float AS ' DECLARE inString alias for $1; begin " +
+                          "return 42.42; end; ' LANGUAGE plpgsql;");
+            if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
+                stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getVoid (float) " +
+                    "RETURNS void AS ' DECLARE inString alias for $1; begin " +
+                    " return; end; ' LANGUAGE plpgsql;");
+            }
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getInt (int) RETURNS int " +
+                          " AS 'DECLARE inString alias for $1; begin " +
+                          "return 42; end;' LANGUAGE plpgsql;");      
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getShort (int2) RETURNS int2 " +
+                    " AS 'DECLARE inString alias for $1; begin " +
+                    "return 42; end;' LANGUAGE plpgsql;");
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getNumeric (numeric) " +
+                          "RETURNS numeric AS ' DECLARE inString alias for $1; " +
+                          "begin return 42; end; ' LANGUAGE plpgsql;");
+            
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getNumericWithoutArg() " +
+                    "RETURNS numeric AS '  " +
+                    "begin return 42; end; ' LANGUAGE plpgsql;");
+            stmt.execute("CREATE OR REPLACE FUNCTION testspg__getarray() RETURNS int[] as 'SELECT ''{1,2}''::int[];' LANGUAGE sql");
+            stmt.execute("CREATE OR REPLACE FUNCTION testspg__raisenotice() RETURNS int as 'BEGIN RAISE NOTICE ''hello'';  RAISE NOTICE ''goodbye''; RETURN 1; END;' LANGUAGE plpgsql");
+            stmt.execute("CREATE OR REPLACE FUNCTION testspg__insertInt(int) RETURNS int as 'BEGIN INSERT INTO int_table(id) VALUES ($1); RETURN 1; END;' LANGUAGE plpgsql");
+        }
         stmt.close ();
     }
 
@@ -64,19 +86,29 @@ public class CallableStmtTest extends TestCase
     {
         Statement stmt = con.createStatement ();
         TestUtil.dropTable(con, "int_table");
-        stmt.execute ("drop FUNCTION testspg__getString (varchar);");
-        stmt.execute ("drop FUNCTION testspg__getDouble (float);");
-        if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
-            stmt.execute( "drop FUNCTION testspg__getVoid(float);");
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("drop FUNCTION testspg__getString");
+            stmt.execute("drop FUNCTION testspg__getDouble");
+            stmt.execute("drop PROCEDURE testspg__getVoid");
+            stmt.execute("drop FUNCTION testspg__getInt");
+            stmt.execute("drop FUNCTION testspg__getShort");
+            stmt.execute("DROP FUNCTION testspg__getNumeric");
+            stmt.execute("drop FUNCTION testspg__getNumericWithoutArg");
+        } else {
+            stmt.execute ("drop FUNCTION testspg__getString (varchar);");
+            stmt.execute ("drop FUNCTION testspg__getDouble (float);");
+            if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
+                stmt.execute( "drop FUNCTION testspg__getVoid(float);");
+            }
+            stmt.execute ("drop FUNCTION testspg__getInt (int);");
+            stmt.execute ("drop FUNCTION testspg__getShort(int2)");
+            stmt.execute ("drop FUNCTION testspg__getNumeric (numeric);");
+      
+            stmt.execute ("drop FUNCTION testspg__getNumericWithoutArg ();");
+            stmt.execute ("DROP FUNCTION testspg__getarray();");
+            stmt.execute ("DROP FUNCTION testspg__raisenotice();");
+            stmt.execute ("DROP FUNCTION testspg__insertInt(int);");
         }
-        stmt.execute ("drop FUNCTION testspg__getInt (int);");
-        stmt.execute ("drop FUNCTION testspg__getShort(int2)");
-        stmt.execute ("drop FUNCTION testspg__getNumeric (numeric);");
-  
-        stmt.execute ("drop FUNCTION testspg__getNumericWithoutArg ();");
-        stmt.execute ("DROP FUNCTION testspg__getarray();");
-        stmt.execute ("DROP FUNCTION testspg__raisenotice();");
-        stmt.execute ("DROP FUNCTION testspg__insertInt(int);");
         TestUtil.closeDB(con);
     }
 
@@ -181,6 +213,8 @@ public class CallableStmtTest extends TestCase
 
     public void testGetArray() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         CallableStatement call = con.prepareCall(func + pkgName + "getarray()}");
         call.registerOutParameter(1, Types.ARRAY);
         call.execute();
@@ -195,6 +229,8 @@ public class CallableStmtTest extends TestCase
 
     public void testRaiseNotice() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         CallableStatement call = con.prepareCall(func + pkgName + "raisenotice()}");
         call.registerOutParameter(1, Types.INTEGER);
         call.execute();

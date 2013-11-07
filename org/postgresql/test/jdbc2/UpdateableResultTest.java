@@ -39,21 +39,28 @@ public class UpdateableResultTest extends TestCase
     protected void setUp() throws Exception
     {
         con = TestUtil.openDB();
-        TestUtil.createTable(con, "updateable", "id int primary key, name text, notselected text, ts timestamp with time zone, intarr int[]", true);
-        TestUtil.createTable(con, "second", "id1 int primary key, name1 text");
-        TestUtil.createTable(con, "stream", "id int primary key, asi text, chr text, bin bytea");
-
+        
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, "updateable", "id int not null primary key, name varchar(20), notselected varchar(20), ts timestamp, intarr int");
+            TestUtil.createTable(con, "seconds", "id1 int not null primary key, name1 varchar(20)");
+            TestUtil.createTable(con, "stream", "id int not null primary key, asi varchar(20), chr varchar(20), bin tinyblob");
+        } else {
+            TestUtil.createTable(con, "updateable", "id int primary key, name text, notselected text, ts timestamp with time zone, intarr int[]", true);
+            TestUtil.createTable(con, "seconds", "id1 int primary key, name1 text");
+            TestUtil.createTable(con, "stream", "id int primary key, asi text, chr text, bin bytea");
+        }
         // put some dummy data into second
         Statement st2 = con.createStatement();
-        st2.execute( "insert into second values (1,'anyvalue' )");
+        st2.execute( "insert into seconds values (1,'anyvalue' )");
         st2.close();
 
     }
 
     protected void tearDown() throws Exception
     {
+       
         TestUtil.dropTable(con, "updateable");
-        TestUtil.dropTable(con, "second");
+        TestUtil.dropTable(con, "seconds");
         TestUtil.dropTable(con, "stream");
         TestUtil.closeDB(con);
     }
@@ -61,13 +68,13 @@ public class UpdateableResultTest extends TestCase
     public void testDeleteRows() throws SQLException
     {
         Statement st = con.createStatement();
-        st.executeUpdate("INSERT INTO second values (2,'two')");
-        st.executeUpdate("INSERT INTO second values (3,'three')");
-        st.executeUpdate("INSERT INTO second values (4,'four')");
+        st.executeUpdate("INSERT INTO seconds values (2,'two')");
+        st.executeUpdate("INSERT INTO seconds values (3,'three')");
+        st.executeUpdate("INSERT INTO seconds values (4,'four')");
         st.close();
 
         st = con.createStatement( ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE );
-        ResultSet rs = st.executeQuery( "select id1,name1 from second order by id1");
+        ResultSet rs = st.executeQuery( "select id1,name1 from seconds order by id1");
 
         assertTrue(rs.next());
         assertEquals(1, rs.getInt("id1"));
@@ -89,7 +96,7 @@ public class UpdateableResultTest extends TestCase
     public void testCancelRowUpdates() throws Exception
     {
         Statement st = con.createStatement( ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE );
-        ResultSet rs = st.executeQuery( "select * from second");
+        ResultSet rs = st.executeQuery( "select * from seconds");
 
         // make sure we're dealing with the correct row.
         rs.first();
@@ -117,7 +124,7 @@ public class UpdateableResultTest extends TestCase
 
         // make sure the update got to the db and the driver isn't lying to us.
         rs.close();
-        rs = st.executeQuery( "select * from second");
+        rs = st.executeQuery( "select * from seconds");
         rs.first();
         assertEquals(999, rs.getInt(1));
         assertEquals("anyvalue", rs.getString(2));
@@ -168,7 +175,7 @@ public class UpdateableResultTest extends TestCase
     public void testPositioning() throws SQLException
     {
         Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet rs = stmt.executeQuery("SELECT id1,name1 FROM second");
+        ResultSet rs = stmt.executeQuery("SELECT id1,name1 FROM seconds");
 
         checkPositioning(rs);
 
@@ -325,7 +332,7 @@ public class UpdateableResultTest extends TestCase
 
         rs.close();
 
-        rs = st.executeQuery("select id1, id, name, name1 from updateable, second" );
+        rs = st.executeQuery("select id1, id, name, name1 from updateable, seconds" );
         try
         {
             while ( rs.next() )
@@ -433,7 +440,7 @@ public class UpdateableResultTest extends TestCase
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                                            ResultSet.CONCUR_UPDATABLE);
 
-        ResultSet rs = st.executeQuery( "select * from only second");
+        ResultSet rs = st.executeQuery( "select * from only seconds");
         assertTrue(rs.next());
         rs.updateInt(1, 2);
         rs.updateRow();

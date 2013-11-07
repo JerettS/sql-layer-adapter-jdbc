@@ -37,7 +37,12 @@ public class MiscTest extends TestCase
         Connection con = TestUtil.openDB();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("select datname from pg_database");
+        ResultSet rs = null;
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = st.executeQuery("select schema_name from information_schema.schemata");
+        } else {
+            rs = st.executeQuery("select datname from pg_database");
+        }
         assertNotNull(rs);
 
         while (rs.next())
@@ -72,7 +77,6 @@ public class MiscTest extends TestCase
         Connection con = TestUtil.openDB();
         try
         {
-
             // transaction mode
             con.setAutoCommit(false);
             Statement stmt = con.createStatement();
@@ -97,7 +101,11 @@ public class MiscTest extends TestCase
     {
         Connection con = TestUtil.openDB();
         Statement stmt = con.createStatement();
-        stmt.execute("CREATE TEMP TABLE t(a int primary key)");
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute ("DROP TABLE IF EXISTS t");
+        } else {
+            stmt.execute("CREATE TEMP TABLE t(a int primary key)");
+        }
         SQLWarning warning = stmt.getWarnings();
         // We should get a warning about primary key index creation
         // it's possible we won't depending on the server's

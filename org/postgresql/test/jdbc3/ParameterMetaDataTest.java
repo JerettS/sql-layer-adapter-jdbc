@@ -21,7 +21,11 @@ public class ParameterMetaDataTest extends TestCase {
 
     protected void setUp() throws Exception {
         _conn = TestUtil.openDB();
-        TestUtil.createTable(_conn, "parametertest", "a int4, b float8, c text, d point, e timestamp with time zone");
+        if (TestUtil.isFoundationDBServer(_conn)) {
+            TestUtil.createTable(_conn, "parametertest", "a int, b double, c text, d int, e timestamp");
+        } else {
+            TestUtil.createTable(_conn, "parametertest", "a int4, b float8, c text, d point, e timestamp with time zone");
+        }
     }
 
     protected void tearDown() throws SQLException {
@@ -31,6 +35,9 @@ public class ParameterMetaDataTest extends TestCase {
 
     public void testParameterMD() throws SQLException {
         if (!TestUtil.isProtocolVersion(_conn, 3))
+            return;
+        
+        if (TestUtil.isFoundationDBServer(_conn))
             return;
 
         PreparedStatement pstmt = _conn.prepareStatement("SELECT a FROM parametertest WHERE b = ? AND c = ? AND d >^ ? ");

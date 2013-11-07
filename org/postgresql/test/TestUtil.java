@@ -350,6 +350,9 @@ public class TestUtil
         try
         {
             String sql = "DROP SEQUENCE " + sequence;
+            if (isFoundationDBServer(con)) {
+                sql = "DROP SEQUENCE IF EXISTS " + sequence + " RESTRICT";
+            }
             stmt.executeUpdate(sql);
         }
         catch (SQLException sqle)
@@ -485,6 +488,13 @@ public class TestUtil
         if (con instanceof org.postgresql.jdbc2.AbstractJdbc2Connection)
         {
             return ((org.postgresql.jdbc2.AbstractJdbc2Connection)con).haveMinimumServerVersion(version);
+        }
+        return false;
+    }
+    
+    public static boolean isFoundationDBServer (Connection con) throws SQLException {
+        if (con instanceof org.postgresql.jdbc2.AbstractJdbc2Connection) {
+            return ((org.postgresql.jdbc2.AbstractJdbc2Connection)con).isFoundationDBServer();
         }
         return false;
     }

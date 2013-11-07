@@ -195,44 +195,50 @@ public abstract class AbstractJdbc2ResultSetMetaData implements PGResultSetMetaD
         fieldInfoFetched = true;
 
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT c.oid, a.attnum, a.attname, c.relname, n.nspname, ");
-        sql.append("a.attnotnull OR (t.typtype = 'd' AND t.typnotnull), ");
-        sql.append("pg_catalog.pg_get_expr(d.adbin, d.adrelid) LIKE '%nextval(%' ");
-        sql.append("FROM pg_catalog.pg_class c ");
-        sql.append("JOIN pg_catalog.pg_namespace n ON (c.relnamespace = n.oid) ");
-        sql.append("JOIN pg_catalog.pg_attribute a ON (c.oid = a.attrelid) ");
-        sql.append("JOIN pg_catalog.pg_type t ON (a.atttypid = t.oid) ");
-        sql.append("LEFT JOIN pg_catalog.pg_attrdef d ON (d.adrelid = a.attrelid AND d.adnum = a.attnum) ");
-        sql.append("JOIN (");
+        
+        // Not supported in FoundationDB SQL Layer
+        if (((AbstractJdbc2Connection)connection).isFoundationDBServer()) {
+            sql.append("SELECT 1 FROM information_schema.tables WHERE 1 = 0");
+        } else {
+            sql.append("SELECT c.oid, a.attnum, a.attname, c.relname, n.nspname, ");
+            sql.append("a.attnotnull OR (t.typtype = 'd' AND t.typnotnull), ");
+            sql.append("pg_catalog.pg_get_expr(d.adbin, d.adrelid) LIKE '%nextval(%' ");
+            sql.append("FROM pg_catalog.pg_class c ");
+            sql.append("JOIN pg_catalog.pg_namespace n ON (c.relnamespace = n.oid) ");
+            sql.append("JOIN pg_catalog.pg_attribute a ON (c.oid = a.attrelid) ");
+            sql.append("JOIN pg_catalog.pg_type t ON (a.atttypid = t.oid) ");
+            sql.append("LEFT JOIN pg_catalog.pg_attrdef d ON (d.adrelid = a.attrelid AND d.adnum = a.attnum) ");
+            sql.append("JOIN (");
+    
+            // 7.4 servers don't support row IN operations (a,b) IN ((c,d),(e,f))
+            // so we've got to fake that with a JOIN here.
+            //
+            boolean hasSourceInfo = false;
+            for (int i=0; i<fields.length; i++) {
+                if (fields[i].getTableOid() == 0)
+                    continue;
+    
+                if (hasSourceInfo)
+                    sql.append(" UNION ALL ");
+    
+                sql.append("SELECT ");
+                sql.append(fields[i].getTableOid());
+                if (!hasSourceInfo)
+                    sql.append(" AS oid ");
+                sql.append(", ");
+                sql.append(fields[i].getPositionInTable());
+                if (!hasSourceInfo)
+                    sql.append(" AS attnum");
+    
+                if (!hasSourceInfo)
+                    hasSourceInfo = true;
+            }
+            sql.append(") vals ON (c.oid = vals.oid AND a.attnum = vals.attnum) ");
 
-        // 7.4 servers don't support row IN operations (a,b) IN ((c,d),(e,f))
-        // so we've got to fake that with a JOIN here.
-        //
-        boolean hasSourceInfo = false;
-        for (int i=0; i<fields.length; i++) {
-            if (fields[i].getTableOid() == 0)
-                continue;
-
-            if (hasSourceInfo)
-                sql.append(" UNION ALL ");
-
-            sql.append("SELECT ");
-            sql.append(fields[i].getTableOid());
             if (!hasSourceInfo)
-                sql.append(" AS oid ");
-            sql.append(", ");
-            sql.append(fields[i].getPositionInTable());
-            if (!hasSourceInfo)
-                sql.append(" AS attnum");
-
-            if (!hasSourceInfo)
-                hasSourceInfo = true;
+                return;
         }
-        sql.append(") vals ON (c.oid = vals.oid AND a.attnum = vals.attnum) ");
-
-        if (!hasSourceInfo)
-            return;
-
+        
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(sql.toString());
         while (rs.next()) {
