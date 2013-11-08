@@ -51,6 +51,8 @@ public class TypesTest extends TestCase {
     }
 
     public void testPreparedBoolean() throws SQLException {
+        if (TestUtil.isFoundationDBServer(_conn))
+            return;
         PreparedStatement pstmt = _conn.prepareStatement("SELECT ?,?,?,?");
         pstmt.setNull(1, Types.BOOLEAN);
         pstmt.setObject(2, null, Types.BOOLEAN);
@@ -72,6 +74,8 @@ public class TypesTest extends TestCase {
     }
 
     public void testPreparedByte() throws SQLException {
+        if (TestUtil.isFoundationDBServer(_conn))
+            return;
         PreparedStatement pstmt = _conn.prepareStatement("SELECT ?,?");
         pstmt.setByte(1, (byte)1);
         pstmt.setObject(2, new Byte((byte)2));
@@ -86,6 +90,8 @@ public class TypesTest extends TestCase {
     }
 
     public void testCallableBoolean() throws SQLException {
+        if (TestUtil.isFoundationDBServer(_conn))
+            return;
         CallableStatement cs = _conn.prepareCall("{? = call return_bool(?)}");
         cs.registerOutParameter(1, Types.BOOLEAN);
         cs.setBoolean(2, true);

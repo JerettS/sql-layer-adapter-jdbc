@@ -7,7 +7,6 @@
 */
 package org.postgresql.test;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
@@ -495,7 +494,7 @@ public class TestUtil
     public static boolean isFoundationDBServer (Connection con) throws SQLException {
         if (con instanceof org.postgresql.jdbc2.AbstractJdbc2Connection) {
             return ((org.postgresql.jdbc2.AbstractJdbc2Connection)con).isFoundationDBServer();
-        }
+        } 
         return false;
     }
 
