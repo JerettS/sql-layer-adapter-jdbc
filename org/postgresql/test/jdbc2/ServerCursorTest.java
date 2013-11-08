@@ -60,12 +60,22 @@ public class ServerCursorTest extends TestCase
     public void testBasicFetch() throws Exception
     {
         createRows(1);
+        ResultSet rs;
+        if (TestUtil.isFoundationDBServer(con)) {
+            
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate("PREPARE pstmt AS SELECT * FROM test_fetch");
+            
+            stmt.executeUpdate("DECLARE pcursor CURSOR FOR EXECUTE pstmt");
+            rs = stmt.executeQuery("FETCH 5 FROM pcursor");
+        }else {
+            PreparedStatement stmt = con.prepareStatement("declare test_cursor cursor for select * from test_fetch");
+            stmt.execute();
 
-        PreparedStatement stmt = con.prepareStatement("declare test_cursor cursor for select * from test_fetch");
-        stmt.execute();
-
-        stmt = con.prepareStatement("fetch forward from test_cursor");
-        ResultSet rs = stmt.executeQuery();
+            stmt = con.prepareStatement("fetch forward from test_cursor");
+            rs = stmt.executeQuery();
+        }
+        
         while (rs.next())
         {
             //there should only be one row returned
@@ -73,12 +83,18 @@ public class ServerCursorTest extends TestCase
             byte[] dataBytes = rs.getBytes(2);
             assertEquals("binary data got munged", DATA_STRING, new String(dataBytes, "UTF8"));
         }
-
+        if (TestUtil.isFoundationDBServer(con)) {
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate("CLOSE pcursor");
+            con.commit();
+            stmt.executeUpdate("DEALLOCATE pstmt");
+        }
     }
 
     //Test binary cursor fetching
     public void testBinaryFetch() throws Exception
     {
+        // No binary cursor in foundationdDB
         if (TestUtil.isFoundationDBServer(con))
             return;
         createRows(1);
