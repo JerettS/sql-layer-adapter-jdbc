@@ -917,8 +917,10 @@ public class PreparedStatementTest extends TestCase
 
     public void testUnknownSetObject() throws SQLException
     {
-        if (TestUtil.isFoundationDBServer(conn))
+        if (TestUtil.isFoundationDBServer(conn)) {
             return;
+        }
+        
         PreparedStatement pstmt = conn.prepareStatement("INSERT INTO intervaltable(i) VALUES (?)");
 
         if (TestUtil.isProtocolVersion(conn, 3))

@@ -367,12 +367,20 @@ public class TestUtil
     public static void dropTable(Connection con, String table) throws SQLException
     {
         Statement stmt = con.createStatement();
+        
+        
         try
         {
-            String sql = "DROP TABLE " + table;
-            if (haveMinimumServerVersion(con, "7.3"))
-            {
-                sql += " CASCADE ";
+            String sql;
+            if (TestUtil.isFoundationDBServer(con)){
+                sql = "DROP TABLE IF EXISTS " + table;
+                
+            } else {
+                sql = "DROP TABLE " + table;
+                if (haveMinimumServerVersion(con, "7.3"))
+                {
+                    sql += " CASCADE ";
+                }
             }
             stmt.executeUpdate(sql);
         }
