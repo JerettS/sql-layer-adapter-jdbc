@@ -207,6 +207,10 @@ public class ConnectionTest extends TestCase
      */
     public void testTransactionIsolation() throws Exception
     {
+        // we support only one Transaction Serialization level. 
+        if (TestUtil.isFoundationDBServer(con)) {
+            return;
+        }
         con = TestUtil.openDB();
 
         int defaultLevel = con.getTransactionIsolation();

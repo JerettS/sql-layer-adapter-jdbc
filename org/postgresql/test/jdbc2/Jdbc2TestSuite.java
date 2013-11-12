@@ -92,9 +92,10 @@ public class Jdbc2TestSuite extends TestSuite
             suite.addTestSuite(OID74Test.class);
             // needs table OIDs returned in RowDescription message.
             suite.addTestSuite(UpdateableResultTest.class );
+            // Parameters not handled correctly
+            suite.addTestSuite(CallableStmtTest.class );
         }
 
-        suite.addTestSuite(CallableStmtTest.class );
         suite.addTestSuite(CursorFetchTest.class);
         suite.addTestSuite(ServerCursorTest.class);
 
@@ -105,7 +106,7 @@ public class Jdbc2TestSuite extends TestSuite
         suite.addTestSuite(LoginTimeoutTest.class);
         suite.addTestSuite(TestACL.class);
         
-        if (TestUtil.isProtocolVersion(conn, 3)) {
+        if (TestUtil.isProtocolVersion(conn, 3) && !TestUtil.isFoundationDBServer(conn)) {
             suite.addTestSuite(CopyTest.class);
         }
         if (TestUtil.haveMinimumServerVersion(conn, "9.3")) {

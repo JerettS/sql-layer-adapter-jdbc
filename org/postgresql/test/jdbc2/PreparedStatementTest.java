@@ -911,15 +911,16 @@ public class PreparedStatementTest extends TestCase
         rs.close();
         pstmt.close();
         if (TestUtil.isFoundationDBServer(conn)) {
-            pstmt = conn.prepareStatement("DROP TABLE decimal_tab");
-            pstmt.executeUpdate();
-            pstmt.close();
+            conn.createStatement().executeUpdate("DROP TABLE DECIMAL_TAB");
         }
-        
     }
 
     public void testUnknownSetObject() throws SQLException
     {
+        if (TestUtil.isFoundationDBServer(conn)) {
+            return;
+        }
+        
         PreparedStatement pstmt = conn.prepareStatement("INSERT INTO intervaltable(i) VALUES (?)");
 
         if (TestUtil.isProtocolVersion(conn, 3))
@@ -956,6 +957,8 @@ public class PreparedStatementTest extends TestCase
      */
     public void testStatementDescribe() throws SQLException
     {
+        if(TestUtil.isFoundationDBServer(conn)) 
+            return;
         PreparedStatement pstmt = conn.prepareStatement("SELECT ?::int");
         pstmt.setObject(1, new Integer(2), Types.OTHER);
         for (int i=0; i<10; i++) {

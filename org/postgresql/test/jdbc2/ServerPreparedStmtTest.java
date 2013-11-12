@@ -276,6 +276,8 @@ public class ServerPreparedStmtTest extends TestCase
     }
 
     public void testTypeChange() throws Exception {
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         PreparedStatement pstmt = con.prepareStatement("SELECT CAST (? AS TEXT)");
         ((PGStatement)pstmt).setUseServerPrepare(true);
         

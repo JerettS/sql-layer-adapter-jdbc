@@ -297,7 +297,7 @@ public class Driver implements java.sql.Driver
         catch (Exception ex2)
         {
             logger.debug("Unexpected connection error:", ex2);
-            throw new PSQLException(GT.tr("Something unusual has occured to cause the driver to fail. Please report this exception."),
+            throw new PSQLException(GT.tr("Something unusual has occurred to cause the driver to fail. Please report this exception."),
                                     PSQLState.UNEXPECTED_ERROR, ex2);
         }
     }
@@ -361,7 +361,7 @@ public class Driver implements java.sql.Driver
                             resultException.fillInStackTrace();
                             throw (SQLException)resultException;
                         } else {
-                            throw new PSQLException(GT.tr("Something unusual has occured to cause the driver to fail. Please report this exception."),
+                            throw new PSQLException(GT.tr("Something unusual has occurred to cause the driver to fail. Please report this exception."),
                                                     PSQLState.UNEXPECTED_ERROR, resultException);
                         }
                     }
@@ -376,10 +376,14 @@ public class Driver implements java.sql.Driver
                     try {
                         wait(delay);
                     } catch (InterruptedException ie) {
-                        abandoned = true;
-                        throw new PSQLException(GT.tr("Interrupted while attempting to connect."),
-                                                PSQLState.CONNECTION_UNABLE_TO_CONNECT);
-                    }                                            
+			
+			// reset the interrupt flag                         
+			Thread.currentThread().interrupt();
+			abandoned = true;
+			
+			// throw an unchecked exception which will hopefully not be ignored by the calling code
+			throw new RuntimeException(GT.tr("Interrupted while attempting to connect."));     
+		   }                                            
                 }
             }
         }

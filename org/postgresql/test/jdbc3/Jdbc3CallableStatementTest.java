@@ -52,6 +52,29 @@ public class Jdbc3CallableStatementTest extends TestCase
                     " LANGUAGE javascript PARAMETER STYLE variables AS $$" +
                     " pa = pa +1; pb = 'foo.out'; pc = pa + 1;" +
                     " $$");
+
+            stmt.execute("CREATE OR REPLACE PROCEDURE numeric_proc (OUT imax numeric(30,15), OUT imin numeric(30,15), OUT null_val numeric(30,15) )" +
+                    " LANGUAGE javascript PARAMETER STYLE java EXTERNAL NAME 'decimal_proc' READS SQL DATA as $$\n"+
+                    " function numeric_proc (imax, imin, null_val) {\n" +
+                    " con = java.sql.DriverManager.getConnection('jdbc:default:connection')\n"+
+                    " stmt = con.createStatement()\n" +
+                    " try {\n" +
+                    "   rs = stmt.executeQuery ('select max_val from test.numeric_tab')\n" +
+                    "   rs.next()\n" +
+                    "   imax[0] = rs.getBigDecimal(1) \n" +
+                    "   rs.close()\n" +
+                    "   rs = stmt.executeQuery ('select min_val from test.numeric_tab')\n" +
+                    "   rs.next()\n"+
+                    "   imin[0] = rs.getBigDecimal(1)\n"+
+                    "   rs.close()\n"+
+                    "   rs = stmt.executeQuery ('select nul_val from test.numeric_tab')\n" +
+                    "   rs.next()\n"+
+                    "   null_val = rs.getBigDecimal(1)\n"+
+                    "   rs.close()\n"+
+                    "} finally {\n"+
+                    "   stmt.close()\n" +
+                    "}}$$");
+            
             
         } else {
             stmt.execute("create temp table numeric_tab (MAX_VAL NUMERIC(30,15), MIN_VAL NUMERIC(30,15), NULL_VAL NUMERIC(30,15) NULL)");
@@ -226,22 +249,44 @@ public class Jdbc3CallableStatementTest extends TestCase
         {
             Statement stmt = con.createStatement();
             if (TestUtil.isFoundationDBServer(con)) {
-                // https://trello.com/c/izukbykc
-                return;
-            }
+                stmt.execute("create table decimal_tab ( max_val numeric(30,15), min_val numeric(30,15), nul_val numeric(30,15) )");
+                stmt.execute("insert into decimal_tab values (999999999999999.000000000000000,0.000000000000001,null)");
+                stmt.execute("CREATE OR REPLACE PROCEDURE decimal_proc (OUT pmax numeric(30,15), OUT pmin numeric(30,15), OUT nval numeric(30,15) )" +
+                        " LANGUAGE javascript PARAMETER STYLE java EXTERNAL NAME 'decimal_proc' READS SQL DATA as $$\n"+
+                        " function decimal_proc (pmax, pmin, nval) {\n" +
+                        " con = java.sql.DriverManager.getConnection('jdbc:default:connection')\n"+
+                        " stmt = con.createStatement()\n" +
+                        " try {\n" +
+                        "   rs = stmt.executeQuery ('select max_val from test.decimal_tab')\n" +
+                        "   rs.next()\n" +
+                        "   pmax[0] = rs.getBigDecimal(1) \n" +
+                        "   rs.close()\n" +
+                        "   rs = stmt.executeQuery ('select min_val from test.decimal_tab')\n" +
+                        "   rs.next()\n"+
+                        "   pmin[0] = rs.getBigDecimal(1)\n"+
+                        "   rs.close()\n"+
+                        "   rs = stmt.executeQuery ('select nul_val from test.decimal_tab')\n" +
+                        "   rs.next()\n"+
+                        "   nval = rs.getBigDecimal(1)\n"+
+                        "   rs.close()\n"+
+                        "} finally {\n"+
+                        "   stmt.close()\n" +
+                        "}}$$");
+            } else {
             
-            stmt.execute("create temp table decimal_tab ( max_val numeric(30,15), min_val numeric(30,15), nul_val numeric(30,15) )");
-            stmt.execute("insert into decimal_tab values (999999999999999.000000000000000,0.000000000000001,null)");
-    
-            boolean ret = stmt.execute("create or replace function "
-       			 + "decimal_proc( OUT pmax numeric, OUT pmin numeric, OUT nval numeric)  as "
-       			 + "'begin " 
-       			 + 	"select max_val into pmax from decimal_tab;"
-       			+ 	"select min_val into pmin from decimal_tab;"
-      			 + 	"select nul_val into nval from decimal_tab;"
-      			 		
-       			 + " end;' "
-       			 + "language plpgsql;");
+                stmt.execute("create temp table decimal_tab ( max_val numeric(30,15), min_val numeric(30,15), nul_val numeric(30,15) )");
+                stmt.execute("insert into decimal_tab values (999999999999999.000000000000000,0.000000000000001,null)");
+        
+                boolean ret = stmt.execute("create or replace function "
+           			 + "decimal_proc( OUT pmax numeric, OUT pmin numeric, OUT nval numeric)  as "
+           			 + "'begin " 
+           			 + 	"select max_val into pmax from decimal_tab;"
+           			+ 	"select min_val into pmin from decimal_tab;"
+          			 + 	"select nul_val into nval from decimal_tab;"
+          			 		
+           			 + " end;' "
+           			 + "language plpgsql;");
+            }
         }
         catch (Exception ex)
         {
@@ -271,7 +316,12 @@ public class Jdbc3CallableStatementTest extends TestCase
             try
             {
                 Statement dstmt = con.createStatement();
-                dstmt.execute("drop function decimal_proc()");
+                if (TestUtil.isFoundationDBServer(con)) {
+                    dstmt.executeUpdate("DROP PROCEDURE decimal_proc");
+                    dstmt.executeUpdate("DROP TABLE decimal_tab");
+                } else {
+                    dstmt.execute("drop function decimal_proc()");
+                }
             }
             catch (Exception ex){}
         }
@@ -355,22 +405,50 @@ public class Jdbc3CallableStatementTest extends TestCase
     {
         try
         {
-            if (TestUtil.isFoundationDBServer(con)) {
-                // https://trello.com/c/izukbykc
-                return;
-            }
             Statement stmt = con.createStatement();
-	        stmt.execute(createBitTab);
-	        stmt.execute(insertBitTab);
-	        boolean ret = stmt.execute("create or replace function "
-	   			 + "insert_bit( inout IMAX boolean, inout IMIN boolean, inout INUL boolean)  as "
-	   			 + "'begin " 
-	   			 + 	"insert into bit_tab values( imax, imin, inul);"
-	   			 + 	"select max_val into imax from bit_tab;"
-	   			 + 	"select min_val into imin from bit_tab;"
-	   			 + 	"select null_val into inul from bit_tab;"		
-	   			 + " end;' "
-	   			 + "language plpgsql;");
+            if (TestUtil.isFoundationDBServer(con)) {
+                stmt.execute("create table bit_tab (max_val boolean, min_val boolean, null_val boolean)");
+                stmt.execute(insertBitTab);
+                stmt.execute("CREATE OR REPLACE PROCEDURE insert_bit (INOUT imax boolean, INOUT imin boolean, INOUT inul boolean )" +
+                        " LANGUAGE javascript PARAMETER STYLE variables READS SQL DATA as $$\n"+
+                        " con = java.sql.DriverManager.getConnection('jdbc:default:connection')\n"+
+                        " stmt = con.prepareStatement('insert into bit_tab values (?, ?, ?)')\n"+
+                        " stmt.setBoolean(1, imax[0]); stmt.setBoolean(2, imin[0]); \n"+
+                        " stmt.setNull(3, -7)\n" +
+                        " stmt.executeUpdate()\n" +
+                        " stmt.close()\n" +
+                        " stmt = con.createStatement()\n" +
+                        " try {\n" +
+                        "   rs = stmt.executeQuery ('select max_val from test.bit_tab')\n" +
+                        "   rs.next()\n" +
+                        "   imax[0] = rs.getBigDecimal(1) \n" +
+                        "   rs.close()\n" +
+                        "   rs = stmt.executeQuery ('select min_val from test.bit_tab')\n" +
+                        "   rs.next()\n"+
+                        "   imin[0] = rs.getBigDecimal(1)\n"+
+                        "   rs.close()\n"+
+                        "   rs = stmt.executeQuery ('select nul_val from test.bit_tab')\n" +
+                        "   rs.next()\n"+
+                        "   inul = rs.getBigDecimal(1)\n"+
+                        "   rs.close()\n"+
+                        "} finally {\n"+
+                        "   stmt.close()\n" +
+                        "}$$");
+
+            
+            } else {
+    	        stmt.execute(createBitTab);
+    	        stmt.execute(insertBitTab);
+    	        boolean ret = stmt.execute("create or replace function "
+    	   			 + "insert_bit( inout IMAX boolean, inout IMIN boolean, inout INUL boolean)  as "
+    	   			 + "'begin " 
+    	   			 + 	"insert into bit_tab values( imax, imin, inul);"
+    	   			 + 	"select max_val into imax from bit_tab;"
+    	   			 + 	"select min_val into imin from bit_tab;"
+    	   			 + 	"select null_val into inul from bit_tab;"		
+    	   			 + " end;' "
+    	   			 + "language plpgsql;");
+            }
         }
         catch (Exception ex)
         {
@@ -398,8 +476,13 @@ public class Jdbc3CallableStatementTest extends TestCase
         {
             try
             {
-                Statement dstmt = con.createStatement();
-                dstmt.execute("drop function insert_bit(boolean, boolean, boolean)");
+                if (TestUtil.isFoundationDBServer(con)) {
+                    con.createStatement().executeUpdate("DROP PROCEDURE insert_bit");
+                    con.createStatement().executeUpdate("DROP TABLE bit_tab");
+                } else {
+                    Statement dstmt = con.createStatement();
+                    dstmt.execute("drop function insert_bit(boolean, boolean, boolean)");
+                }
             }
             catch (Exception ex){}
         }
@@ -412,17 +495,39 @@ public class Jdbc3CallableStatementTest extends TestCase
         try
         {
 	        Statement stmt = con.createStatement();
-	        stmt.execute(createBitTab);
-	        stmt.execute(insertBitTab);
-	        boolean ret = stmt.execute("create or replace function "
-	   			 + "update_bit( in IMAX boolean, in IMIN boolean, in INUL boolean) returns int as "
-	   			 + "'begin " 
-	   			 + 	"update bit_tab set  max_val = imax;"
-	   			 + 	"update bit_tab set  min_val = imin;"
-	   			 + 	"update bit_tab set  min_val = inul;"
-	   			 +  " return 0;"		
-	   			 + " end;' "
-	   			 + "language plpgsql;");
+	        if (TestUtil.isFoundationDBServer(con)) {
+	            stmt.execute("create table bit_tab (max_val boolean, min_val boolean, null_val boolean)");
+	            stmt.execute(insertBitTab);
+                stmt.execute("create or replace function" + 
+                        " update_bit(imax boolean, imin boolean, inul boolean) RETURNS int"+
+                        " language javascript parameter style variables as $$"+
+                        "  stmt = java.sql.DriverManager.getConnection('jdbc:default:connection').prepareStatement('UPDATE bit_tab SET max_val = ?');" +
+                        "  stmt.setBoolean(1,imax);"+
+                        "  stmt.executeUpdate();" +
+                        "  stmt.close();" +
+                        "  stmt = java.sql.DriverManager.getConnection('jdbc:default:connection').prepareStatement('UPDATE bit_tab SET min_val = ?');" +
+                        "  stmt.setBoolean(1,imin);"+
+                        "  stmt.executeUpdate();" +
+                        "  stmt.close();" +
+                        "  stmt = java.sql.DriverManager.getConnection('jdbc:default:connection').prepareStatement('UPDATE bit_tab SET null_val = ?');" +
+                        "  stmt.setBoolean(1, inul);"+
+                        "  stmt.executeUpdate();" +
+                        "  stmt.close();" +
+                        "  0; $$");
+	        } else {
+    	        
+    	        stmt.execute(createBitTab);
+    	        stmt.execute(insertBitTab);
+    	        boolean ret = stmt.execute("create or replace function "
+    	   			 + "update_bit( in IMAX boolean, in IMIN boolean, in INUL boolean) returns int as "
+    	   			 + "'begin " 
+    	   			 + 	"update bit_tab set  max_val = imax;"
+    	   			 + 	"update bit_tab set  min_val = imin;"
+    	   			 + 	"update bit_tab set  min_val = inul;"
+    	   			 +  " return 0;"		
+    	   			 + " end;' "
+    	   			 + "language plpgsql;");
+	        }
         }
         catch (Exception ex)
         {
@@ -454,7 +559,12 @@ public class Jdbc3CallableStatementTest extends TestCase
             try
             {
                 Statement dstmt = con.createStatement();
-                dstmt.execute("drop function update_bit(boolean, boolean, boolean)");
+                if (TestUtil.isFoundationDBServer(con)) {
+                    dstmt.executeUpdate("DROP PROCEDURE update_bit");
+                    dstmt.executeUpdate("DROP TABLE bit_tab");
+                } else {
+                    dstmt.execute("drop function update_bit(boolean, boolean, boolean)");
+                }
             }
             catch (Exception ex){}
         }
@@ -677,7 +787,11 @@ public class Jdbc3CallableStatementTest extends TestCase
         try
         {
 	        Statement stmt = con.createStatement();
-	        stmt.execute(createDecimalTab);
+	        if (TestUtil.isFoundationDBServer(con)) {
+	            stmt.execute("create table decimal_tab ( max_val float, min_val float, null_val float )");
+	        }else {
+	            stmt.execute(createDecimalTab);
+	        }
 	        boolean ret = stmt.execute(createUpdateFloat);
 	        stmt.close();
 	        PreparedStatement pstmt = con.prepareStatement("insert into decimal_tab values (?,?)");
@@ -716,6 +830,9 @@ public class Jdbc3CallableStatementTest extends TestCase
             {
                 Statement dstmt = con.createStatement();
                 dstmt.execute("drop function updatefloat_proc(float, float)");
+                if (TestUtil.isFoundationDBServer(con)) {
+                    con.createStatement().executeUpdate("DROP TABLE decimal_tab");
+                }
             }
             catch (Exception ex){}
         }
@@ -784,9 +901,35 @@ public class Jdbc3CallableStatementTest extends TestCase
         try
         {
         Statement stmt = con.createStatement();
-        stmt.execute( createDecimalTab );
-        stmt.execute( insertDecimalTab );
-        boolean ret = stmt.execute(createFloatProc);
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("create table decimal_tab ( max_val float, min_val float, null_val float )");
+            stmt.execute(insertDecimalTab);
+
+            stmt.execute("CREATE OR REPLACE PROCEDURE float_proc (OUT imax float, OUT imin float, OUT inul float )" +
+                    " LANGUAGE javascript PARAMETER STYLE variables READS SQL DATA as $$\n"+
+                    " con = java.sql.DriverManager.getConnection('jdbc:default:connection')\n"+
+                    " stmt = con.createStatement()\n" +
+                    " try {\n" +
+                    "   rs = stmt.executeQuery ('select max_val from test.decimal_tab')\n" +
+                    "   rs.next()\n" +
+                    "   imax[0] = rs.getFloat(1) \n" +
+                    "   rs.close()\n" +
+                    "   rs = stmt.executeQuery ('select min_val from test.decimal_tab')\n" +
+                    "   rs.next()\n"+
+                    "   imin[0] = rs.getFloat(1)\n"+
+                    "   rs.close()\n"+
+                    "   rs = stmt.executeQuery ('select nul_val from test.decimal_tab')\n" +
+                    "   rs.next()\n"+
+                    "   inul = rs.getFloat(1)\n"+
+                    "   rs.close()\n"+
+                    "} finally {\n"+
+                    "   stmt.close()\n" +
+                    "}$$");
+        } else {
+            stmt.execute( createDecimalTab );
+            stmt.execute( insertDecimalTab );
+            boolean ret = stmt.execute(createFloatProc);
+        }
         }
         catch (Exception ex)
         {
@@ -818,7 +961,12 @@ public class Jdbc3CallableStatementTest extends TestCase
             try
             {
                 Statement dstmt = con.createStatement();
-                dstmt.execute(dropFloatProc);
+                if (TestUtil.isFoundationDBServer(con)) {
+                    dstmt.executeUpdate ("DROP PROCEDURE float_proc");
+                    dstmt.executeUpdate("DROP TABLE decimal_tab");
+                } else {
+                    dstmt.execute(dropFloatProc);
+                }
             }
             catch (Exception ex){}
         }

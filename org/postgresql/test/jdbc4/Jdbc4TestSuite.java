@@ -34,6 +34,7 @@ public class Jdbc4TestSuite extends TestSuite
         }
         suite.addTestSuite(ConnectionTest.class);
         suite.addTestSuite(WrapperTest.class);
+        suite.addTestSuite(BinaryTest.class);
 
         try
         {

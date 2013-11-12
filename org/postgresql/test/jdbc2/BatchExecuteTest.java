@@ -249,7 +249,8 @@ public class BatchExecuteTest extends TestCase
     {
         Statement stmt = con.createStatement();
         if (TestUtil.isFoundationDBServer(con)) {
-            stmt.addBatch ("select 1/0;");
+            con.setAutoCommit(true);
+            stmt.addBatch ("CREATE TABLE unused (a int not null primary key)");
         } else {
             stmt.addBatch("CREATE TEMP TABLE unused (a int primary key)");
         }
@@ -257,6 +258,9 @@ public class BatchExecuteTest extends TestCase
         // Execute an empty batch to clear warnings.
         stmt.executeBatch();
         assertNull(stmt.getWarnings());
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.executeUpdate("DROP TABLE unused");
+        }
         stmt.close();
     }
 
@@ -264,6 +268,7 @@ public class BatchExecuteTest extends TestCase
     {
         Statement stmt = con.createStatement();
         if (TestUtil.isFoundationDBServer(con)) {
+            con.setAutoCommit(true);
             stmt.execute("CREATE TABLE batchescape(d date)");
         } else {
             stmt.execute("CREATE TEMP TABLE batchescape (d date)");
@@ -293,9 +298,14 @@ public class BatchExecuteTest extends TestCase
 
     public void testBatchWithEmbeddedNulls() throws SQLException
     {
+        // paramter management
+        if (TestUtil.isFoundationDBServer(con))
+            return;
         Statement stmt = con.createStatement();
         if (TestUtil.isFoundationDBServer(con)) {
+            con.setAutoCommit(true);
             stmt.execute("CREATE TABLE batchstring (a text)");
+            con.setAutoCommit(false);
         } else {
             stmt.execute("CREATE TEMP TABLE batchstring (a text)");
         }

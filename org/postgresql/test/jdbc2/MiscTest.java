@@ -63,6 +63,10 @@ public class MiscTest extends TestCase
     public void testSingleThreadCancel() throws Exception
     {
         Connection con = TestUtil.openDB();
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.closeDB(con);
+            return;
+        }
         Statement stmt = con.createStatement();
         for (int i=0; i<100; i++) {
             ResultSet rs = stmt.executeQuery("SELECT 1");
@@ -80,7 +84,11 @@ public class MiscTest extends TestCase
             // transaction mode
             con.setAutoCommit(false);
             Statement stmt = con.createStatement();
-            stmt.execute("select 1/0");
+            if (TestUtil.isFoundationDBServer(con)){
+                stmt.execute("select * from no_table");
+            } else {
+                stmt.execute("select 1/0");
+            }
             fail( "Should not execute this, as a SQLException s/b thrown" );
             con.commit();
         }

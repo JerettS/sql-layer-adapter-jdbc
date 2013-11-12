@@ -51,8 +51,8 @@ public class ResultSetMetaDataTest extends TestCase
     {
         if (!TestUtil.isFoundationDBServer(conn)) { 
             TestUtil.dropTable(conn, "compositetest");
-            TestUtil.dropTable(conn, "sizetest");
         }
+        TestUtil.dropTable(conn, "sizetest");
         TestUtil.dropTable(conn, "rsmd1");
         TestUtil.dropTable(conn, "timetest");
         TestUtil.dropTable(conn, "serialtest");
