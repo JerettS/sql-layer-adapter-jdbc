@@ -67,8 +67,6 @@ public class Jdbc2TestSuite extends TestSuite
         // PreparedStatement
         suite.addTestSuite(PreparedStatementTest.class);
         suite.addTestSuite(StatementTest.class);
-        if (!TestUtil.isFoundationDBServer(conn)) {
-        }
 
         // ServerSide Prepared Statements
         suite.addTestSuite(ServerPreparedStmtTest.class);
