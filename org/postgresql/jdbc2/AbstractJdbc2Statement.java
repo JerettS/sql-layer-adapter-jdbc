@@ -908,7 +908,8 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
             StringBuffer newsql = new StringBuffer(len);
             int i=0;
             while (i<len){
-                i=parseSql(p_sql,i,newsql,false,connection.getStandardConformingStrings());
+                i=parseSql(p_sql,i,newsql,false,connection.getStandardConformingStrings(),
+                        ((AbstractJdbc2Connection)connection).isFoundationDBServer());
                 // We need to loop here in case we encounter invalid
                 // SQL, consider: SELECT a FROM t WHERE (1 > 0)) ORDER BY a
                 // We can't ending replacing after the extra closing paren
@@ -928,7 +929,7 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
     }
     
     /**
-     * parse the given sql from index i, appending it to the gven buffer
+     * parse the given sql from index i, appending it to the given buffer
      * until we hit an unmatched right parentheses or end of string.  When
      * the stopOnComma flag is set we also stop processing when a comma is
      * found in sql text that isn't inside nested parenthesis.
@@ -941,7 +942,7 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
      * @return the position we stopped processing at
      */
     protected static int parseSql(String p_sql,int i,StringBuffer newsql, boolean stopOnComma,
-                                  boolean stdStrings)throws SQLException{
+                                  boolean stdStrings, boolean isFoundationDBServer)throws SQLException{
         short state = IN_SQLCODE;
         int len = p_sql.length();
         int nestedParenthesis=0;
@@ -1048,9 +1049,9 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
                     // extract arguments
                     i= posArgs+1;// we start the scan after the first (
                     StringBuffer args=new StringBuffer();
-                    i = parseSql(p_sql,i,args,false,stdStrings);
+                    i = parseSql(p_sql,i,args,false,stdStrings, isFoundationDBServer);
                     // translate the function and parse arguments
-                    newsql.append(escapeFunction(functionName,args.toString(),stdStrings));
+                    newsql.append(escapeFunction(functionName,args.toString(),stdStrings, isFoundationDBServer));
                 }
                 // go to the end of the function copying anything found
                 i++;
@@ -1078,7 +1079,8 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
      * @param stdStrings whether standard_conforming_strings is on
      * @return the right postgreSql sql
      */
-    protected static String escapeFunction(String functionName, String args, boolean stdStrings) throws SQLException{
+    protected static String escapeFunction(String functionName, String args, boolean stdStrings, 
+                boolean isFoundationDBServer) throws SQLException{
         // parse function arguments
         int len = args.length();
         int i=0;
@@ -1086,13 +1088,18 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
         while (i<len){
             StringBuffer arg = new StringBuffer();
             int lastPos=i;
-            i=parseSql(args,i,arg,true,stdStrings);
+            i=parseSql(args,i,arg,true,stdStrings, isFoundationDBServer);
             if (lastPos!=i){
                 parsedArgs.add(arg);
             }
             i++;
         }
-        // we can now tranlate escape functions
+        
+        if (isFoundationDBServer){
+            return unchangedFunction(functionName, parsedArgs);
+        }
+        
+        // we can now translate escape functions
         try{
             Method escapeMethod = EscapedFunctions.getFunction(functionName);
             return (String) escapeMethod.invoke(null,new Object[] {parsedArgs});
@@ -1103,19 +1110,22 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
                 throw new PSQLException(e.getTargetException().getMessage(),
                                         PSQLState.SYSTEM_ERROR);
         }catch (Exception e){
-            // by default the function name is kept unchanged
-            StringBuffer buf = new StringBuffer();
-            buf.append(functionName).append('(');
-            for (int iArg = 0;iArg<parsedArgs.size();iArg++){
-                buf.append(parsedArgs.get(iArg));
-                if (iArg!=(parsedArgs.size()-1))
-                    buf.append(',');
-            }
-            buf.append(')');
-            return buf.toString();    
+            return unchangedFunction(functionName, parsedArgs);
         }
     }
 
+    protected static String unchangedFunction (String functionName, ArrayList parsedArgs) {
+        // by default the function name is kept unchanged
+        StringBuffer buf = new StringBuffer();
+        buf.append(functionName).append('(');
+        for (int iArg = 0;iArg<parsedArgs.size();iArg++){
+            buf.append(parsedArgs.get(iArg));
+            if (iArg!=(parsedArgs.size()-1))
+                buf.append(',');
+        }
+        buf.append(')');
+        return buf.toString();    
+    }
     /*
      *
      * The following methods are postgres extensions and are defined

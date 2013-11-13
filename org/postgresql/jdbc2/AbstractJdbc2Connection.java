@@ -680,7 +680,7 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     {
         checkClosed();
         StringBuffer buf = new StringBuffer(sql.length());
-        AbstractJdbc2Statement.parseSql(sql,0,buf,false,getStandardConformingStrings());
+        AbstractJdbc2Statement.parseSql(sql,0,buf,false,getStandardConformingStrings(), isFoundationDBServer());
         return buf.toString();
     }
 
