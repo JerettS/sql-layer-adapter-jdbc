@@ -29,11 +29,19 @@ public class StatementTest extends TestCase
         super.setUp();
 
         con = TestUtil.openDB();
-        TestUtil.createTempTable(con, "test_statement",
-                                 "i int");
-        TestUtil.createTempTable(con, "escapetest",
-                                 "ts timestamp, d date, t time, \")\" varchar(5), \"\"\"){a}'\" text ");
-        TestUtil.createTempTable(con, "comparisontest","str1 varchar(5), str2 varchar(15)");
+        
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con, "test_statement", "i int");
+            TestUtil.createTable(con, "escapetest", "ts timestamp, d date, t time, \")\" varchar(5),\"\"\"){a}'\" text  ");
+            TestUtil.createTable(con, "comparisontest","str1 varchar(5), str2 varchar(15)");
+        } else {
+        
+            TestUtil.createTempTable(con, "test_statement",
+                                     "i int");
+            TestUtil.createTempTable(con, "escapetest",
+                                     "ts timestamp, d date, t time, \")\" varchar(5), \"\"\"){a}'\" text ");
+            TestUtil.createTempTable(con, "comparisontest","str1 varchar(5), str2 varchar(15)");
+        }
         Statement stmt = con.createStatement();
         stmt.executeUpdate(TestUtil.insertSQL("comparisontest","str1,str2","'_abcd','_found'"));
         stmt.executeUpdate(TestUtil.insertSQL("comparisontest","str1,str2","'%abcd','%found'"));
@@ -102,9 +110,15 @@ public class StatementTest extends TestCase
     public void testEmptyQuery() throws SQLException
     {
         Statement stmt = con.createStatement();
-        stmt.execute("");
-        assertNull(stmt.getResultSet());
-        assertTrue(!stmt.getMoreResults());
+        try {
+            stmt.execute("");
+            assertNull(stmt.getResultSet());
+            assertTrue(!stmt.getMoreResults());
+        } catch (SQLException ex) {
+            if (!TestUtil.isFoundationDBServer(con)) {
+                fail ("Empty query should not fail");
+            }
+        }
     }
 
     public void testUpdateCount() throws SQLException
@@ -120,8 +134,16 @@ public class StatementTest extends TestCase
         count = stmt.executeUpdate("UPDATE test_statement SET i=4");
         assertEquals(2, count);
 
-        count = stmt.executeUpdate("CREATE TEMP TABLE another_table (a int)");
+        if (TestUtil.isFoundationDBServer(con)){
+            count = stmt.executeUpdate("CREATE TABLE another_table (a int)");
+        } else {
+            count = stmt.executeUpdate("CREATE TEMP TABLE another_table (a int)");
+        }
         assertEquals(0, count);
+        
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.executeUpdate("DROP TABLE another_table");
+        }
     }
 
     public void testEscapeProcessing() throws SQLException
@@ -159,8 +181,12 @@ public class StatementTest extends TestCase
         assertEquals("{}", rs.getString(2));
         assertEquals("'\"", rs.getString(3));
         assertEquals("b'}'", rs.getString(4));
-        
-        count = stmt.executeUpdate( "create temp table b (i int)" );
+
+        if (TestUtil.isFoundationDBServer(con)) {
+            count = stmt.executeUpdate("create table b (i int)");
+        } else {
+            count = stmt.executeUpdate( "create temp table b (i int)" );
+        }
         assertEquals(0, count);
 
         rs = stmt.executeQuery( "select * from {oj test_statement a left outer join b on (a.i=b.i)} ");
@@ -172,6 +198,9 @@ public class StatementTest extends TestCase
         rs = stmt.executeQuery("select str2 from comparisontest where str1 like '|%abcd' {escape '|'} ");
         assertTrue(rs.next());
         assertEquals("%found",rs.getString(1));
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.executeUpdate("DROP TABLE b");
+        }
     }
 
 
@@ -208,7 +237,11 @@ public class StatementTest extends TestCase
         assertTrue(rs.next());
         assertEquals(Math.atan2(-2.3,7), rs.getDouble(1), 0.00001);
 
-        rs = stmt.executeQuery("select {fn ceiling(-2.3)} as ceiling ");
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = stmt.executeQuery("select {fn ceil(-2.3)} as ceiling");
+        } else {
+            rs = stmt.executeQuery("select {fn ceiling(-2.3)} as ceiling ");
+        }
         assertTrue(rs.next());
         assertEquals(-2, rs.getDouble(1), 0.00001);
 
@@ -251,21 +284,42 @@ public class StatementTest extends TestCase
     public void testStringFunctions() throws SQLException
     {
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("select {fn ascii(' test')},{fn char(32)}" +
-                ",{fn concat('ab','cd')}" +
-                ",{fn lcase('aBcD')},{fn left('1234',2)},{fn length('123 ')}" +
-                ",{fn locate('bc','abc')},{fn locate('bc','abc',3)}");
-        assertTrue(rs.next());
-        assertEquals(32,rs.getInt(1));
-        assertEquals(" ",rs.getString(2));
-        assertEquals("abcd",rs.getString(3));
-        assertEquals("abcd",rs.getString(4));
-        assertEquals("12",rs.getString(5));
-        assertEquals(3,rs.getInt(6));
-        assertEquals(2,rs.getInt(7));
-        assertEquals(0,rs.getInt(8));
-
-        if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
+        ResultSet rs;
+        if (TestUtil.isFoundationDBServer(con)) {
+            // char() not supported
+            rs = stmt.executeQuery("select {fn ascii(' test')}" +
+                    ",{fn concat('ab','cd')}" +
+                    ",{fn lcase('aBcD')},{fn left('1234',2)},{fn length('123 ')}" +
+                    ",{fn locate('bc','abc')},{fn locate('bc','abc',3)}");
+            assertTrue(rs.next());
+            assertEquals(32,rs.getInt(1));
+            assertEquals("abcd",rs.getString(2));
+            assertEquals("abcd",rs.getString(3));
+            assertEquals("12",rs.getString(4));
+            assertEquals(4,rs.getInt(5));
+            assertEquals(2,rs.getInt(6));
+            assertEquals(0,rs.getInt(7));
+            
+        } else {
+            rs = stmt.executeQuery("select {fn ascii(' test')},{fn char(32)}" +
+                    ",{fn concat('ab','cd')}" +
+                    ",{fn lcase('aBcD')},{fn left('1234',2)},{fn length('123 ')}" +
+                    ",{fn locate('bc','abc')},{fn locate('bc','abc',3)}");
+            assertTrue(rs.next());
+            assertEquals(32,rs.getInt(1));
+            assertEquals(" ",rs.getString(2));
+            assertEquals("abcd",rs.getString(3));
+            assertEquals("abcd",rs.getString(4));
+            assertEquals("12",rs.getString(5));
+            assertEquals(3,rs.getInt(6));
+            assertEquals(2,rs.getInt(7));
+            assertEquals(0,rs.getInt(8));
+        }
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = stmt.executeQuery("SELECT {fn replace('abcdbc', 'bc', 'x')}");
+            assertTrue(rs.next());
+            assertEquals("axdx", rs.getString(1));
+        } else if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
             rs = stmt.executeQuery("SELECT {fn insert('abcdef',3,2,'xxxx')}" +
                 ",{fn replace('abcdbc','bc','x')}");
             assertTrue(rs.next());
@@ -273,18 +327,32 @@ public class StatementTest extends TestCase
             assertEquals("axdx",rs.getString(2));
         }
 
-        rs = stmt.executeQuery("select {fn ltrim(' ab')},{fn repeat('ab',2)}" +
-                ",{fn right('abcde',2)},{fn rtrim('ab ')}" +
-                ",{fn space(3)},{fn substring('abcd',2,2)}" +
-                ",{fn ucase('aBcD')}");
-        assertTrue(rs.next());
-        assertEquals("ab",rs.getString(1));
-        assertEquals("abab",rs.getString(2));
-        assertEquals("de",rs.getString(3));
-        assertEquals("ab",rs.getString(4));
-        assertEquals("   ",rs.getString(5));
-        assertEquals("bc",rs.getString(6));
-        assertEquals("ABCD",rs.getString(7));
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = stmt.executeQuery("select {fn ltrim(' ab')}" +
+                    ",{fn right('abcde',2)},{fn rtrim('ab ')}" +
+                    ",{fn substring('abcd',2,2)}" +
+                    ",{fn ucase('aBcD')}");
+            assertTrue(rs.next());
+            assertEquals("ab",rs.getString(1));
+            assertEquals("de",rs.getString(2));
+            assertEquals("ab",rs.getString(3));
+            assertEquals("bc",rs.getString(4));
+            assertEquals("ABCD",rs.getString(5));
+            
+        } else {
+            rs = stmt.executeQuery("select {fn ltrim(' ab')},{fn repeat('ab',2)}" +
+                    ",{fn right('abcde',2)},{fn rtrim('ab ')}" +
+                    ",{fn space(3)},{fn substring('abcd',2,2)}" +
+                    ",{fn ucase('aBcD')}");
+            assertTrue(rs.next());
+            assertEquals("ab",rs.getString(1));
+            assertEquals("abab",rs.getString(2));
+            assertEquals("de",rs.getString(3));
+            assertEquals("ab",rs.getString(4));
+            assertEquals("   ",rs.getString(5));
+            assertEquals("bc",rs.getString(6));
+            assertEquals("ABCD",rs.getString(7));
+        }
     }
 
     public void testDateFuncWithParam() throws SQLException
@@ -305,6 +373,10 @@ public class StatementTest extends TestCase
     
     public void testDateFunctions() throws SQLException
     {
+        // TimestampDiff not working correctly. 
+        if (TestUtil.isFoundationDBServer(con)) {
+            return;
+        }
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select {fn curdate()},{fn curtime()}" +
                 ",{fn dayname({fn now()})}, {fn dayofmonth({fn now()})}" +
@@ -361,13 +433,18 @@ public class StatementTest extends TestCase
     public void testSystemFunctions() throws SQLException
     {
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("select {fn ifnull(null,'2')}" +
+        ResultSet rs;
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = stmt.executeQuery("select {fn ifnull(null, '2')}, {fn user}");
+        } else {
+            rs = stmt.executeQuery("select {fn ifnull(null,'2')}" +
                 ",{fn user()} ");
+        }
         assertTrue(rs.next());
         assertEquals("2",rs.getString(1));
         assertEquals(TestUtil.getUser(),rs.getString(2));
 
-        if (TestUtil.haveMinimumServerVersion(con, "7.3")) {
+        if (TestUtil.haveMinimumServerVersion(con, "7.3") && !TestUtil.isFoundationDBServer(con)) {
             rs = stmt.executeQuery("select {fn database()} ");
             assertTrue(rs.next());
             assertEquals(TestUtil.getDatabase(),rs.getString(1));
@@ -378,7 +455,11 @@ public class StatementTest extends TestCase
     {
         Statement stmt = con.createStatement();
         // Will generate a NOTICE: for primary key index creation
-        stmt.execute("CREATE TEMP TABLE unused (a int primary key)");
+        if (TestUtil.isFoundationDBServer(con)) {
+            stmt.execute("DROP TABLE IF EXISTS not_here");
+        } else {
+            stmt.execute("CREATE TEMP TABLE unused (a int primary key)");
+        }
         stmt.executeQuery("SELECT 1");
 	// Executing another query should clear the warning from the first one.
         assertNull(stmt.getWarnings());
@@ -393,6 +474,9 @@ public class StatementTest extends TestCase
      */
     public void testParsingSemiColons() throws SQLException
     {
+        // No rule support -> different sql statment? 
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         Statement stmt = con.createStatement();
         stmt.execute("CREATE RULE r1 AS ON INSERT TO escapetest DO (DELETE FROM test_statement ; INSERT INTO test_statement VALUES (1); INSERT INTO test_statement VALUES (2); );");
         stmt.executeUpdate("INSERT INTO escapetest(ts) VALUES (NULL)");
@@ -409,7 +493,9 @@ public class StatementTest extends TestCase
         // dollar-quotes are supported in the backend since version 8.0
         if (!TestUtil.haveMinimumServerVersion(con, "8.0"))
             return;
-        
+        // no support for dollar quotes
+        if (TestUtil.isFoundationDBServer(con)) 
+            return;
         Statement st = con.createStatement();
         ResultSet rs;
 

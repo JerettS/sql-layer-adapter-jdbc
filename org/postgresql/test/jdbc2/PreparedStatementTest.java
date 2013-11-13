@@ -53,7 +53,6 @@ public class PreparedStatementTest extends TestCase
         TestUtil.dropTable(conn, "intervaltable");
         TestUtil.closeDB(conn);
     }
-
     public void testSetBinaryStream() throws SQLException
     {
         ByteArrayInputStream bais;
@@ -444,7 +443,7 @@ public class PreparedStatementTest extends TestCase
         st.executeUpdate();
         st.close();
     }
-    
+
     public void testComments() throws SQLException {
         if (TestUtil.isFoundationDBServer(conn)) 
             return;
