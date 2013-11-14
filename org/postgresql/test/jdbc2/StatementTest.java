@@ -327,32 +327,18 @@ public class StatementTest extends TestCase
             assertEquals("axdx",rs.getString(2));
         }
 
-        if (TestUtil.isFoundationDBServer(con)) {
-            rs = stmt.executeQuery("select {fn ltrim(' ab')}" +
-                    ",{fn right('abcde',2)},{fn rtrim('ab ')}" +
-                    ",{fn substring('abcd',2,2)}" +
-                    ",{fn ucase('aBcD')}");
-            assertTrue(rs.next());
-            assertEquals("ab",rs.getString(1));
-            assertEquals("de",rs.getString(2));
-            assertEquals("ab",rs.getString(3));
-            assertEquals("bc",rs.getString(4));
-            assertEquals("ABCD",rs.getString(5));
-            
-        } else {
-            rs = stmt.executeQuery("select {fn ltrim(' ab')},{fn repeat('ab',2)}" +
-                    ",{fn right('abcde',2)},{fn rtrim('ab ')}" +
-                    ",{fn space(3)},{fn substring('abcd',2,2)}" +
-                    ",{fn ucase('aBcD')}");
-            assertTrue(rs.next());
-            assertEquals("ab",rs.getString(1));
-            assertEquals("abab",rs.getString(2));
-            assertEquals("de",rs.getString(3));
-            assertEquals("ab",rs.getString(4));
-            assertEquals("   ",rs.getString(5));
-            assertEquals("bc",rs.getString(6));
-            assertEquals("ABCD",rs.getString(7));
-        }
+        rs = stmt.executeQuery("select {fn ltrim(' ab')},{fn repeat('ab',2)}" +
+                ",{fn right('abcde',2)},{fn rtrim('ab ')}" +
+                ",{fn space(3)},{fn substring('abcd',2,2)}" +
+                ",{fn ucase('aBcD')}");
+        assertTrue(rs.next());
+        assertEquals("ab",rs.getString(1));
+        assertEquals("abab",rs.getString(2));
+        assertEquals("de",rs.getString(3));
+        assertEquals("ab",rs.getString(4));
+        assertEquals("   ",rs.getString(5));
+        assertEquals("bc",rs.getString(6));
+        assertEquals("ABCD",rs.getString(7));
     }
 
     public void testDateFuncWithParam() throws SQLException
@@ -373,10 +359,6 @@ public class StatementTest extends TestCase
     
     public void testDateFunctions() throws SQLException
     {
-        // TimestampDiff not working correctly. 
-        if (TestUtil.isFoundationDBServer(con)) {
-            return;
-        }
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select {fn curdate()},{fn curtime()}" +
                 ",{fn dayname({fn now()})}, {fn dayofmonth({fn now()})}" +
@@ -577,13 +559,20 @@ public class StatementTest extends TestCase
     			}
     		}, 5000);
     		stmt.setQueryTimeout(1);
-    		stmt.execute("select pg_sleep(10)");
+    		if (TestUtil.isFoundationDBServer(con)) {
+    		    stmt.execute("select sleep(10000)");
+    		} else {
+    		    stmt.execute("select pg_sleep(10)");
+    		}
     		
     	}catch( SQLException sqle )
     	{
     		// state for cancel    		
     		if (sqle.getSQLState().compareTo("57014") == 0) 
     			timer.cancel();
+    		
+    		if (TestUtil.isFoundationDBServer(con) && sqle.getSQLState().compareTo("58000") == 0)
+    		    timer.cancel();
     	}
     }
 
