@@ -37,9 +37,17 @@ public class DatabaseEncodingTest extends TestCase
     protected void setUp() throws Exception
     {
         con = TestUtil.openDB();
-        TestUtil.createTable(con,
-                             "testdbencoding",
-                             "unicode_ordinal integer primary key not null, unicode_string varchar(" + STEP + ")");
+        
+        if (TestUtil.isFoundationDBServer(con)) {
+            TestUtil.createTable(con,
+                    "testdbencoding",
+                    "unicode_ordinal integer primary key not null, unicode_string varchar(" + STEP*2 + ")");
+            
+        } else {
+            TestUtil.createTable(con,
+                                 "testdbencoding",
+                                 "unicode_ordinal integer primary key not null, unicode_string varchar(" + STEP + ")");
+        }
         // disabling auto commit makes the test run faster
         // by not committing each insert individually.
         con.setAutoCommit(false);
@@ -70,7 +78,13 @@ public class DatabaseEncodingTest extends TestCase
     public void testEncoding() throws Exception {
         // Check that we have a UTF8 server encoding, or we must skip this test.
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT getdatabaseencoding()");
+        
+        ResultSet rs;
+        if (TestUtil.isFoundationDBServer(con)) {
+            rs = stmt.executeQuery("SELECT upper(current_value) from information_schema.server_parameters where parameter_name = 'fdbsql.default_charset'");
+        } else {
+            rs = stmt.executeQuery("SELECT getdatabaseencoding()");
+        }
         assertTrue(rs.next());
 
         String dbEncoding = rs.getString(1);

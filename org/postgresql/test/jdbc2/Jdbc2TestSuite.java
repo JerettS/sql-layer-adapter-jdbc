@@ -81,8 +81,8 @@ public class Jdbc2TestSuite extends TestSuite
         suite.addTestSuite(MiscTest.class);
         if (!TestUtil.isFoundationDBServer(conn)) {
             suite.addTestSuite(NotifyTest.class);
-            suite.addTestSuite(DatabaseEncodingTest.class);
         }
+        suite.addTestSuite(DatabaseEncodingTest.class);
 
         // Fastpath/LargeObject
         if (!TestUtil.isFoundationDBServer(conn)) {
