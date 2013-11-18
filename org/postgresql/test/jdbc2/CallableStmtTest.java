@@ -8,6 +8,8 @@
 package org.postgresql.test.jdbc2;
 
 import org.postgresql.test.TestUtil;
+
+import java.math.BigDecimal;
 import java.sql.*;
 
 import junit.framework.TestCase;
@@ -34,7 +36,7 @@ public class CallableStmtTest extends TestCase
         if (TestUtil.isFoundationDBServer(con)) {
             stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getString(a varchar(20)) RETURNS VARCHAR(20)" +
                     " LANGUAGE javascript PARAMETER STYLE variables AS $$ 'bob' $$");
-            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getDouble(a float) RETURNS float" +
+            stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getDouble(a double) RETURNS double" +
                     " LANGUAGE javascript PARAMETER STYLE variables AS $$ 42.42 $$");
             stmt.execute ("CREATE OR REPLACE PROCEDURE testspg__getVoid (IN a float) " +
                     " LANGUAGE javascript PARAMETER STYLE variables AS ''");
@@ -49,6 +51,17 @@ public class CallableStmtTest extends TestCase
             stmt.execute("CREATE OR REPLACE FUNCTION testspg__getNumericWIthoutArg() RETURNS numeric" +
                     " LANGUAGE javascript PARAMETER STYLE variables AS '42'");
             
+            stmt.execute("CREATE OR REPLACE FUNCTION testspg__insertInt(a int) RETURNS int" +
+                    " LANGUAGE javascript PARAMETER STYLE variables AS $$\n" +
+                    " con = java.sql.DriverManager.getConnection('jdbc:default:connection')\n"+
+                    " stmt = con.createStatement()\n"+
+                    " try {\n" +
+                    "    stmt.executeUpdate('INSERT INTO int_table(id) VALUES ('+a+')')\n"+
+                    "} finally {\n"+
+                    "    stmt.close()\n"+
+                    "    con.close()\n" +
+                    "}1$$");
+                    
         } else {
             
             stmt.execute ("CREATE OR REPLACE FUNCTION testspg__getString (varchar) " +
@@ -94,6 +107,7 @@ public class CallableStmtTest extends TestCase
             stmt.execute("drop FUNCTION testspg__getShort");
             stmt.execute("DROP FUNCTION testspg__getNumeric");
             stmt.execute("drop FUNCTION testspg__getNumericWithoutArg");
+            stmt.execute("DROP FUNCTION testspg__insertInt");
         } else {
             stmt.execute ("drop FUNCTION testspg__getString (varchar);");
             stmt.execute ("drop FUNCTION testspg__getDouble (float);");
@@ -190,7 +204,13 @@ public class CallableStmtTest extends TestCase
         call.setBigDecimal (2, new java.math.BigDecimal(4));
         call.registerOutParameter (1, Types.NUMERIC);
         call.execute ();
-        assertEquals(new java.math.BigDecimal(42), call.getBigDecimal(1));
+        
+        BigDecimal check =new java.math.BigDecimal(42);
+        if (TestUtil.isFoundationDBServer(con)){
+            check = check.setScale(1);
+        }
+        assertEquals(check.scale(), call.getBigDecimal(1).scale());
+        assertEquals(check, call.getBigDecimal(1));
     }
     
     public void testGetNumericWithoutArg () throws Throwable
@@ -198,7 +218,11 @@ public class CallableStmtTest extends TestCase
         CallableStatement call = con.prepareCall (func + pkgName + "getNumericWithoutArg () }");
         call.registerOutParameter (1, Types.NUMERIC);
         call.execute ();
-        assertEquals(new java.math.BigDecimal(42), call.getBigDecimal(1));
+        BigDecimal check =new java.math.BigDecimal(42);
+        if (TestUtil.isFoundationDBServer(con)){
+            check = check.setScale(1);
+        }
+        assertEquals(check, call.getBigDecimal(1));
     }
 
     public void testGetString () throws Throwable
@@ -269,8 +293,8 @@ public class CallableStmtTest extends TestCase
 
     public void testFetchWithNoResults() throws SQLException {
         CallableStatement cs = con.prepareCall("{call now()}");
-        cs.execute();
         try {
+            cs.execute();
             cs.getObject(1);
             fail("expected exception");
         } catch(Exception e) {
@@ -320,5 +344,4 @@ public class CallableStmtTest extends TestCase
         assertEquals(3, rs.getInt(1));
         assertTrue(!rs.next());
     }
-
 }
