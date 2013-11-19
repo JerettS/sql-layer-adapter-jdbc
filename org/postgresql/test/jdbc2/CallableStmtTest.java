@@ -9,7 +9,6 @@ package org.postgresql.test.jdbc2;
 
 import org.postgresql.test.TestUtil;
 
-import java.math.BigDecimal;
 import java.sql.*;
 
 import junit.framework.TestCase;
@@ -204,13 +203,7 @@ public class CallableStmtTest extends TestCase
         call.setBigDecimal (2, new java.math.BigDecimal(4));
         call.registerOutParameter (1, Types.NUMERIC);
         call.execute ();
-        
-        BigDecimal check =new java.math.BigDecimal(42);
-        if (TestUtil.isFoundationDBServer(con)){
-            check = check.setScale(1);
-        }
-        assertEquals(check.scale(), call.getBigDecimal(1).scale());
-        assertEquals(check, call.getBigDecimal(1));
+        assertEquals(new java.math.BigDecimal(42), call.getBigDecimal(1));
     }
     
     public void testGetNumericWithoutArg () throws Throwable
@@ -218,11 +211,7 @@ public class CallableStmtTest extends TestCase
         CallableStatement call = con.prepareCall (func + pkgName + "getNumericWithoutArg () }");
         call.registerOutParameter (1, Types.NUMERIC);
         call.execute ();
-        BigDecimal check =new java.math.BigDecimal(42);
-        if (TestUtil.isFoundationDBServer(con)){
-            check = check.setScale(1);
-        }
-        assertEquals(check, call.getBigDecimal(1));
+        assertEquals(new java.math.BigDecimal(42), call.getBigDecimal(1));
     }
 
     public void testGetString () throws Throwable

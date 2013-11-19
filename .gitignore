@@ -7,5 +7,6 @@ jars
 nbproject
 .idea
 *.iml
+build.local.properties
 
 /bin
