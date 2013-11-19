@@ -2306,7 +2306,7 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
 
     /*
         * Note if s is a String it should be escaped by the caller to avoid SQL
-        * injection attacks.  It is not done here for efficency reasons as
+        * injection attacks.  It is not done here for efficiency reasons as
         * most calls to this method do not require escaping as the source
         * of the string is known safe (i.e. Integer.toString())
      */
