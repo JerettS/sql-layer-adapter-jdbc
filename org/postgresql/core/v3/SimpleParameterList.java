@@ -52,7 +52,6 @@ class SimpleParameterList implements V3ParameterList {
         flags[index-1] |= OUT;
         
         setResolvedType (index, SqlTypeToOID(sqlType));
-        //paramValues[index-1] = NULL_OBJECT;
     }
 
     private void bind(int index, Object value, int oid, int binary) throws SQLException {
