@@ -30,8 +30,7 @@ public class Jdbc3TestSuite extends TestSuite
         
             if ( TestUtil.haveMinimumServerVersion( con, "8.1") && TestUtil.isProtocolVersion(con, 3))
             {
-                if (!TestUtil.isFoundationDBServer(con))
-                    suite.addTestSuite(Jdbc3CallableStatementTest.class);
+                suite.addTestSuite(Jdbc3CallableStatementTest.class);
             }
             if ( TestUtil.haveMinimumServerVersion( con, "8.2") )
             {
