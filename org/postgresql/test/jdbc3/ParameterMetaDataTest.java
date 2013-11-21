@@ -101,7 +101,7 @@ public class ParameterMetaDataTest extends TestCase {
         if (!TestUtil.isProtocolVersion(_conn, 3))
             return;
 
-        PreparedStatement pstmt = _conn.prepareStatement("SELECT a FROM parametertest WHERE e = ? AND c = ?");
+        PreparedStatement pstmt = _conn.prepareStatement("SELECT a FROM parametertest WHERE c = ? AND e = ?");
         ParameterMetaData pmd = pstmt.getParameterMetaData();
 
         pstmt.setString(1, "Hi");
