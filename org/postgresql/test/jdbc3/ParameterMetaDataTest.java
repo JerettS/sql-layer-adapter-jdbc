@@ -101,8 +101,6 @@ public class ParameterMetaDataTest extends TestCase {
         if (!TestUtil.isProtocolVersion(_conn, 3))
             return;
 
-        if (TestUtil.isFoundationDBServer(_conn))
-            return;
         PreparedStatement pstmt = _conn.prepareStatement("SELECT a FROM parametertest WHERE c = ? AND e = ?");
         ParameterMetaData pmd = pstmt.getParameterMetaData();
 
