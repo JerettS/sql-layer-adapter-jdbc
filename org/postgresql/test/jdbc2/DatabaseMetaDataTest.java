@@ -122,6 +122,15 @@ public class DatabaseMetaDataTest extends TestCase
         TestUtil.closeDB( con );
     }
 
+    public void testTablesBySchema() throws Exception 
+    {
+        DatabaseMetaData dbmd = con.getMetaData();
+        assertNotNull(dbmd);
+        ResultSet rs = dbmd.getTables( null, "test", null, new String[] {"TABLE"});
+        assertTrue(rs.next());
+        rs.close();
+    }
+    
     public void testTables() throws Exception
     {
         DatabaseMetaData dbmd = con.getMetaData();
@@ -715,6 +724,20 @@ public class DatabaseMetaDataTest extends TestCase
         rs.close();
     }
 
+    
+    public void testFuncInSchema() throws SQLException
+    {
+        DatabaseMetaData dbmd = con.getMetaData();
+        assertNotNull(dbmd);
+        ResultSet rs = dbmd.getProcedures(null, "test", null);
+        assertTrue(rs.next());
+        assertEquals("f1", rs.getString(3) );
+        assertTrue(rs.next());
+        assertEquals("f2", rs.getString(3));
+        assertTrue(rs.next());
+        assertEquals("f3", rs.getString(3));
+        assertTrue(!rs.next());
+    }
     public void testFuncWithoutNames() throws SQLException
     {
         DatabaseMetaData dbmd = con.getMetaData();
@@ -1027,6 +1050,13 @@ public class DatabaseMetaDataTest extends TestCase
 
     }
 
+    public void testGetUDT0() throws Exception
+    {
+        DatabaseMetaData dbmd = con.getMetaData();
+        ResultSet rs = dbmd.getUDTs(null, "test" , null, null);
+        assertTrue(!rs.next());
+    }
+    
     public void testGetUDT1() throws Exception
     {
         if (!TestUtil.haveMinimumServerVersion(con, "7.3"))

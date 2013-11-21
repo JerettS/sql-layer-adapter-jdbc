@@ -1834,7 +1834,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
 
             if (schemaPattern != null && !"".equals(schemaPattern))
             {
-                sql += " AND r.schema_name LIKE ";
+                sql += " AND r.routine_schema LIKE ";
                 sql += "'" + connection.escapeString(schemaPattern) + "'";
             }
             if (procedureNamePattern != null)
@@ -2102,10 +2102,8 @@ public abstract class AbstractJdbc2DatabaseMetaData
     
             if (schemaPattern != null && !"".equals(schemaPattern))
             {
-                fdbSelect.append(" AND TABLE_SCHEMA LIKE ");
+                fdbSelect.append(" AND TABLE_SCHEM LIKE ");
                 fdbSelect.append("'").append(connection.escapeString(schemaPattern)).append("'");
-                
-                fdbSelect.append(escapeQuotes(schemaPattern));
             }
             if (tableNamePattern != null && !"".equals(tableNamePattern))
             {
@@ -4661,6 +4659,21 @@ public abstract class AbstractJdbc2DatabaseMetaData
                                       int[] types
                                      ) throws SQLException
     {
+        if (connection.isFoundationDBServer()) {
+            Field f[] = new Field[7];
+            List v = new ArrayList();  // The new ResultSet tuple stuff
+
+            f[0] = new Field("type_cat", Oid.VARCHAR);
+            f[1] = new Field("type_schem", Oid.VARCHAR);
+            f[2] = new Field("type_name", Oid.VARCHAR);
+            f[3] = new Field("class_name", Oid.VARCHAR);
+            f[4] = new Field("data_type", Oid.INT4);
+            f[5] = new Field("remarks", Oid.VARCHAR);
+            f[6] = new Field("base_type", Oid.INT4);
+
+            return (ResultSet) ((BaseStatement)createMetaDataStatement()).createDriverResultSet(f, v);
+        }
+        
         String sql = "select "
                      + "null as type_cat, n.nspname as type_schem, t.typname as type_name,  null as class_name, "
                      + "CASE WHEN t.typtype='c' then " + java.sql.Types.STRUCT + " else " + java.sql.Types.DISTINCT + " end as data_type, pg_catalog.obj_description(t.oid, 'pg_type')  "

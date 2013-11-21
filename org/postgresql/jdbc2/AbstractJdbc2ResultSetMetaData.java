@@ -104,7 +104,7 @@ public abstract class AbstractJdbc2ResultSetMetaData implements PGResultSetMetaD
     {
         String type_name = getPGType(column);
 
-        return type_name.equals("cash") || type_name.equals("money");
+        return type_name != null && (type_name.equals("cash") || type_name.equals("money"));
     }
 
     /*

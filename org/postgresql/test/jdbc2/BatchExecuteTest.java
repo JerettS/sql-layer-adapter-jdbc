@@ -298,7 +298,6 @@ public class BatchExecuteTest extends TestCase
 
     public void testBatchWithEmbeddedNulls() throws SQLException
     {
-        // paramter management
         if (TestUtil.isFoundationDBServer(con))
             return;
         Statement stmt = con.createStatement();
