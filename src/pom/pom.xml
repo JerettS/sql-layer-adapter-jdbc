@@ -4,7 +4,7 @@
     <groupId>@maven.group.id@</groupId>
     <artifactId>@maven.artifact.id@</artifactId>
     <packaging>jar</packaging>
-    <name>PostgreSQL JDBC Driver</name>
+    <name>FoundationDB SQL layer JDBC Driver</name>
     <version>@maven.artifact.version.string@</version>
     <description>@maven.artifact.description@ @jdbc.version.upper@</description>
     <url>http://www.foundationdb.com/</url>
