@@ -619,7 +619,7 @@
     <echo message="Maven version string: ${maven.artifact.version.string}" />
   </target>
 
-  <target name="prepare-pom" depends="prepare,check_versions" description="Filters the pom depending on the jdbc version being built">
+  <target name="prepare-pom" depends="prepare,check_versions,snapshot-version" description="Filters the pom depending on the jdbc version being built">
     <mkdir dir="${builddir}/pom"/>
     <!-- Copy the templated pom.xml with version info -->
     <filter token="maven.group.id" value="${maven.group.id}"/>
@@ -627,6 +627,7 @@
     <filter token="maven.artifact.version.string" value="${maven.artifact.version.string}"/>
     <filter token="maven.artifact.description" value="${maven.artifact.description}"/>
     <filter token="jdbc.version.upper" value="${jdbc.version.upper}"/>
+    <filter token="maven.snapshots.repository.url" value="${maven.snapshots.repository.url}"/>  
     <copy todir="${builddir}/pom" filtering="true" file="src/pom/pom.xml"/>
   </target>
 
