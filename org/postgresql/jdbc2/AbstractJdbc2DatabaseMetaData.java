@@ -1818,7 +1818,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
 
         String sql;
         if (connection.isFoundationDBServer()) {
-            sql = "SELECT NULL AS PROCEDURE_CAT, r.routine_schema as PROCEDURE_SCHEM, r.routine_name AS PROCEDURE_NAME, " +
+            sql = "SELECT NULL AS PROCEDURE_CAT, r.specific_schema as PROCEDURE_SCHEM, r.specific_name AS PROCEDURE_NAME, " +
                     " CASE WHEN is_result = 'YES' THEN 'returnValue' ELSE p.parameter_name END AS COLUMN_NAME," +
                     " CASE WHEN is_result = 'YES' THEN " + java.sql.DatabaseMetaData.procedureColumnReturn + 
                     " WHEN parameter_mode = 'IN' THEN " + java.sql.DatabaseMetaData.procedureColumnIn +
@@ -1834,21 +1834,21 @@ public abstract class AbstractJdbc2DatabaseMetaData
                     " '' AS IS_NULLABLE," +
                     " NULL as SPECIFIC_NAME"+
                     " FROM information_schema.routines r " +
-                    " INNER JOIN information_schema.parameters p ON (r.routine_schema = p.routine_schema AND r.routine_name = p.routine_name)"+
+                    " INNER JOIN information_schema.parameters p ON (r.specific_schema = p.specific_schema AND r.specific_name = p.specific_name)"+
                     " INNER JOIN information_schema.types t ON (p.data_type = t.type_name) WHERE true";
 
             if (schemaPattern != null && !"".equals(schemaPattern))
             {
-                sql += " AND r.routine_schema LIKE ";
+                sql += " AND r.specific_schema LIKE ";
                 sql += "'" + connection.escapeString(schemaPattern) + "'";
             }
             if (procedureNamePattern != null)
             {
-                sql += " AND r.routine_name LIKE ";
+                sql += " AND r.specific_name LIKE ";
                 sql += "'" + connection.escapeString(procedureNamePattern) + "'";
 
             }
-            sql += " ORDER BY r.routine_schema, r.routine_name, p.ordinal_position";
+            sql += " ORDER BY r.specific_schema, r.specific_name, p.ordinal_position";
 
             return createMetaDataStatement().executeQuery(sql);
 
