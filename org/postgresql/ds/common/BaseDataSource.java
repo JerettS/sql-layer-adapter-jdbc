@@ -32,18 +32,15 @@ public abstract class BaseDataSource implements Referenceable
     // database.  That way we don't have to maintain the connecting code in
     // multiple places.
     static {
-        /*
         try
         {
-            //Class.forName("org.postgresql.Driver");
-            //Class.forName("com.foundationdb.Driver");
-            ;
+            Class.forName("org.postgresql.Driver");
+            Class.forName("com.foundationdb.Driver");
         }
         catch (ClassNotFoundException e)
         {
             System.err.println("PostgreSQL DataSource unable to load PostgreSQL JDBC Driver");
         }
-        */
     }
 
     // Needed to implement the DataSource/ConnectionPoolDataSource interfaces
@@ -619,6 +616,7 @@ public abstract class BaseDataSource implements Referenceable
     public Reference getReference() throws NamingException
     {
         Reference ref = createReference();
+        ref.add(new StringRefAddr("protocol", protocol));
         ref.add(new StringRefAddr("serverName", serverName));
         if (portNumber != 0)
         {

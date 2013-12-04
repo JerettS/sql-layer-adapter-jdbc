@@ -144,5 +144,4 @@ public class Driver extends org.postgresql.DriverBase
     {
         throw notImplemented(this.getClass(), "getParentLogger()");
     }
-
 }
