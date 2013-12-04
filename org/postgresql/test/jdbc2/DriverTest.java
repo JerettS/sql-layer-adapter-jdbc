@@ -12,7 +12,6 @@ import org.postgresql.test.TestUtil;
 
 import junit.framework.TestCase;
 
-import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.Properties;
 

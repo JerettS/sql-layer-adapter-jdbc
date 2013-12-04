@@ -64,9 +64,15 @@ public class Driver extends org.postgresql.DriverBase
      * @throws SQLException if the connection could not be made
      */
     protected Connection makeConnection(String url, Properties props) throws SQLException {
-        return new @JDBCCONNECTCLASS@(hostSpecs(props),
-                                      user(props), database(props),
-                                      props, url);
+    
+        Properties p = new Properties (props);
+        p.setProperty("PROTOCOL", getProtocol());
+        p.setProperty("VERSION", getVersion());
+        p.setProperty("MAJORVERSION", Integer.toString(getMajorVersion()));
+        p.setProperty("MINORVERSION", Integer.toString(getMinorVersion()));
+        return new @JDBCCONNECTCLASS@(hostSpecs(p),
+                                      user(p), database(p),
+                                      p, url);
     }
 
     public static final int MAJORVERSION = @MAJORVERSION@;

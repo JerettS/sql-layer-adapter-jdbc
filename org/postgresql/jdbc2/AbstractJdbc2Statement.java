@@ -20,7 +20,7 @@ import java.util.TimerTask;
 import java.util.TimeZone;
 import java.util.Calendar;
 
-import org.postgresql.Driver;
+import org.postgresql.DriverBase;
 import org.postgresql.largeobject.*;
 import org.postgresql.core.*;
 import org.postgresql.core.types.*;
@@ -737,7 +737,7 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
             }
         };
         
-        Driver.addTimerTask( cancelTimer, seconds * 1000);
+        DriverBase.addTimerTask( cancelTimer, seconds * 1000);
         timeout = seconds;
     }
 
@@ -3247,7 +3247,7 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
 
     public void setRef(int i, Ref x) throws SQLException
     {
-        throw Driver.notImplemented(this.getClass(), "setRef(int,Ref)");
+        throw org.postgresql.Driver.notImplemented(this.getClass(), "setRef(int,Ref)");
     }
 
     public void setDate(int i, java.sql.Date d, java.util.Calendar cal) throws SQLException
@@ -3372,12 +3372,12 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
 
     public Blob getBlob(int i) throws SQLException
     {
-        throw Driver.notImplemented(this.getClass(), "getBlob(int)");
+        throw org.postgresql.Driver.notImplemented(this.getClass(), "getBlob(int)");
     }
 
     public Clob getClob(int i) throws SQLException
     {
-        throw Driver.notImplemented(this.getClass(), "getClob(int)");
+        throw org.postgresql.Driver.notImplemented(this.getClass(), "getClob(int)");
     }
 
     public Object getObjectImpl(int i, java.util.Map map) throws SQLException
@@ -3385,12 +3385,12 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
         if (map == null || map.isEmpty()) {
             return getObject(i);
         }
-        throw Driver.notImplemented(this.getClass(), "getObjectImpl(int,Map)");
+        throw org.postgresql.Driver.notImplemented(this.getClass(), "getObjectImpl(int,Map)");
     }
 
     public Ref getRef(int i) throws SQLException
     {
-        throw Driver.notImplemented(this.getClass(), "getRef(int)");
+        throw org.postgresql.Driver.notImplemented(this.getClass(), "getRef(int)");
     }
 
     public java.sql.Date getDate(int i, java.util.Calendar cal) throws SQLException
@@ -3441,7 +3441,7 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
     // no custom types allowed yet..
     public void registerOutParameter(int parameterIndex, int sqlType, String typeName) throws SQLException
     {
-        throw Driver.notImplemented(this.getClass(), "registerOutParameter(int,int,String)");
+        throw org.postgresql.Driver.notImplemented(this.getClass(), "registerOutParameter(int,int,String)");
     }
 
     private synchronized void killTimer()

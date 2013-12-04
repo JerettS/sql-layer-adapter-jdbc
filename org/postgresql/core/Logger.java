@@ -13,7 +13,7 @@ import java.sql.DriverManager;
 import java.io.PrintWriter;
 import java.util.Date;
 
-import org.postgresql.Driver;
+import org.postgresql.DriverBase;
 
 /**
  * Poor man's logging infrastructure. This just deals with maintaining a per-
@@ -47,11 +47,11 @@ public final class Logger {
     }
 
     public boolean logDebug() {
-        return level >= Driver.DEBUG;
+        return level >= DriverBase.DEBUG;
     }
 
     public boolean logInfo() {
-        return level >= Driver.INFO;
+        return level >= DriverBase.INFO;
     }
 
     public void debug(String str) {

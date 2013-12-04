@@ -27,12 +27,6 @@ public class BatchExecuteTest extends TestCase
     public BatchExecuteTest(String name)
     {
         super(name);
-        try
-        {
-            //Class.forName("org.postgresql.Driver");
-            ;
-        }
-        catch( Exception ex){}
     }
 
     // Set up the fixture for this testcase: a connection to a database with

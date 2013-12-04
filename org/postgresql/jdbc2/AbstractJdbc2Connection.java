@@ -14,8 +14,7 @@ import java.util.*;
 
 import org.postgresql.core.*;
 
-import org.postgresql.Driver;
-//import com.foundationdb.Driver;
+import org.postgresql.DriverBase;
 import org.postgresql.PGNotification;
 import org.postgresql.fastpath.Fastpath;
 import org.postgresql.largeobject.LargeObjectManager;
@@ -81,6 +80,10 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     private Set<Integer> useBinaryReceiveForOids;
 
     public abstract DatabaseMetaData getMetaData() throws SQLException;
+    
+    private final String driverVersion;
+    private final int   driverMajorVersion;
+    private final int   driverMinorVersion;
 
     //
     // Ctor.
@@ -93,7 +96,7 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         // In addition to setting the log level, enable output to
         // standard out if no other printwriter is set
 
-        int logLevel = Driver.getLogLevel();
+        int logLevel = DriverBase.getLogLevel();
         String connectionLogLevel = info.getProperty("loglevel");
         if (connectionLogLevel != null) {
             try {
@@ -133,14 +136,17 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
 
         //Print out the driver version number
         if (logger.logInfo())
-            logger.info(Driver.getVersion());
+            logger.info(info.getProperty("VERSION"));
 
         // Now make the initial connection and set up local state
         this.protoConnection = ConnectionFactory.openConnection(hostSpecs, user, database, info, logger);
         this.dbVersionNumber = protoConnection.getServerVersion();
         this.isFoundationDBServer = protoConnection.isFoundationDBServer();
-        this.compatible = info.getProperty("compatible", Driver.MAJORVERSION + "." + Driver.MINORVERSION);
-
+        this.compatible = info.getProperty("compatible",info.getProperty("MAJORVERSION") + "." + info.getProperty("MINORVERSION"));
+        this.driverVersion = info.getProperty("VERSION");
+        this.driverMajorVersion = Integer.parseInt(info.getProperty("MAJORVERSION"));
+        this.driverMinorVersion = Integer.parseInt(info.getProperty("MINORVERSION"));
+        
         // Set read-only early if requested
         if (Boolean.valueOf(info.getProperty("readOnly", "false")))
         {
@@ -1268,5 +1274,20 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     public int getBackendPID()
     {
     	return protoConnection.getBackendPID();
+    }
+    
+    public String getDriverVersion() 
+    {
+        return this.driverVersion;
+    }
+    
+    public int getDriverMajorVersion()
+    {
+        return this.driverMajorVersion;
+    }
+    
+    public int getDriverMinorVersion()
+    {
+        return this.driverMinorVersion;
     }
 }

@@ -520,7 +520,6 @@ public abstract class BaseDataSource implements Referenceable
     {
         StringBuffer sb = new StringBuffer(100);
         sb.append(protocol);
-        //sb.append("jdbc:postgresql:");
         sb.append("//");
         sb.append(serverName);
         if (portNumber != 0) {

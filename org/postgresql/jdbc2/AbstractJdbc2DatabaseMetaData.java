@@ -13,7 +13,7 @@ import java.util.*;
 import org.postgresql.core.*;
 import org.postgresql.util.PSQLException;
 import org.postgresql.util.PSQLState;
-import org.postgresql.Driver;
+import org.postgresql.DriverBase;
 import org.postgresql.util.GT;
 
 public abstract class AbstractJdbc2DatabaseMetaData
@@ -220,7 +220,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
     public String getDatabaseProductName() throws SQLException
     {
         if (connection.isFoundationDBServer()) {
-            return "FoundationDB SQL Layer";
+            return "FoundationDB SQL layer";
         } else {
             return "PostgreSQL";
         }
@@ -258,7 +258,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public String getDriverVersion() throws SQLException
     {
-        return Driver.getVersion();
+        return connection.getDriverVersion();
     }
 
     /*
@@ -268,7 +268,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public int getDriverMajorVersion()
     {
-        return Driver.MAJORVERSION;
+        return connection.getDriverMajorVersion();
     }
 
     /*
@@ -278,7 +278,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public int getDriverMinorVersion()
     {
-        return Driver.MINORVERSION;
+        return connection.getDriverMinorVersion();
     }
 
     /*

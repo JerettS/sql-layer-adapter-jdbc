@@ -17,15 +17,6 @@ public class TypesTest extends TestCase {
 
     public TypesTest(String name) {
         super(name);
-        try
-        {
-            //Class.forName("org.postgresql.Driver");
-            ;
-        }
-        catch (Exception ex )
-        {
-            
-        }
     }
 
     protected void setUp() throws Exception {
