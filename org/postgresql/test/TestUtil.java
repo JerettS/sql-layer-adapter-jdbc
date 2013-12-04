@@ -44,7 +44,7 @@ public class TestUtil
 			sendBufferSize = "&sendBufferSize="+getSendBufferSize();
 		}
 		
-        return "jdbc:postgresql://"
+        return getProtocol() + "//"
                                 + getServer() + ":" 
                                 + getPort() + "/" 
                                 + getDatabase() 
@@ -59,6 +59,12 @@ public class TestUtil
     /*
      * Returns the Test server
      */
+    
+    public static String getProtocol() 
+    {
+        return System.getProperty("protocol", "jdbc:postgresql:");
+    }
+    
     public static String getServer()
     {
         return System.getProperty("server", "localhost");
@@ -159,7 +165,7 @@ public class TestUtil
                 java.sql.DriverManager.setLogWriter(new java.io.PrintWriter(output,true));
             }
             
-            org.postgresql.Driver.setLogLevel(getLogLevel()); // Also loads and registers driver.
+            org.postgresql.DriverBase.setLogLevel(getLogLevel()); // Also loads and registers driver.
             initialized = true;
         }
     }        

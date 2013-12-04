@@ -30,7 +30,8 @@ public class UpdateableResultTest extends TestCase
         super( name );
         try
         {
-            Class.forName("org.postgresql.Driver");
+            //Class.forName("org.postgresql.Driver");
+            ;
         }
         catch( Exception ex ){}
         

@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql;
+package com.foundationdb;
 
 import java.sql.*;
 import java.util.*;
@@ -23,7 +23,7 @@ import org.postgresql.util.GT;
  * to try to connect to the target URL.
  *
  * <p>It is strongly recommended that each Driver class should be small and
- * standalone so that the Driver class can be loaded and queried without
+ * stand alone so that the Driver class can be loaded and queried without
  * bringing in vast quantities of supporting code.
  *
  * <p>When a Driver class is loaded, it should create an instance of itself
@@ -35,6 +35,7 @@ import org.postgresql.util.GT;
  */
 public class Driver extends org.postgresql.DriverBase
 {
+
     static
     {
         try
@@ -98,22 +99,22 @@ public class Driver extends org.postgresql.DriverBase
      */
     public static String getVersion()
     {
-        return "@VERSION@ (build " + PSQLDriverVersion.buildNumber + ")";
+        return "@FDBVERSION@ (build " + PSQLDriverVersion.buildNumber + ")";
     }
 
     public String getProtocol() 
     {
-        return "jdbc:postgresql:";
+        return "jdbc:fdbsql:";
     }
     
     protected String getName()
     {
-        return "@NAME@";
+        return "@FDBNAME@";
     }
 
     protected String getResourcesName() 
     {
-        return "org/postgresql/driverconfig.properties";
+        return "org/fdbsql/driverconfig.properties";
     }
 
     protected String getPortNumber()
@@ -144,5 +145,6 @@ public class Driver extends org.postgresql.DriverBase
     {
         throw notImplemented(this.getClass(), "getParentLogger()");
     }
+
 
 }

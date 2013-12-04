@@ -98,6 +98,7 @@ public abstract class BaseDataSourceTest extends TestCase
         bds.setPrepareThreshold(TestUtil.getPrepareThreshold());
         bds.setLogLevel(TestUtil.getLogLevel());
         bds.setProtocolVersion(TestUtil.getProtocolVersion());
+        bds.setProtocol(TestUtil.getProtocol());
     }
 
     /**

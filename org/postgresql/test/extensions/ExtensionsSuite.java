@@ -23,7 +23,7 @@ public class ExtensionsSuite extends TestSuite
      */
     public static TestSuite suite() throws Exception
     {
-        Class.forName("org.postgresql.Driver");
+        //Class.forName("org.postgresql.Driver");
         TestSuite suite = new TestSuite();
         
         Connection connection = TestUtil.openDB();

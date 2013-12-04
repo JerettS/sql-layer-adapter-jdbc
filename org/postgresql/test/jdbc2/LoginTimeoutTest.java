@@ -129,7 +129,7 @@ public class LoginTimeoutTest extends TestCase
         new Thread(helper, "timeout listen helper").start();
         
         try {
-            String url = "jdbc:postgresql://" + helper.getHost() + ":" + helper.getPort() + "/dummy";
+            String url = TestUtil.getProtocol() + "//" + helper.getHost() + ":" + helper.getPort() + "/dummy";
             Properties props = new Properties();
             props.setProperty("user", "dummy");
             props.setProperty("loginTimeout", "5");
