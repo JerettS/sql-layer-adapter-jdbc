@@ -1,2 +1,2 @@
-com.foundationdb.Driver
+com.foundationdb.sql.jdbc.Driver
 org.postgresql.Driver

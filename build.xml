@@ -22,7 +22,7 @@
   <property name="jardir"  value="jars" />
   <property name="builddir" value="build" />
   <property name="package" value="org/postgresql" />
-  <property name="fdbpackage" value="com/foundationdb"/>
+  <property name="fdbpackage" value="com/foundationdb/sql/jdbc"/>
   <property name="debug" value="on" />
 
   <!-- default build parameters are in build.properties, these may be

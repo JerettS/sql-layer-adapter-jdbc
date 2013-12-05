@@ -242,9 +242,9 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
             assertTrue(dbmd.getDriverMajorVersion() == org.postgresql.Driver.MAJORVERSION);
             assertTrue("dbmd minor version is: " + dbmd.getDriverMinorVersion() , dbmd.getDriverMinorVersion() == org.postgresql.Driver.MINORVERSION);
         } else if (dbmd.getDriverVersion().startsWith("FoundationDB")) {
-            assertTrue(dbmd.getDriverVersion().equals(com.foundationdb.Driver.getVersion()));
-            assertTrue(dbmd.getDriverMajorVersion() == com.foundationdb.Driver.MAJORVERSION);
-            assertTrue("dbmd minor version is: " + dbmd.getDriverMinorVersion() , dbmd.getDriverMinorVersion() == com.foundationdb.Driver.MINORVERSION);
+            assertTrue(dbmd.getDriverVersion().equals(com.foundationdb.sql.jdbc.Driver.getVersion()));
+            assertTrue(dbmd.getDriverMajorVersion() == com.foundationdb.sql.jdbc.Driver.MAJORVERSION);
+            assertTrue("dbmd minor version is: " + dbmd.getDriverMinorVersion() , dbmd.getDriverMinorVersion() == com.foundationdb.sql.jdbc.Driver.MINORVERSION);
         }
     }
 }
