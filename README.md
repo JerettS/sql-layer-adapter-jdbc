@@ -10,7 +10,8 @@ This driver is installed by default with the SQL Layer. If you need to install t
 
 If you've got access to Maven Central, simply add the following to your project's pom.xml:
 
-```<dependency>
+```
+<dependency>
   <groupId>com.foundationdb.Driver</groupId>
   <artifactId>fdb-sql-layer-jdbc</artifactId>
   <version>9.4.0</version>
