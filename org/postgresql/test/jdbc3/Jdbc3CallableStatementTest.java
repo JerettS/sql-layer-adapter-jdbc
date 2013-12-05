@@ -1234,8 +1234,9 @@ public class Jdbc3CallableStatementTest extends TestCase
                 if (TestUtil.isFoundationDBServer(con)) {
                     dstmt.execute("DROP TABLE d_tab");
                     dstmt.execute("DROP PROCEDURE double_proc");
+                } else {
+                    dstmt.execute("drop function double_proc()");
                 }
-                dstmt.execute("drop function double_proc()");
             }
             catch (Exception ex){}
         }

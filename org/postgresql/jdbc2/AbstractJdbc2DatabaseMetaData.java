@@ -1658,9 +1658,10 @@ public abstract class AbstractJdbc2DatabaseMetaData
             sql = "SELECT NULL as PROCEDURE_CAT, r.routine_schema AS PROCEDURE_SCHEM, r.routine_name as PROCEDURE_NAME, " +
                     " NULL, NULL, NULL, "+
                     " NULL as REMARKS," +
-                    java.sql.DatabaseMetaData.procedureReturnsResult + "  AS PROCEDURE_TYPE";
+                    " CASE WHEN r.routine_type = 'FUNCTION' THEN " + java.sql.DatabaseMetaData.procedureReturnsResult +
+                    "  ELSE " + java.sql.DatabaseMetaData.procedureNoResult + " END AS PROCEDURE_TYPE";
             if (jdbcVersion >= 4) {
-                sql += ", r.routine_name AS SPECIFIC_NAME";
+                sql += ", r.specific_name AS SPECIFIC_NAME";
             }
             sql += " FROM information_schema.routines r WHERE TRUE";
             if (schemaPattern != null && !"".equals(schemaPattern))
@@ -1817,33 +1818,37 @@ public abstract class AbstractJdbc2DatabaseMetaData
 
         String sql;
         if (connection.isFoundationDBServer()) {
-            sql = "SELECT NULL AS PROCEDURE_CAT, r.routine_schema as PROCEDURE_SCHEM, r.routine_name AS PROCEDURE_NAME, " +
+            sql = "SELECT NULL AS PROCEDURE_CAT, r.specific_schema as PROCEDURE_SCHEM, r.specific_name AS PROCEDURE_NAME, " +
                     " CASE WHEN is_result = 'YES' THEN 'returnValue' ELSE p.parameter_name END AS COLUMN_NAME," +
                     " CASE WHEN is_result = 'YES' THEN " + java.sql.DatabaseMetaData.procedureColumnReturn + 
                     " WHEN parameter_mode = 'IN' THEN " + java.sql.DatabaseMetaData.procedureColumnIn +
                     " WHEN parameter_mode = 'OUT' THEN " + java.sql.DatabaseMetaData.procedureColumnOut +
                     " WHEN parameter_mode = 'INOUT' THEN " + java.sql.DatabaseMetaData.procedureColumnInOut +
                     " ELSE 0 END AS COLUMN_TYPE," +                     
-                    " t.jdbc_type_id as DATA_TYPE, p.type as TYPE_NAME,"+
-                    " p.precision as PRECISION, p.length as LENGTH, p.scale as SCALE, NULL as RADIX,"+
+                    " t.jdbc_type_id as DATA_TYPE, p.data_type as TYPE_NAME,"+
+                    " p.numeric_precision as PRECISION, p.character_maximum_length as LENGTH, p.numeric_scale as SCALE, p.numeric_precision_radix as RADIX,"+
                     java.sql.DatabaseMetaData.procedureNullableUnknown + " AS NULLABLE," +
-                    " NULL AS REMARKS" + 
+                    " NULL AS REMARKS," + 
+                    " NULL AS COLUMN_DEF, NULL as SQL_DATA_TYPE, NULL AS SQL_DATETIME_SUB, NULL as CHAR_OCTET_LENTGH," +
+                    " p.ordinal_position as ORDINAL_POSITION,"+
+                    " '' AS IS_NULLABLE," +
+                    " NULL as SPECIFIC_NAME"+
                     " FROM information_schema.routines r " +
-                    " INNER JOIN information_schema.parameters p ON (r.routine_schema = p.routine_schema AND r.routine_name = p.routine_name)"+
-                    " INNER JOIN information_schema.types t ON (p.type = t.type_name) WHERE true";
+                    " INNER JOIN information_schema.parameters p ON (r.specific_schema = p.specific_schema AND r.specific_name = p.specific_name)"+
+                    " INNER JOIN information_schema.types t ON (p.data_type = t.type_name) WHERE true";
 
             if (schemaPattern != null && !"".equals(schemaPattern))
             {
-                sql += " AND r.routine_schema LIKE ";
+                sql += " AND r.specific_schema LIKE ";
                 sql += "'" + connection.escapeString(schemaPattern) + "'";
             }
             if (procedureNamePattern != null)
             {
-                sql += " AND r.routine_name LIKE ";
+                sql += " AND r.specific_name LIKE ";
                 sql += "'" + connection.escapeString(procedureNamePattern) + "'";
 
             }
-            sql += " ORDER BY r.routine_schema, r.routine_name, p.position";
+            sql += " ORDER BY r.specific_schema, r.specific_name, p.ordinal_position";
 
             return createMetaDataStatement().executeQuery(sql);
 
@@ -2093,10 +2098,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
             fdbSelect.append("SELECT s.sequence_schema TABLE_SCHEM, s.sequence_name as TABLE_NAME, 'SEQUENCE' as TABLE_TYPE ");
             fdbSelect.append("FROM information_schema.sequences s");
             fdbSelect.append(" UNION ALL ");
-            fdbSelect.append("SELECT v.schema_name as TABLE_SCHEM, v.table_name AS TABLE_NAME, 'VIEW' as TABLE_TYPE ");
-            fdbSelect.append("FROM information_schema.views v");
-            fdbSelect.append(" UNION ALL ");
-            fdbSelect.append("SELECT i.schema_name AS TABLE_SCHEM, i.index_name as TABLE_NAME, 'INDEX' as TABLE_TYPE ");
+            fdbSelect.append("SELECT i.table_schema AS TABLE_SCHEM, i.index_name as TABLE_NAME, 'INDEX' as TABLE_TYPE ");
             fdbSelect.append("FROM information_schema.indexes i");
             fdbSelect.append(") AS TABLES WHERE 1=1");
     
@@ -2518,27 +2520,28 @@ public abstract class AbstractJdbc2DatabaseMetaData
 
         String sql;
         if (connection.isFoundationDBServer()) {
-            sql = "SELECT NULL AS TABLE_CAT, c.schema_name as TABLE_SCHEM, c.table_name as TABLE_NAME, c.column_name AS COLUMN_NAME," +
+            sql = "SELECT NULL AS TABLE_CAT, c.table_schema as TABLE_SCHEM, c.table_name as TABLE_NAME, c.column_name AS COLUMN_NAME," +
                     " t.jdbc_type_id AS DATA_TYPE, t.type_name AS TYPE_NAME, " +
-                    " CASE WHEN t.attribute_1 = 'MAX LENGTH' THEN c.length WHEN t.attribute_1 = 'PRECISION' THEN c.precision ELSE 32 END as COLUMN_SIZE,"+
+                    " CASE WHEN t.attribute_1 = 'MAX LENGTH' THEN c.character_maximum_length WHEN t.attribute_1 = 'PRECISION' THEN c.numeric_precision ELSE 32 END as COLUMN_SIZE,"+
                     " NULL AS BUFFER_LENGTH, "+ 
-                    " CASE WHEN t.attribute_2 = 'SCALE' THEN c.scale ELSE NULL END as DECIMAL_DIGITS, NULL as NUM_PREC_RADIX, " +
-                    " CASE WHEN c.nullable = 'NO' THEN " + java.sql.DatabaseMetaData.columnNoNulls  + " ELSE " + java.sql.DatabaseMetaData.columnNullable + " END AS NULLABLE," +
+                    " CASE WHEN t.attribute_2 = 'SCALE' THEN c.numeric_scale ELSE NULL END as DECIMAL_DIGITS," +
+                    " CASE WHEN t.attribute_2 = 'SCALE' THEN c.numeric_precision_radix ELSE NULL END  as NUM_PREC_RADIX, " +
+                    " CASE WHEN c.is_nullable = 'NO' THEN " + java.sql.DatabaseMetaData.columnNoNulls  + " ELSE " + java.sql.DatabaseMetaData.columnNullable + " END AS NULLABLE," +
                     " NULL AS REMARKS, c.column_default AS COLUMN_DEF, " +
                     " NULL AS SQL_DATA_TYPE, NULL AS SQL_DATETIME_SUB, " +
-                    " CASE WHEN t.attribute_1 = 'MAX_LENGTH' THEN c.length ELSE NULL END as CHAR_OCTET_LENGTH," +
-                    " c.position+1 AS ORDINAL_POSITION, c.nullable AS IS_NULLABLE";
+                    " c.character_octet_length as CHAR_OCTET_LENGTH," +
+                    " c.ordinal_position+1 AS ORDINAL_POSITION, c.is_nullable AS IS_NULLABLE";
             if (jdbcVersion >= 3) {
                 sql +=", NULL AS SCOPE_CATALOG, NULL AS SCOPE_SCHEMA, NULL AS SCOPE_TABLE, NULL AS SOURCE_DATA_TYPE";
             }
             if (jdbcVersion >= 4) {
                 sql += ", CASE WHEN c.sequence_name IS NOT NULL THEN 'YES' ELSE 'NO' END AS IS_AUTOINCREMENT";
             }
-            sql += " FROM information_schema.columns c INNER JOIN information_schema.types t ON (c.type = t.type_name) WHERE true";
+            sql += " FROM information_schema.columns c INNER JOIN information_schema.types t ON (c.data_type = t.type_name) WHERE true";
 
             if (schemaPattern != null && !"".equals(schemaPattern))
             {
-                sql += " AND c.schema_name LIKE ";
+                sql += " AND c.table_schema LIKE ";
                 sql += "'" + connection.escapeString(schemaPattern) + "'";
             }
 
@@ -2552,7 +2555,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
                 sql += " AND c.column_name LIKE ";
                 sql += "'" + connection.escapeString(columnNamePattern) + "'";
             }
-            sql += " ORDER BY c.schema_name,c.table_name, position ";
+            sql += " ORDER BY c.table_schema,c.table_name, c.ordinal_position ";
             
             return createMetaDataStatement().executeQuery(sql);
 
@@ -2841,13 +2844,13 @@ public abstract class AbstractJdbc2DatabaseMetaData
 
         String sql;
         if (connection.isFoundationDBServer()) {
-            sql = "SELECT c.schema_name as nspname, c.table_name as relname, c.column_name as attname," +
+            sql = "SELECT c.table_schema as nspname, c.table_name as relname, c.column_name as attname," +
                     "null as attacl, null as attname"+
                     " FROM information_schema.columns c WHERE 1=1 ";
 
             if (schema != null && !"".equals(schema))
             {
-                sql += " AND c.schema_name = ";
+                sql += " AND c.table_schema = ";
                 sql += "'" + connection.escapeString(schema) + "'";
             }
 
@@ -3357,16 +3360,17 @@ public abstract class AbstractJdbc2DatabaseMetaData
         String sql;
         if (connection.isFoundationDBServer()) {
             sql = "SELECT ic.column_name as attname, t.postgres_oid as atttypid, " +
-                    " case when c.length is not null then c.length + 4 when c.precision is not null then (c.precision) * 65535 + c.scale + 4 else 0 END as atttypmod" +
+                    " case when c.character_octet_length is not null then c.character_octet_length + 4 "+
+                    "    when c.numeric_precision is not null then (c.numeric_precision) * 65535 + c.numeric_scale + 4 else 0 END as atttypmod" +
                     " FROM information_schema.indexes i INNER JOIN information_schema.index_columns ic "+
-                    " ON  (ic.schema_name = i.schema_name AND ic.index_table_name = i.table_name AND ic.index_name = i.index_name) "+
-                    " INNER JOIN information_schema.columns c ON (ic.column_schema_name = c.schema_name AND ic.column_table_name = c.table_name AND ic.column_name = c.column_name) " +
-                    " INNER JOIN information_schema.types t ON (t.type_name = c.type)" + 
+                    " ON  (ic.index_table_schema = i.table_schema AND ic.index_table_name = i.table_name AND ic.index_name = i.index_name) "+
+                    " INNER JOIN information_schema.columns c ON (ic.column_schema = c.table_schema AND ic.column_table = c.table_name AND ic.column_name = c.column_name) " +
+                    " INNER JOIN information_schema.types t ON (t.type_name = c.data_type)" + 
                     " WHERE i.index_name = 'PRIMARY' ";
 
             if (schema != null && !"".equals(schema))
             {
-                sql += " AND i.schema_name = ";
+                sql += " AND i.table_schema = ";
                 sql += "'" + connection.escapeString(schema) + "'";
 
             }
@@ -3541,13 +3545,13 @@ public abstract class AbstractJdbc2DatabaseMetaData
         String sql;
         
         if (connection.isFoundationDBServer()) {
-            sql = "SELECT NULL AS TABLE_CAT, schema_name AS TABLE_SCHEM, index_table_name AS TABLE_NAME," +
+            sql = "SELECT NULL AS TABLE_CAT, index_table_schema AS TABLE_SCHEM, index_table_name AS TABLE_NAME," +
                     " column_name as COLUMN_NAME, ordinal_position + 1 AS KEY_SEQ, index_name AS PK_NAME"+
                     " FROM information_schema.index_columns ic"+
                     " WHERE index_name = 'PRIMARY' ";
             if (schema != null && !"".equals(schema))
             {
-                sql += " AND schema_name = "; 
+                sql += " AND index_table_schema = "; 
                 sql += "'" + connection.escapeString(schema) + "'";
             }
             if (table != null && !"".equals(table)) 
@@ -4370,7 +4374,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
         String sql;
         
         if (connection.isFoundationDBServer()) {
-            sql = "SELECT NULL AS TABLE_CAT, i.SCHEMA_NAME as TABLE_SCHEM, i.TABLE_NAME, "+
+            sql = "SELECT NULL AS TABLE_CAT, i.table_schema as TABLE_SCHEM, i.TABLE_NAME, "+
                     "CASE WHEN i.index_type in ('PRIMARY','UNIQUE') THEN 0 ELSE 1 END AS NON_UNIQUE, " +
                     java.sql.DatabaseMetaData.tableIndexOther + " AS TYPE, " +
                     " NULL as INDEX_QUALIFIER, i.index_name as INDEX_NAME," +
@@ -4379,7 +4383,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
                     " CASE WHEN c.is_ascending = 'YES' THEN 'A' ELSE 'D' END AS ASC_OR_DESC, " +
                     " 0 AS CARDINALTITY, 0 AS PAGES, NULL AS FILTER_CONDITIONS" +
                     " FROM information_schema.indexes i, information_schema.index_columns c" +
-                    " WHERE i.schema_name = c.schema_name AND i.table_name = c.index_table_name AND i.index_name = c.index_name";
+                    " WHERE i.table_schema = c.index_table_schema AND i.table_name = c.index_table_name AND i.index_name = c.index_name";
 
             sql += " AND i.TABLE_NAME = ";
             sql += "'" + connection.escapeString(tableName) + "'";
