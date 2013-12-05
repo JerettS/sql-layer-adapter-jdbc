@@ -98,6 +98,7 @@ public class PGObjectFactory implements ObjectFactory
 
     protected Object loadBaseDataSource(BaseDataSource ds, Reference ref)
     {
+        ds.setProtocol(getProperty(ref, "protocol"));
         ds.setDatabaseName(getProperty(ref, "databaseName"));
         ds.setPassword(getProperty(ref, "password"));
         String port = getProperty(ref, "portNumber");

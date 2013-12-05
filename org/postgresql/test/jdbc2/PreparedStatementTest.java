@@ -23,14 +23,7 @@ public class PreparedStatementTest extends TestCase
     public PreparedStatementTest(String name)
     {
         super(name);
-        
-        try 
-        { 
-            org.postgresql.Driver driver = new org.postgresql.Driver();
-        } 
-        catch (Exception ex) 
-        {;}
-    }
+     }
 
     protected void setUp() throws Exception
     {

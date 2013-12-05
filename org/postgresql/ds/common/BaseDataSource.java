@@ -8,6 +8,9 @@
 package org.postgresql.ds.common;
 
 import javax.naming.*;
+
+import org.postgresql.DriverBase;
+
 import java.sql.*;
 
 import java.io.IOException;
@@ -32,6 +35,7 @@ public abstract class BaseDataSource implements Referenceable
         try
         {
             Class.forName("org.postgresql.Driver");
+            Class.forName("com.foundationdb.Driver");
         }
         catch (ClassNotFoundException e)
         {
@@ -41,7 +45,7 @@ public abstract class BaseDataSource implements Referenceable
 
     // Needed to implement the DataSource/ConnectionPoolDataSource interfaces
     private transient PrintWriter logger;
-
+    private String protocol;
     // Standard properties, defined in the JDBC 2.0 Optional Package spec
     private String serverName = "localhost";
     private String databaseName = "";
@@ -428,6 +432,15 @@ public abstract class BaseDataSource implements Referenceable
         return tcpKeepAlive;
     }
 
+    public void setProtocol (String protocol) 
+    {
+        this.protocol = protocol;
+    }
+    
+    public String getProtocol ()
+    {
+        return protocol;
+    }
     /**
      * Sets protocol transfer mode.
      *
@@ -506,7 +519,8 @@ public abstract class BaseDataSource implements Referenceable
     public String getUrl()
     {
         StringBuffer sb = new StringBuffer(100);
-        sb.append("jdbc:postgresql://");
+        sb.append(protocol);
+        sb.append("//");
         sb.append(serverName);
         if (portNumber != 0) {
             sb.append(":").append(portNumber);
@@ -560,11 +574,14 @@ public abstract class BaseDataSource implements Referenceable
     }
 
     /**
-     +     * Sets properties from a DriverManager URL.
-     +     */
+     * Sets properties from a DriverManager URL.
+     */
     public void setUrl(String url) throws SQLException {
 
-        Properties p = org.postgresql.Driver.parseURL(url, null);
+        Properties p = null;
+        DriverBase d = (DriverBase)java.sql.DriverManager.getDriver(url);
+        p = d.parseURL(url, null);
+        protocol = d.getProtocol();
      	serverName = p.getProperty("PGHOST", "localhost");
      	portNumber = Integer.parseInt(p.getProperty("PGPORT", "0"));
      	databaseName = p.getProperty("PGDBNAME");
@@ -598,6 +615,7 @@ public abstract class BaseDataSource implements Referenceable
     public Reference getReference() throws NamingException
     {
         Reference ref = createReference();
+        ref.add(new StringRefAddr("protocol", protocol));
         ref.add(new StringRefAddr("serverName", serverName));
         if (portNumber != 0)
         {
@@ -682,6 +700,7 @@ public abstract class BaseDataSource implements Referenceable
         out.writeObject(binaryTransferEnable);
         out.writeObject(binaryTransferDisable);
         out.writeBoolean(logLevelSet);
+        out.writeObject(protocol);
     }
 
     protected void readBaseObject(ObjectInputStream in) throws IOException, ClassNotFoundException
@@ -709,6 +728,7 @@ public abstract class BaseDataSource implements Referenceable
         binaryTransferEnable = (String)in.readObject();
         binaryTransferDisable = (String)in.readObject();
         logLevelSet = in.readBoolean();
+        protocol = (String)in.readObject();
     }
 
     public void initializeFrom(BaseDataSource source) throws IOException, ClassNotFoundException {
@@ -720,5 +740,4 @@ public abstract class BaseDataSource implements Referenceable
         ObjectInputStream ois = new ObjectInputStream(bais);
         readBaseObject(ois);
     }
-
 }

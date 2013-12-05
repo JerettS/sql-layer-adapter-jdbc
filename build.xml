@@ -22,6 +22,7 @@
   <property name="jardir"  value="jars" />
   <property name="builddir" value="build" />
   <property name="package" value="org/postgresql" />
+  <property name="fdbpackage" value="com/foundationdb/sql/jdbc"/>
   <property name="debug" value="on" />
 
   <!-- default build parameters are in build.properties, these may be
@@ -104,6 +105,9 @@
     <include name="${package}/xa/*.java"/>
     <include name="${package}/xa/jdbc3/*.java"/>
     <include name="${package}/xa/jdbc4/*.java" if="jdbc4any"/>
+      
+    <!-- FDB Driver -->
+    <include name="${fdbpackage}/*.java" />
   </patternset>
 
   <target name="check_versions">
@@ -207,6 +211,7 @@
     <jar jarfile="${jardir}/postgresql.jar">
       <fileset dir="${builddir}">
         <include name="${package}/**/*.class" />
+        <include name="${fdbpackage}/**/*.class" />
       </fileset>
 
       <fileset dir="${srcdir}">
@@ -326,7 +331,10 @@
     <!-- Some defaults -->
     <filter token="MAJORVERSION" value="${major}" />
     <filter token="MINORVERSION" value="${minor}" />
+    <filter token="NAME" value="PostgreSQL" />
+    <filter token="FDBNAME" value="FoundationBD SQL layer"/>
     <filter token="VERSION" value="PostgreSQL ${fullversion} ${edition}" />
+    <filter token="FDBVERSION" value="FoundationDB SQL layer ${fullversion} ${edition}" />  
     <filter token="JDBCCONNECTCLASS" value="${connectclass}" />
     <filter token="NOTIMPLEMENTEDEXCEPTION" value="${notimplementedexception}" />
     <filter token="XA_DS_CLASS" value="${xadsclass}" />
@@ -374,7 +382,10 @@
           overwrite="true"
           tofile="${srcdir}/${package}/ssl/MakeSSL.java"
           filtering="yes" />
-
+    <copy file="${srcdir}/${fdbpackage}/Driver.java.in"
+          overwrite="true"
+          tofile="${srcdir}/${fdbpackage}/Driver.java"
+          filtering="yes"/>
   <echo message="Configured build for the ${edition} edition driver." />
   </target>
 
@@ -403,6 +414,7 @@
     <delete quiet="true" file="${srcdir}/${package}/ds/PGConnectionPoolDataSource.java" />
     <delete quiet="true" file="${srcdir}/${package}/xa/PGXADataSource.java" />
     <delete quiet="true" file="${srcdir}/${package}/ssl/MakeSSL.java" />
+    <delete quiet="true" file="${srcdir}/${fdbpackage}/Driver.java"/>
   </target>
 
   <!-- This compiles and executes the JUnit tests -->
@@ -462,6 +474,7 @@
       <sysproperty key="loglevel" value="${loglevel}" />
       <sysproperty key="protocolVersion" value="${protocolVersion}" />
       <sysproperty key="ssltest.properties" value="${ssltest.properties}" />
+      <sysproperty key="protocol" value="${protocol}"/>
 
       <classpath>
         <pathelement location="${jardir}/postgresql.jar" />
@@ -498,6 +511,7 @@
             <sysproperty key="loglevel" value="${loglevel}" />
             <sysproperty key="protocolVersion" value="${protocolVersion}" />
             <sysproperty key="ssltest.properties" value="${ssltest.properties}" />
+            <sysproperty key="protocol" value="${protocol}"/>
         
             <classpath>
               <pathelement location="${jardir}/postgresql.jar" />

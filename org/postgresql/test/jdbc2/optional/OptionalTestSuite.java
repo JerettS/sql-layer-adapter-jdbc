@@ -25,6 +25,7 @@ public class OptionalTestSuite extends TestSuite
     public static TestSuite suite() throws Exception
     {
         Class.forName("org.postgresql.Driver");
+        Class.forName("com.foundationdb.sql.jdbc.Driver");
         TestSuite suite = new TestSuite();
         suite.addTestSuite(SimpleDataSourceTest.class);
         suite.addTestSuite(ConnectionPoolTest.class);
