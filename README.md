@@ -12,7 +12,7 @@ If you've got access to Maven Central, simply add the following to your project'
 
 ```
 <dependency>
-  <groupId>com.foundationdb.Driver</groupId>
+  <groupId>com.foundationdb</groupId>
   <artifactId>fdb-sql-layer-jdbc</artifactId>
   <version>9.4.0</version>
 </dependency>
@@ -49,7 +49,7 @@ of doing this:
 
 ```java
 try {
-  Class.forName("com.foundationdb.Driver");
+  Class.forName("com.foundationdb.sql.jdbc.Driver");
 } catch(Exception e) {
   // your error handling code goes here
 }
@@ -63,11 +63,11 @@ try {
    This method specifies the driver from the command line. When running the
    application, you specify the driver using the option:
 
-    `-Djdbc.drivers=com.foundationdb.Driver`
+    `-Djdbc.drivers=com.foundationdb.sql.jdbc.Driver`
 
    eg: This is an example of running a sample app with with the driver:
 
-    `java -Djdbc.drivers=com.foundationdb.Driver com.foundationdb.sample.Main`
+    `java -Djdbc.drivers=com.foundationdb.sql.jdbc.Driver com.company.sample.Main`
 
    note: This method only works with Applications (not for Applets).
 	 However, the application is not tied to one driver, so if you needed
