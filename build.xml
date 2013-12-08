@@ -35,7 +35,8 @@
   <property name="maven.jar" value="${jardir}/${maven.artifact.id}-${maven.artifact.version}.jar"/>
   <property name="maven.javadoc.jar" value="${jardir}/${maven.artifact.id}-${maven.artifact.version}-javadoc.jar"/>
   <property name="maven.sources.jar" value="${jardir}/${maven.artifact.id}-${maven.artifact.version}-sources.jar"/>
-
+  <property name="java.target" value="${java.specification.version}"/>
+    
   <patternset id="jdbc.version.src.pattern">
     <!-- This is the core of the driver.  It is common for all versions. -->
     <include name="${package}/*.java" />
@@ -113,23 +114,23 @@
   <target name="check_versions">
     <condition property="jdbc2">
       <or>
-        <equals arg1="${java.specification.version}" arg2="1.2"/>
-        <equals arg1="${java.specification.version}" arg2="1.3"/>
+        <equals arg1="${java.target}" arg2="1.2"/>
+        <equals arg1="${java.target}" arg2="1.3"/>
       </or>
     </condition>
     <condition property="jdbc3">
-        <equals arg1="${java.specification.version}" arg2="1.4"/>
+        <equals arg1="${java.target}" arg2="1.4"/>
     </condition>
     <condition property="jdbc3g">
-	<equals arg1="${java.specification.version}" arg2="1.5"/>
+	<equals arg1="${java.target}" arg2="1.5"/>
     </condition>
     <condition property="jdbc4">
-        <equals arg1="${java.specification.version}" arg2="1.6"/>
+        <equals arg1="${java.target}" arg2="1.6"/>
     </condition>
     <condition property="jdbc41">
       <or>
-	<equals arg1="${java.specification.version}" arg2="1.7"/>
-        <equals arg1="${java.specification.version}" arg2="1.8"/>
+	<equals arg1="${java.target}" arg2="1.7"/>
+        <equals arg1="${java.target}" arg2="1.8"/>
       </or>
     </condition>
     <condition property="jdbc4any">
@@ -229,7 +230,7 @@
     <available classname="org.postgresql.Driver" property="old.driver.present" />
     <fail message="Old driver was detected on classpath or in jre/lib/ext, please remove and try again." if="old.driver.present" />
 
-    <javac classpath="${srcdir}" srcdir="${srcdir}" destdir="${builddir}" debug="${debug}" source="${java.specification.version}">
+    <javac classpath="${srcdir}" srcdir="${srcdir}" destdir="${builddir}" debug="${debug}" source="${java.target}" target="${java.target}">
       <patternset refid="jdbc.version.src.pattern"/>
     </javac>
   </target>
@@ -439,7 +440,7 @@
   <target name="testjar" depends="jar">
     <fail message="JUnit could not be found in your classpath.  You must download and install it from http://junit.org to build and run the test suite." unless="junit" />
     <mkdir dir="${builddir}/tests"/>
-    <javac srcdir="${srcdir}" destdir="${builddir}/tests" debug="${debug}" source="${java.specification.version}">
+    <javac srcdir="${srcdir}" destdir="${builddir}/tests" debug="${debug}" source="${java.target}" target="${java.target}">
       <include name="${package}/test/**" />
 
       <exclude name="${package}/test/jdbc4/**" unless="jdbc4tests" />
