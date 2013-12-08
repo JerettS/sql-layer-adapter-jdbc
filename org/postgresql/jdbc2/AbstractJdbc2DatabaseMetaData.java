@@ -4469,7 +4469,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
 
             if (schema != null && !"".equals(schema))
             {
-                sql += " AND i.SCHEMA_NAME = ";
+                sql += " AND i.TABLE_SCHEMA = ";
                 sql += "'" + connection.escapeString(schema) + "'";
                 
             }
