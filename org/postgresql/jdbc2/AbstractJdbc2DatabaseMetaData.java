@@ -3670,6 +3670,85 @@ public abstract class AbstractJdbc2DatabaseMetaData
          *   the PK_NAME field.
          */
 
+        if (connection.isFoundationDBServer()) {
+            
+            String sql = "SELECT NULL AS PKTABLE_CAT, PKTABLE_SCHEM, PKTABLE_NAME, PKCOLUMN_NAME," +
+            		" NULL AS FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, FKCOLUMN_NAME, KEY_SEQ," +
+            		" UPDATE_RULE, DELETE_RULE, FK_NAME, PK_NAME, DEFERRABILITY FROM (" +
+            		"select pkc.table_schema as PKTABLE_SCHEM, pkc.table_name as PKTABLE_NAME, pkc.column_name as PKCOLUMN_NAME,"+
+                    " fkc.table_schema as FKTABLE_SCHEM, fkc.table_name as FKTABLE_NAME, fkc.column_name as FKCOLUMN_NAME," + 
+                    " pkc.ordinal_position + 1 AS KEY_SEQ," + 
+                    DatabaseMetaData.importedKeyNoAction + " as UPDATE_RULE," +
+                    DatabaseMetaData.importedKeyNoAction + " as DELETE_RULE," +
+                    " fk.constraint_name AS FK_NAME, pk.constraint_name as PK_NAME," +
+                    DatabaseMetaData.importedKeyNotDeferrable + " AS DEFERRABILITY" +
+                    " from information_schema.table_constraints fk" +
+                    " JOIN information_schema.grouping_constraints gc ON (fk.constraint_schema = gc.constraint_schema and fk.constraint_name = gc.constraint_name)" +
+                    " JOIN information_schema.key_column_usage fkc ON (fk.constraint_schema = fkc.constraint_schema and fk.constraint_name = fkc.constraint_name)" +
+                    " JOIN information_schema.table_constraints pk ON (gc.unique_schema = pk.constraint_schema and gc.unique_constraint_name = pk.constraint_name)" +
+                    " JOIN information_schema.key_column_usage pkc ON (pk.constraint_schema = pkc.constraint_schema and pk.constraint_name = pkc.constraint_name)" + 
+                    " where fk.constraint_type = 'GROUPING' " + 
+                    " and fkc.position_in_unique_constraint = pkc.ordinal_position" +
+                    " UNION " + 
+                    "select pkc.table_schema as PKTABLE_SCHEM, pkc.table_name as PKTABLE_name, pkc.column_name as PKCOLUMN_NAME,"+
+                    " fkc.table_schema as FKTABLE_SCHEMA, fkc.table_name as FKTABLE_NAME, fkc.column_name as FKCOLUMN_NAME," + 
+                    " pkc.ordinal_position + 1 AS KEY_SEQ," + 
+                    " CASE rc.update_rule WHEN 'NO ACTION' THEN " + DatabaseMetaData.importedKeyNoAction +
+                    		" WHEN 'RESTRICT' THEN " + DatabaseMetaData.importedKeyRestrict +
+                    		" WHEN 'CASCADE' THEN " + DatabaseMetaData.importedKeyCascade +
+                    		" WHEN 'SET NULL' THEN " + DatabaseMetaData.importedKeySetNull +
+                    		" WHEN 'SET DEFAULT' THEN " + DatabaseMetaData.importedKeySetDefault + 
+                    		" ELSE NULL END AS UPDATE_RULE," +
+                    " CASE rc.delete_rule WHEN 'NO ACTION' THEN " + DatabaseMetaData.importedKeyNoAction +
+                            " WHEN 'RESTRICT' THEN " + DatabaseMetaData.importedKeyRestrict +
+                            " WHEN 'CASCADE' THEN " + DatabaseMetaData.importedKeyCascade +
+                            " WHEN 'SET NULL' THEN " + DatabaseMetaData.importedKeySetNull +
+                            " WHEN 'SET DEFAULT' THEN " + DatabaseMetaData.importedKeySetDefault + 
+                            " ELSE NULL END AS DELETE_RULE," +
+                    " pk.constraint_name PK_NAME, fk.constraint_name FK_NAME," +
+                    DatabaseMetaData.importedKeyNotDeferrable + " AS DEFERRABILITY" + 
+                    " from information_schema.table_constraints fk "+
+                    " JOIN information_schema.referential_constraints rc ON (fk.constraint_schema = rc.constraint_schema and fk.constraint_name = rc.constraint_name)" +
+                    " JOIN information_schema.key_column_usage fkc ON (fk.constraint_schema = fkc.constraint_schema and fk.constraint_name = fkc.constraint_name)" +
+                    " JOIN information_schema.table_constraints pk ON (rc.unique_constraint_schema = pk.constraint_schema and rc.unique_constraint_name = pk.constraint_name)" +
+                    " JOIN information_schema.key_column_usage pkc ON (pk.constraint_schema = pkc.constraint_schema and pk.constraint_name = pkc.constraint_name)" +
+                    " where fk.constraint_type = 'FOREIGN KEY'"+ 
+                    " and fkc.position_in_unique_constraint = pkc.ordinal_position) AS CONSTRAINTS WHERE 1=1";
+                    
+            if (primarySchema != null && !"".equals(primarySchema))
+            {
+                sql += " AND PKTABLE_SCHEM = "; 
+                sql += "'" + connection.escapeString(primarySchema) + "'";
+            }
+            if (foreignSchema != null && !"".equals(foreignSchema))
+            {
+                sql += " AND FKTABLE_SCHEM = "; 
+                sql += "'" + connection.escapeString(foreignSchema) + "'";
+            }
+            if (primaryTable != null && !"".equals(primaryTable))
+            {
+                sql += " AND PKTABLE_NAME = ";
+                sql += "'" + connection.escapeString(primaryTable) + "'";
+            }
+            if (foreignTable != null && !"".equals(foreignTable))
+            {
+                sql += " AND FKTABLE_NAME = ";
+                sql += "'" + connection.escapeString(foreignTable) + "'";
+            }
+            
+            if (primaryTable != null)
+            {
+                sql += " ORDER BY  FKTABLE_SCHEM, FKTABLE_NAME, FK_NAME, KEY_SEQ";
+            }
+            else
+            {
+                sql += " ORDER BY PKTABLE_SCHEM, PKTABLE_NAME, FK_NAME, KEY_SEQ";
+            }
+
+            
+            return createMetaDataStatement().executeQuery(sql);
+
+        } else 
         if (connection.haveMinimumServerVersion("7.4"))
         {
             String sql = "SELECT NULL::text AS PKTABLE_CAT, pkn.nspname AS PKTABLE_SCHEM, pkc.relname AS PKTABLE_NAME, pka.attname AS PKCOLUMN_NAME, " +
