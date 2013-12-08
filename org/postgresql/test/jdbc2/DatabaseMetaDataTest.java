@@ -393,20 +393,47 @@ public class DatabaseMetaDataTest extends TestCase
           
         
     }
+    
+    public void testGroupForeignKeysValid() throws Exception 
+    {
+        if (!TestUtil.isFoundationDBServer(con))
+            return;
+        TestUtil.createTable( con, "people", "id int not null primary key, name text" );
+        TestUtil.createTable(con, "users", "id int not null primary key, people_id int, policy_id int," +
+                          "CONSTRAINT people GROUPING FOREIGN KEY (people_id) references people(id)");
+
+        DatabaseMetaData dbmd = con.getMetaData();
+        assertNotNull(dbmd);
+
+        ResultSet rs = dbmd.getImportedKeys(null, "", "users" );
+        assertTrue (rs.next());
+        assertEquals ("people", rs.getString("PKTABLE_NAME"));
+        assertEquals ("id", rs.getString("PKCOLUMN_NAME"));
+        assertEquals ("users", rs.getString ("FKTABLE_NAME"));
+        assertEquals("people_id", rs.getString("FKCOLUMN_NAME"));
+        
+        rs = dbmd.getExportedKeys( null, "", "people" );
+        assertTrue (rs.next());
+        assertEquals ("people", rs.getString("PKTABLE_NAME"));
+        assertEquals ("id", rs.getString("PKCOLUMN_NAME"));
+        assertEquals ("users", rs.getString ("FKTABLE_NAME"));
+        assertEquals("people_id", rs.getString("FKCOLUMN_NAME"));
+
+        TestUtil.dropTable( con, "users" );
+        TestUtil.dropTable( con, "people" );
+    }
 
     public void testForeignKeys() throws Exception
     {
-        Connection con1 = TestUtil.openDB();
-        if (TestUtil.isFoundationDBServer(con1)) {
-            TestUtil.closeDB(con1);
+        if (TestUtil.isFoundationDBServer(con))
             return;
-        }
-        TestUtil.createTable( con1, "people", "id int4 primary key, name text" );
-        TestUtil.createTable( con1, "policy", "id int4 primary key, name text" );
+        Connection con1 = TestUtil.openDB();
 
-        TestUtil.createTable( con1, "users", "id int4 primary key, people_id int4, policy_id int4," +
-                              "CONSTRAINT people FOREIGN KEY (people_id) references people(id)," +
-                              "constraint policy FOREIGN KEY (policy_id) references policy(id)" );
+        TestUtil.createTable( con1, "people", "id int primary key, name text" );
+        TestUtil.createTable( con1, "policy", "id int primary key, name text" );
+        TestUtil.createTable( con1, "users", "id int primary key, people_id int, policy_id int," +
+                          "CONSTRAINT people FOREIGN KEY (people_id) references people(id)," +
+                          "constraint policy FOREIGN KEY (policy_id) references policy(id)" );
 
         DatabaseMetaData dbmd = con.getMetaData();
         assertNotNull(dbmd);
