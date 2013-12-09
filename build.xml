@@ -344,12 +344,14 @@
     <filter token="POOLED_CONN_CLASS" value="${pooledconnclass}" />
     <filter token="CONN_POOL_DS_CLASS" value="${connpooldsclass}" />
     <filter token="DEF_PGPORT" value="${def_pgport}" />
+    <filter token="DEF_FDBPORT" value="${def_fdbport}" />
     <filter token="MAKE_SSL_CLASS" value="${makesslclass}"/>
 
      <fail unless="major" message="'major' undefined. Please follow the directions in README."/>
      <fail unless="minor" message="'minor' undefined. Please follow the directions in README."/>
      <fail unless="fullversion" message="'fullversion' undefined. Please follow the directions in README."/>
      <fail unless="def_pgport" message="'def_pgport' undefined. Please follow the directions in README."/>
+     <fail unless="def_fdbport" message="'def_fdbport' undefined. Please follow the directions in README."/>
      <fail unless="enable_debug" message="'enable_debug' undefined. Please follow the directions in README."/>
  
     <!-- Put a check for the current version here -->

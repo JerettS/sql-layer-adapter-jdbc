@@ -8,5 +8,6 @@ nbproject
 .idea
 *.iml
 build.local.properties
+com/foundationdb/sql/jdbc/Driver.java
 
 /bin
