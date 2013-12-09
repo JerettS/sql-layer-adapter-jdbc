@@ -142,6 +142,7 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         this.protoConnection = ConnectionFactory.openConnection(hostSpecs, user, database, info, logger);
         this.dbVersionNumber = protoConnection.getServerVersion();
         this.isFoundationDBServer = protoConnection.isFoundationDBServer();
+        // NB: This is overridden when isFoundationDBServer() is true, see haveMinimumCompatibleVersion()
         this.compatible = info.getProperty("compatible",info.getProperty("MAJORVERSION") + "." + info.getProperty("MINORVERSION"));
         this.driverVersion = info.getProperty("VERSION");
         this.driverMajorVersion = Integer.parseInt(info.getProperty("MAJORVERSION"));
@@ -1132,7 +1133,7 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
      */
     public boolean haveMinimumCompatibleVersion(String ver)
     {
-        return (compatible.compareTo(ver) >= 0);
+        return isFoundationDBServer() || (compatible.compareTo(ver) >= 0);
     }
 
 
