@@ -57,6 +57,10 @@ class ProtocolConnectionImpl implements ProtocolConnection {
         return this.isFoundationDBServer;
     }
 
+    public String getFoundationDBServerVersion() {
+        return foundationDBServerVersion;
+    }
+
     public synchronized boolean getStandardConformingStrings()
     {
         return standardConformingStrings;
@@ -170,6 +174,10 @@ class ProtocolConnectionImpl implements ProtocolConnection {
         this.isFoundationDBServer = set;
     }
 
+    void setFoundationDBServerVersion(String version) {
+        this.foundationDBServerVersion = version;
+    }
+
     void setBackendKeyData(int cancelPid, int cancelKey) {
         this.cancelPid = cancelPid;
         this.cancelKey = cancelKey;
@@ -244,6 +252,7 @@ class ProtocolConnectionImpl implements ProtocolConnection {
     private int cancelPid;
     private int cancelKey;
     private boolean isFoundationDBServer = false;
+    private String foundationDBServerVersion;
 
     private boolean standardConformingStrings;
     private int transactionState;

@@ -620,10 +620,10 @@ public class ConnectionFactoryImpl extends ConnectionFactory {
                 } 
                 else if (name.equals("foundationdb_server"))
                 {
-                    
-                    if (value.equals("on"))
+                    if (!value.equals("off")) {
                         protoConnection.isFoundationDBServer(true);
-                    // default is off/false, leave it that way.     
+                        protoConnection.setFoundationDBServerVersion(value);
+                    }
                 }
 
                 break;

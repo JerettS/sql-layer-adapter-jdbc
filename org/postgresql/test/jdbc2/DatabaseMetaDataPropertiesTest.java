@@ -226,7 +226,7 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         assertNotNull(dbmd);
 
         if (TestUtil.isFoundationDBServer(con)) {
-            assertTrue(dbmd.getDatabaseProductName().equals("FoundationDB SQL layer"));
+            assertTrue(dbmd.getDatabaseProductName().equals("FoundationDB SQL Layer"));
         } else {
             assertTrue(dbmd.getDatabaseProductName().equals("PostgreSQL"));
         }
