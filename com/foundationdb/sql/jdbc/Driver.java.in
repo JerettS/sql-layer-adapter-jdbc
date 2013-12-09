@@ -124,7 +124,7 @@ public class Driver extends org.postgresql.DriverBase
 
     protected String getPortNumber()
     {
-        return "@DEF_FDPORT@";
+        return "@DEF_FDBPORT@";
     }
 
     /*
