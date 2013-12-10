@@ -154,4 +154,10 @@ public interface ProtocolConnection {
      * Return false otherwise. 
      */
     boolean isFoundationDBServer();
+
+    /**
+     * Return the real FoundationDB SQL Layer version number,
+     * Return null otherwise.
+     */
+    String getFoundationDBServerVersion();
 }

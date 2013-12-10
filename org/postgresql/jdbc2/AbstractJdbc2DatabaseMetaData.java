@@ -220,7 +220,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
     public String getDatabaseProductName() throws SQLException
     {
         if (connection.isFoundationDBServer()) {
-            return "FoundationDB SQL layer";
+            return "FoundationDB SQL Layer";
         } else {
             return "PostgreSQL";
         }
@@ -234,7 +234,11 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public String getDatabaseProductVersion() throws SQLException
     {
-        return connection.getDBVersionNumber();
+        if (connection.isFoundationDBServer()) {
+            return connection.getFoundationDBVersionNumber();
+        } else {
+            return connection.getDBVersionNumber();
+        }
     }
 
     /*
@@ -246,7 +250,11 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public String getDriverName() throws SQLException
     {
-        return "PostgreSQL Native Driver";
+        if (connection.isFoundationDBServer()) {
+            return "FoundationDB SQL Layer Native Driver";
+        } else {
+            return "PostgreSQL Native Driver";
+        }
     }
 
     /*

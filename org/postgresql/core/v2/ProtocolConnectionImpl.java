@@ -212,6 +212,18 @@ class ProtocolConnectionImpl implements ProtocolConnection {
     	return cancelPid;
     }
 
+    //
+    // SQL Layer does not support protocol v2
+    //
+
+    public final boolean isFoundationDBServer() {
+        return false;
+    }
+
+    public String getFoundationDBServerVersion() {
+        return null;
+    }
+
     private String serverVersion;
     private int cancelPid;
     private int cancelKey;
@@ -229,10 +241,5 @@ class ProtocolConnectionImpl implements ProtocolConnection {
     private final String database;
     private final QueryExecutorImpl executor;
     private final Logger logger;
-    
-    private boolean foundationDBServer = false;
+}
 
-    public final boolean isFoundationDBServer() {
-        return foundationDBServer;
-    }
- }

@@ -53,6 +53,7 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     private final String dbVersionNumber;
     /* */
     private final boolean isFoundationDBServer;
+    private final String foundationDBVersionNumber;
 
     /* Query that runs COMMIT */
     private final Query commitQuery;
@@ -142,6 +143,7 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
         this.protoConnection = ConnectionFactory.openConnection(hostSpecs, user, database, info, logger);
         this.dbVersionNumber = protoConnection.getServerVersion();
         this.isFoundationDBServer = protoConnection.isFoundationDBServer();
+        this.foundationDBVersionNumber = protoConnection.getFoundationDBServerVersion();
         // NB: This is overridden when isFoundationDBServer() is true, see haveMinimumCompatibleVersion()
         this.compatible = info.getProperty("compatible",info.getProperty("MAJORVERSION") + "." + info.getProperty("MINORVERSION"));
         this.driverVersion = info.getProperty("VERSION");
@@ -1059,6 +1061,12 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     {
         return isFoundationDBServer;
     }
+
+    public String getFoundationDBVersionNumber()
+    {
+        return foundationDBVersionNumber;
+    }
+
     // Parse a "dirty" integer surrounded by non-numeric characters
     private static int integerPart(String dirtyString)
     {
@@ -1081,9 +1089,10 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
      */
     public int getServerMajorVersion()
     {
+        String version = isFoundationDBServer() ? foundationDBVersionNumber : dbVersionNumber;
         try
         {
-            StringTokenizer versionTokens = new StringTokenizer(dbVersionNumber, ".");  // aaXbb.ccYdd
+            StringTokenizer versionTokens = new StringTokenizer(version, ".");  // aaXbb.ccYdd
             return integerPart(versionTokens.nextToken()); // return X
         }
         catch (NoSuchElementException e)
@@ -1097,9 +1106,10 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
      */
     public int getServerMinorVersion()
     {
+        String version = isFoundationDBServer() ? foundationDBVersionNumber : dbVersionNumber;
         try
         {
-            StringTokenizer versionTokens = new StringTokenizer(dbVersionNumber, ".");  // aaXbb.ccYdd
+            StringTokenizer versionTokens = new StringTokenizer(version, ".");  // aaXbb.ccYdd
             versionTokens.nextToken(); // Skip aaXbb
             return integerPart(versionTokens.nextToken()); // return Y
         }
