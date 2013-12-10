@@ -80,7 +80,6 @@ platform.
 
 The driver recognizes JDBC URLs of the form:
 
-    ```
     # Default localhost and port
     jdbc:fdbsql:schema
 
@@ -89,7 +88,6 @@ The driver recognizes JDBC URLs of the form:
 
     # Fully specified
     jdbc:fdbsql://host:port/schema
-    ```
 
 The default host and port, if omitted, are `localhost` and `15432`.
 
