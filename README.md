@@ -1,103 +1,193 @@
-# FoundationDB SQL Layer JDBC driver
+# FoundationDB SQL Layer JDBC Driver
 
-This [JDBC](http://www.oracle.com/technetwork/java/overview-141217.html) driver provides connectivity between the Java programming language and the [SQL Layer](https://foundationdb.com/layers/sql/index.html).
+This [JDBC](http://www.oracle.com/technetwork/java/overview-141217.html) driver
+provides connectivity between the Java programming language and the
+[SQL Layer](https://foundationdb.com/layers/sql/).
 
-## 1. Getting the driver
 
-This driver is installed by default with the SQL Layer. If you need to install this driver separately, use Maven Central. You can also compile it yourself.
+## Getting the Driver
 
-### Getting the driver from Maven Central
+There are two versions of the driver built for every release. These implement
+the JDBC 4.0 and 4.1 APIs for use with Java 6 and Java 7, respectively. Both
+the driver and JDBC versions are included in the name of the driver for
+clarity.
 
-If you've got access to Maven Central, simply add the following to your project's pom.xml:
+The latest release is 1.9-1 with versions named `1.9-1-jdbc4` and
+`1.9-1-jdbc41`.
 
-```
+
+### SQL Layer
+
+This JDBC 4.1 version is included with the installation of the SQL Layer.
+The jar file can be found in the following system-dependent locations:
+
+- Linux
+    - `/usr/share/foundationdb/sql/client/fdb-sql-layer-jdbc-*.jar`
+- Mac OS X
+    - `/usr/local/foundationdb/sql/client/fdb-sql-layer-jdbc-*.jar`
+- Windows
+    - `C:\Program Files\foundationdb\sql\lib\client\fdb-sql-layer-jdbc-*.jar`
+
+
+### Maven Central
+
+Both versions of the driver are deployed to standard Central repository for
+use with Maven based projects. To get started, simply include the following
+in the `<dependencies>` section of your project's `pom.xml` file:
+
+```xml
 <dependency>
   <groupId>com.foundationdb</groupId>
   <artifactId>fdb-sql-layer-jdbc</artifactId>
-  <version>9.4.0</version>
+  <version>1.9-1-jdbc41</version>
 </dependency>
 ```
 
-### Compiling the driver
 
-Alternatively, to compile you will need to have a Java 6 or newer [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) and will need to have
-[Ant](http://ant.apache.org/index.html) installed. Then, simply run ant in the top level directory.
-This will compile the correct driver for your JVM, and build a .jar file (Java ARchive)
-called fdb-sql-layer-jdbc.jar.
+### Direct Download
 
-*REMEMBER*: Once you have compiled the driver, it will work on ALL platforms
-that support that version of the API. You don't need to build it for each
+For convenience, direct links to the `jar` files of the latest release are below:
+
+- [1.9-1 - Java 6 / JDBC 4.0](http://search.maven.org/remotecontent?filepath=com/foundationdb/fdb-sql-layer-jdbc/1.9-1-jdbc4/fdb-sql-layer-jdbc-1.9-1-jdbc4.jar)
+- [1.9-1 - Java 7 / JDBC 4.1](http://search.maven.org/remotecontent?filepath=com/foundationdb/fdb-sql-layer-jdbc/1.9-1-jdbc41/fdb-sql-layer-jdbc-1.9-1-jdbc41.jar)
+
+
+### Building
+
+Compiling the driver from scratch requires
+[JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+(>= 6) and the [Apache Ant](http://ant.apache.org/index.html) build tool.
+
+1. Clone
+    - `git clone git@github.com:FoundationDB/sql-layer-jdbc.git`
+2. Build
+    - `ant clean maven-jar`
+    - The `jars/` directory will contain `fdb-sql-layer-jdbc-x.y-b.jar`
+
+If you would like to build a Java 6 compatible driver when using JDK7, pass the
+`java.target` parameter:
+
+`ant clean maven-jar -Djava.target=1.6`
+
+*Note*: Once the driver has been built, it will work on ALL platforms that
+support that version of the API. You *do not* need to build it for each
 platform.
 
-## 2. Installing the driver
 
-To install the driver, the fdb-sql-layer-jdbc.jar file has to be in the classpath.
+## Using the Driver
 
-i.e. under LINUX/SOLARIS (the example here is my linux box):
-
-	export CLASSPATH=.:/usr/local/foundationdb/sql/client/fdb-sql-layer-jdbc.jar
-
-## 3. Using the driver
-
-To use the driver, you must introduce it to JDBC. There's two ways
-of doing this:
-
-- Hardcoded
-
-   This method hardcodes your driver into your application. You
-   introduce the driver using the following snippet of code:
-
-```java
-try {
-  Class.forName("com.foundationdb.sql.jdbc.Driver");
-} catch(Exception e) {
-  // your error handling code goes here
-}
-```
-
-   Remember, this method restricts your code to just the FoundationDB SQL Layer.
-   However, this is how most people load the driver.
-
-- Parameters
-
-   This method specifies the driver from the command line. When running the
-   application, you specify the driver using the option:
-
-    `-Djdbc.drivers=com.foundationdb.sql.jdbc.Driver`
-
-   eg: This is an example of running a sample app with with the driver:
-
-    `java -Djdbc.drivers=com.foundationdb.sql.jdbc.Driver com.company.sample.Main`
-
-   note: This method only works with Applications (not for Applets).
-	 However, the application is not tied to one driver, so if you needed
-	 to switch databases (why I don't know ;-) ), you don't need to
-	 recompile the application (as long as you havent hardcoded the url's).
-
-### JDBC URL syntax
+### JDBC URL Syntax
 
 The driver recognizes JDBC URLs of the form:
 
-    jdbc:fdbsql:database
+    # Default localhost and port
+    jdbc:fdbsql:schema
 
-    jdbc:fdbsql://host/database
+    # Default port
+    jdbc:fdbsql://host/schema
 
-    jdbc:fdbsql://host:port/database
+    # Fully specified
+    jdbc:fdbsql://host:port/schema
 
-Also, you can supply both username and passwords as arguments, by appending
-them to the URL. e.g.:
+The default host and port, if omitted, are `localhost` and `15432`.
 
-    jdbc:fdbsql:database?user=me
-    jdbc:fdbsql:database?user=me&password=mypass
+The username and password can also be supplied as arguments appended to the URL:
 
-Notes:
+    jdbc:fdbsql:schema?user=me
+    jdbc:fdbsql:schema?user=me&password=mypass
 
-- If you are connecting to localhost or 127.0.0.1 you can leave it out of the
-   URL. i.e.: `jdbc:fdbsql://localhost/mydb` can be replaced with `jdbc:fdbsql:mydb`
 
-- The port defaults to 15432 if it's left out.
+### Classpath
 
-## 4. More Information ##
-For a full guide of how to use JDBC, refer to [Oracle's website](http://www.oracle.com/technetwork/java/javase/jdbc/) and the [JDBC tutorial](http://docs.oracle.com/javase/tutorial/jdbc/).
+To use the driver, the jar file must be in the `classpath`. Note that projects
+using a build tool (e.g. Maven) can generally skip this section.
 
-For support, visit our community site at http://community.foundationdb.com or hop on the `#foundationdb` IRC channel on irc.freenode.net
+On Linix based systems, the simplest way is to `export` it into the current
+environment. For example, to use the SQL Layer bundled jar file on Linux:
+
+```
+$ export CLASSPATH=".:/usr/share/foundationdb/sql/client/fdb-sql-layer-jdbc-1.9-1-jdbc41.jar"
+$ javac MyClass.java
+$ java MyClass
+```
+
+Consult the [PATH and CLASSPATH Tutorial](http://docs.oracle.com/javase/tutorial/essential/environment/paths.html)
+for more details.
+
+
+### Code
+
+1. Automatic (Recommended Method)
+
+    As of Java 6, any driver in the classpath can be used directly via the
+    URL. The JVM handles all class lookup and loading automatically. For
+    example, to open a connection to the `test` schema on `localhost`:
+
+    ```java
+    try {
+        Connection conn = DriverManager.getConnection("jdbc:fdbsql:test");
+    } catch(SQLException e) {
+        // Driver not found
+    }
+    ```
+
+    As the catch clause above indicates, `getConnection()` will throw a
+    SQLException if the driver corresponding to the URL isn't in the classpath.
+
+2. Manual
+
+    Alternatively, the driver can be manually loaded before any connection
+    attempt is made. As mentioned above, *this is not required*.
+
+    ```java
+    try {
+        Class.forName("com.foundationdb.sql.jdbc.Driver");
+    } catch(ClassNotFoundException e) {
+        // Driver not found
+    }
+    ```
+
+   Remember, this method restricts your program to just this driver.
+
+3. Parameters
+
+   Lastly, the JVM supports specifiying the driver from the command line via
+   the `jdbc.drivers` system property. For example, to run the class `Main`
+   with this driver:
+
+    `$ java -Djdbc.drivers=com.foundationdb.sql.jdbc.Driver Main`
+
+   Note that JVM *will still start* if the driver could not be found and your
+   first `getConnection()` attempt will throw an exception.
+
+
+## More Information
+
+For a full guide on how to use JDBC, refer to the official
+[documentation](http://www.oracle.com/technetwork/java/javase/jdbc/)
+and [tutorial](http://docs.oracle.com/javase/tutorial/jdbc/).
+
+
+## Contributing
+
+1. Fork
+2. Branch
+3. Commit
+4. Pull Request
+
+Thanks! Please make sure any changes come with new tests.
+
+
+## Contact
+
+* Community: http://community.foundationdb.com
+* IRC: #FoundationDB on irc.freenode.net
+
+
+## License
+
+BSD 3-Clause License  
+Copyright (c) 2013 FoundationDB, LLC  
+It is free software and may be redistributed under the terms specified
+in the LICENSE file.
+
