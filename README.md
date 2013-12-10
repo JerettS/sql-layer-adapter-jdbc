@@ -18,7 +18,7 @@ The latest release is 1.9-1 with versions named `1.9-1-jdbc4` and
 
 ### SQL Layer
 
-This JDBC 4.1 version of is included with the installation of the SQL Layer.
+This JDBC 4.1 version is included with the installation of the SQL Layer.
 The jar file can be found in the following system-dependent locations:
 
 - Linux
@@ -55,8 +55,8 @@ For convenience, direct links to the `jar` files of the latest release are below
 ### Building
 
 Compiling the driver from scratch requires
-[JDK6](http://www.oracle.com/technetwork/java/javase/downloads/index.html), or
-newer, and the [Apache Ant](http://ant.apache.org/index.html) build tool.
+[JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+(>= 6) and the [Apache Ant](http://ant.apache.org/index.html) build tool.
 
 1. Clone
     - `git clone git@github.com:FoundationDB/sql-layer-jdbc.git`
@@ -80,15 +80,20 @@ platform.
 
 The driver recognizes JDBC URLs of the form:
 
-    jdbc:fdbsql:database
+    ```
+    # Default localhost and port
+    jdbc:fdbsql:schema
 
+    # Default port
     jdbc:fdbsql://host/schema
 
+    # Fully specified
     jdbc:fdbsql://host:port/schema
+    ```
 
 The default host and port, if omitted, are `localhost` and `15432`.
 
-The username and password can also be supplied as arguments to the URL:
+The username and password can also be supplied as arguments appended to the URL:
 
     jdbc:fdbsql:schema?user=me
     jdbc:fdbsql:schema?user=me&password=mypass
@@ -99,7 +104,7 @@ The username and password can also be supplied as arguments to the URL:
 To use the driver, the jar file must be in the `classpath`. Note that projects
 using a build tool (e.g. Maven) can generally skip this section.
 
-On *nix based systems, the simplest way is to `export` it into your current
+On Linix based systems, the simplest way is to `export` it into the current
 environment. For example, to use the SQL Layer bundled jar file on Linux:
 
 ```
@@ -118,7 +123,7 @@ for more details.
 
     As of Java 6, any driver in the classpath can be used directly via the
     URL. The JVM handles all class lookup and loading automatically. For
-    example, to open a connection to schema `test` on localhost:
+    example, to open a connection to the `test` schema on `localhost`:
 
     ```java
     try {
@@ -133,8 +138,8 @@ for more details.
 
 2. Manual
 
-    Alternatively, you can cause the driver to manually be loaded before any
-    connection attempt is made. As mentioned above, *this is not required*.
+    Alternatively, the driver can be manually loaded before any connection
+    attempt is made. As mentioned above, *this is not required*.
 
     ```java
     try {
@@ -144,7 +149,7 @@ for more details.
     }
     ```
 
-   Remember, this method restricts your code to just this driver.
+   Remember, this method restricts your program to just this driver.
 
 3. Parameters
 
