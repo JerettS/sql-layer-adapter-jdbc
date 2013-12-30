@@ -261,11 +261,6 @@ public class DatabaseMetaDataTest extends TestCase
             return ;
 
         Connection con1 = TestUtil.openDB();
-        if (TestUtil.isFoundationDBServer(con1)) {
-            TestUtil.closeDB(con1);
-            return;
-        }
-        
         TestUtil.createTable( con1, "pkt", "a int not null, b int not null, CONSTRAINT pkt_pk_a PRIMARY KEY (a), CONSTRAINT pkt_un_b UNIQUE (b)");
         TestUtil.createTable( con1, "fkt", "c int, d int, CONSTRAINT fkt_fk_c FOREIGN KEY (c) REFERENCES pkt(b)");
 
@@ -276,7 +271,10 @@ public class DatabaseMetaDataTest extends TestCase
         {
             assertTrue("pkt".equals(rs.getString("PKTABLE_NAME")));
             assertTrue("fkt".equals(rs.getString("FKTABLE_NAME")));
-            assertTrue("pkt_un_b".equals(rs.getString("PK_NAME")));
+            if (TestUtil.isFoundationDBServer(con)) 
+                assertTrue("pkt.pkt_un_b".equals(rs.getString("PK_NAME")));
+            else
+                assertTrue("pkt_un_b".equals(rs.getString("PK_NAME")));
             assertTrue("b".equals(rs.getString("PKCOLUMN_NAME")));
         }
         assertTrue(j == 1);
@@ -289,10 +287,6 @@ public class DatabaseMetaDataTest extends TestCase
     public void testMultiColumnForeignKeys() throws Exception
     {
         Connection con1 = TestUtil.openDB();
-        if (TestUtil.isFoundationDBServer(con1)) {
-            TestUtil.closeDB(con1);
-            return;
-        }
         TestUtil.createTable( con1, "pkt", "a int not null, b int not null, CONSTRAINT pkt_pk PRIMARY KEY (a,b)");
         TestUtil.createTable( con1, "fkt", "c int, d int, CONSTRAINT fkt_fk_pkt FOREIGN KEY (c,d) REFERENCES pkt(b,a)");
 
@@ -304,15 +298,28 @@ public class DatabaseMetaDataTest extends TestCase
             assertTrue("pkt".equals(rs.getString("PKTABLE_NAME")));
             assertTrue("fkt".equals(rs.getString("FKTABLE_NAME")));
             assertTrue(j + 1 == rs.getInt("KEY_SEQ"));
+            
+            // The FDB Server changes the FK key order to match the parent PK index order
+            // so the key_seq becomes a->d, b->c, rather than the declared order of b->c, a->d
             if (j == 0)
             {
-                assertTrue("b".equals(rs.getString("PKCOLUMN_NAME")));
-                assertTrue("c".equals(rs.getString("FKCOLUMN_NAME")));
+                if (TestUtil.isFoundationDBServer(con)) {
+                    assertTrue("a".equals(rs.getString("PKCOLUMN_NAME")));
+                    assertTrue("d".equals(rs.getString("FKCOLUMN_NAME")));
+                } else {
+                    assertTrue("b".equals(rs.getString("PKCOLUMN_NAME")));
+                    assertTrue("c".equals(rs.getString("FKCOLUMN_NAME")));
+                }
             }
             else
             {
-                assertTrue("a".equals(rs.getString("PKCOLUMN_NAME")));
-                assertTrue("d".equals(rs.getString("FKCOLUMN_NAME")));
+                if (TestUtil.isFoundationDBServer(con)) {
+                    assertTrue("b".equals(rs.getString("PKCOLUMN_NAME")));
+                    assertTrue("c".equals(rs.getString("FKCOLUMN_NAME")));
+                } else {
+                    assertTrue("a".equals(rs.getString("PKCOLUMN_NAME")));
+                    assertTrue("d".equals(rs.getString("FKCOLUMN_NAME")));
+                }
             }
         }
         assertTrue(j == 2);
@@ -324,12 +331,10 @@ public class DatabaseMetaDataTest extends TestCase
 
     public void testSameTableForeignKeys() throws Exception
     {
-        Connection con1 = TestUtil.openDB();
-        if (TestUtil.isFoundationDBServer(con1)) {
-            TestUtil.closeDB(con1);
+        if (TestUtil.isFoundationDBServer(con)) 
             return;
-        }
         
+        Connection con1 = TestUtil.openDB();
         TestUtil.createTable( con1, "person", "FIRST_NAME character varying(100) NOT NULL,"+
           "LAST_NAME character varying(100) NOT NULL,"+
           "FIRST_NAME_PARENT_1 character varying(100),"+
@@ -388,10 +393,6 @@ public class DatabaseMetaDataTest extends TestCase
 
         TestUtil.dropTable( con1, "person" );
         TestUtil.closeDB(con1);
-        
-       
-          
-        
     }
     
     public void testGroupForeignKeysValid() throws Exception 
@@ -425,13 +426,11 @@ public class DatabaseMetaDataTest extends TestCase
 
     public void testForeignKeys() throws Exception
     {
-        if (TestUtil.isFoundationDBServer(con))
-            return;
         Connection con1 = TestUtil.openDB();
 
-        TestUtil.createTable( con1, "people", "id int primary key, name text" );
-        TestUtil.createTable( con1, "policy", "id int primary key, name text" );
-        TestUtil.createTable( con1, "users", "id int primary key, people_id int, policy_id int," +
+        TestUtil.createTable( con1, "people", "id int not null primary key, name text" );
+        TestUtil.createTable( con1, "policy", "id int not null primary key, name text" );
+        TestUtil.createTable( con1, "users", "id int not null primary key, people_id int, policy_id int," +
                           "CONSTRAINT people FOREIGN KEY (people_id) references people(id)," +
                           "constraint policy FOREIGN KEY (policy_id) references policy(id)" );
 
@@ -456,10 +455,17 @@ public class DatabaseMetaDataTest extends TestCase
             assertTrue( fkColumnName.equals( "people_id" ) || fkColumnName.equals( "policy_id" ) ) ;
 
             String fkName = rs.getString( "FK_NAME" );
-            assertTrue( fkName.startsWith( "people") || fkName.startsWith( "policy" ) );
+            if (TestUtil.isFoundationDBServer(con)) {
+                assertTrue (fkName.equals("users.people") || fkName.equals("users.policy") );
+            } else {
+                assertTrue( fkName.startsWith( "people") || fkName.startsWith( "policy" ) );
+            }
 
             String pkName = rs.getString( "PK_NAME" );
-            assertTrue( pkName.equals( "people_pkey") || pkName.equals( "policy_pkey" ) );
+            if (TestUtil.isFoundationDBServer(con))
+                assertTrue (pkName.equals("people.PRIMARY") || pkName.equals("policy.PRIMARY") );
+            else
+                assertTrue( pkName.equals( "people_pkey") || pkName.equals( "policy_pkey" ) );
 
         }
 
@@ -476,8 +482,11 @@ public class DatabaseMetaDataTest extends TestCase
         assertEquals( "users", rs.getString( "FKTABLE_NAME" ) );
         assertEquals( "people_id", rs.getString( "FKCOLUMN_NAME" ) );
 
-        assertTrue( rs.getString( "FK_NAME" ).startsWith( "people" ) );
-
+        if (TestUtil.isFoundationDBServer(con)) {
+            assertTrue(rs.getString("FK_NAME").equals("users.people"));
+        } else {
+            assertTrue( rs.getString( "FK_NAME" ).startsWith( "people" ) );
+        }
 
         TestUtil.dropTable( con1, "users" );
         TestUtil.dropTable( con1, "people" );
@@ -541,7 +550,7 @@ public class DatabaseMetaDataTest extends TestCase
             if (rownum == 0)
             {
                 if (TestUtil.isFoundationDBServer(con)) {
-                    assertEquals("int", rs.getString("TYPE_NAME"));
+                    assertEquals("INT", rs.getString("TYPE_NAME"));
                 }else {
                     assertEquals("int4", rs.getString("TYPE_NAME"));
                 }
@@ -549,12 +558,12 @@ public class DatabaseMetaDataTest extends TestCase
             else if (rownum == 1)
             {
                 if (TestUtil.isFoundationDBServer(con)) {
-                    assertEquals("bigint", rs.getString("TYPE_NAME"));
+                    assertEquals("BIGINT", rs.getString("TYPE_NAME"));
                 } else {
                     assertEquals("serial", rs.getString("TYPE_NAME"));
                 }
             }
-            else if (TestUtil.isFoundationDBServer(con) && rownum == 2)
+            else if (!TestUtil.isFoundationDBServer(con) && rownum == 2)
             {
                 assertEquals("bigserial", rs.getString("TYPE_NAME"));
             }
