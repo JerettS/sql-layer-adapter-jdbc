@@ -3713,7 +3713,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
                             " WHEN 'SET NULL' THEN " + DatabaseMetaData.importedKeySetNull +
                             " WHEN 'SET DEFAULT' THEN " + DatabaseMetaData.importedKeySetDefault + 
                             " ELSE NULL END AS DELETE_RULE," +
-                    " pk.constraint_name PK_NAME, fk.constraint_name FK_NAME," +
+                    "  fk.constraint_name FK_NAME, pk.constraint_name PK_NAME," +
                     DatabaseMetaData.importedKeyNotDeferrable + " AS DEFERRABILITY" + 
                     " from information_schema.table_constraints fk "+
                     " JOIN information_schema.referential_constraints rc ON (fk.constraint_schema = rc.constraint_schema and fk.constraint_name = rc.constraint_name)" +
