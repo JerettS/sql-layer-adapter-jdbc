@@ -1591,7 +1591,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
      */
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException
     {
-        return false;
+        return true;
     }
 
     /*
