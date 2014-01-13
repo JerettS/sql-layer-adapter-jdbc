@@ -2268,9 +2268,11 @@ public abstract class AbstractJdbc2DatabaseMetaData
     private static final Map fdbTableTypes;
     static {
         fdbTableTypes = new HashMap();
-        fdbTableTypes.put ("TABLE", "SELECT NULL as TABLE_CAT, table_schema as TABLE_SCHEM, table_name as TABLE_NAME, type_type as TABLE_TYPE, NULL as REMARKS from information_schema.tables where table_type = 'TABLE'");
-        fdbTableTypes.put("VIEW", "SELECT NULL as TABLE_CAT, schema_name as TABLE_SCHEM, table_name as TABLE_NAME, 'VIEW' as TABLE_TYPE, NULL as REMARKS from information_schema.views WHERE 1=1");
-        fdbTableTypes.put("DICTIONARY VIEW", "SELECT NULL as TABLE_CAT, table_schema as TABLE_SCHEM, table_name as TABLE_NAME, type_type as TABLE_TYPE, NULL as REMARKS from information_schema.tables where table_type = 'DICTIONARY VIEW'");
+        String fromTablesFormat = "SELECT NULL as TABLE_CAT, table_schema as TABLE_SCHEM, table_name as TABLE_NAME, type_type as TABLE_TYPE, NULL as REMARKS from information_schema.tables WHERE table_type = '%s'";
+        fdbTableTypes.put("TABLE", String.format(fromTablesFormat, "TABLE"));
+        fdbTableTypes.put("VIEW", String.format(fromTablesFormat, "VIEW"));
+        fdbTableTypes.put("SYSTEM TABLE", String.format(fromTablesFormat, "SYSTEM TABLE"));
+        fdbTableTypes.put("SYSTEM VIEW", String.format(fromTablesFormat, "SYSTEM VIEW"));
         fdbTableTypes.put("INDEX", "SELECT NULL as TABLE_CAT, schema_name as TABLE_SCHEM, index_name as TABLE_NAME, 'INDEX' as TABLE_TYPE, NULL as REMARKS from information_schema.indexes WHERE 1=1");
         fdbTableTypes.put("SEQUENCE", "SELECT NULL as TABLE_CAT, sequence_schema as TABLE_SCHEM, sequence_name as TABLE_NAME, 'SEQUENCE' as TABLE_TYPE, NULL as REMARKS from information_schema.sequences WHERE 1=1");
     }
