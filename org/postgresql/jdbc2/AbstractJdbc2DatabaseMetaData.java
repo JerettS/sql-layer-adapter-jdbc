@@ -3701,7 +3701,7 @@ public abstract class AbstractJdbc2DatabaseMetaData
                     " and fkc.position_in_unique_constraint = pkc.ordinal_position" +
                     " UNION " + 
                     "select pkc.table_schema as PKTABLE_SCHEM, pkc.table_name as PKTABLE_name, pkc.column_name as PKCOLUMN_NAME,"+
-                    " fkc.table_schema as FKTABLE_SCHEMA, fkc.table_name as FKTABLE_NAME, fkc.column_name as FKCOLUMN_NAME," + 
+                    " fkc.table_schema as FKTABLE_SCHEM, fkc.table_name as FKTABLE_NAME, fkc.column_name as FKCOLUMN_NAME," + 
                     " pkc.ordinal_position + 1 AS KEY_SEQ," + 
                     " CASE rc.update_rule WHEN 'NO ACTION' THEN " + DatabaseMetaData.importedKeyNoAction +
                     		" WHEN 'RESTRICT' THEN " + DatabaseMetaData.importedKeyRestrict +
