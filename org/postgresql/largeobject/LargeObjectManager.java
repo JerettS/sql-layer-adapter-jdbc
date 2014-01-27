@@ -16,7 +16,7 @@ import org.postgresql.fastpath.FastpathArg;
 import org.postgresql.util.PSQLException;
 import org.postgresql.util.GT;
 import org.postgresql.util.PSQLState;
-
+import org.postgresql.jdbc2.AbstractJdbc2Connection;
 /**
  * This class implements the large object interface to org.postgresql.
  *
@@ -98,6 +98,11 @@ public class LargeObjectManager
      */
     public LargeObjectManager(BaseConnection conn) throws SQLException
     {
+        
+        if ( ((AbstractJdbc2Connection)conn).isFoundationDBServer() ) {
+            throw new PSQLException (GT.tr("Large Objects not supported with FoundationDB server"), PSQLState.SYSTEM_ERROR);
+        }
+        
         this.conn = conn;
         // We need Fastpath to do anything
         this.fp = conn.getFastpathAPI();
