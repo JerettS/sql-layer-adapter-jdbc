@@ -1000,8 +1000,10 @@ public class DatabaseMetaDataTest extends TestCase
         assertTrue(rs.next());
         rs = dbmd.getTables( null, null, "a\\\\", new String[] {"TABLE"});
         assertTrue(rs.next());
-        rs = dbmd.getTables( null, null, "a\\", new String[] {"TABLE"});
-        assertTrue(!rs.next());
+        if (!TestUtil.isFoundationDBServer(con)) {
+	        rs = dbmd.getTables( null, null, "a\\", new String[] {"TABLE"});
+	        assertTrue(!rs.next());
+        }
     }
 
     public void testSearchStringEscape() throws Exception {
