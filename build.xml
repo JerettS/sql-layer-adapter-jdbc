@@ -440,7 +440,7 @@
 
   <!-- This compiles and builds the test jarfile. -->  
   <target name="testjar" depends="jar">
-    <fail message="JUnit could not be found in your classpath.  You must download and install it from http://junit.org to build and run the test suite." unless="junit" />
+    <fail message="JUnit 3.8.1 could not be found in your classpath.  You must download and install it from http://junit.org to build and run the test suite." unless="junit" />
     <mkdir dir="${builddir}/tests"/>
     <javac srcdir="${srcdir}" destdir="${builddir}/tests" debug="${debug}" source="${java.target}" target="${java.target}">
       <include name="${package}/test/**" />
