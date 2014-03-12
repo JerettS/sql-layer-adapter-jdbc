@@ -558,7 +558,7 @@ public class DatabaseMetaDataTest extends TestCase
             else if (rownum == 1)
             {
                 if (TestUtil.isFoundationDBServer(con)) {
-                    assertEquals("BIGINT", rs.getString("TYPE_NAME"));
+                    assertEquals("INT", rs.getString("TYPE_NAME"));
                 } else {
                     assertEquals("serial", rs.getString("TYPE_NAME"));
                 }
