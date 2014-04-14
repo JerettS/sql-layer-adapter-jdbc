@@ -108,6 +108,7 @@ public class DatabaseEncodingTest extends TestCase
             insert.setString(2, testString);
             assertEquals(1, insert.executeUpdate());
         }
+        con.commit();
 
         for (int i = 0xe000; i < 0x10000; i += STEP)
         {
@@ -122,6 +123,7 @@ public class DatabaseEncodingTest extends TestCase
             insert.setString(2, testString);
             assertEquals(1, insert.executeUpdate());
         }
+        con.commit();
 
         if (testHighUnicode) {
             for (int i = 0x10000; i < 0x110000; i += STEP)
@@ -147,7 +149,6 @@ public class DatabaseEncodingTest extends TestCase
         con.commit();
 
         // Check data.
-        stmt.setFetchSize(1);
         rs = stmt.executeQuery("SELECT unicode_ordinal, unicode_string FROM testdbencoding ORDER BY unicode_ordinal");
         for (int i = 1; i < 0xd800; i += STEP)
         {
