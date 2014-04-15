@@ -31,6 +31,7 @@ public class DatabaseEncodingTest extends TestCase
     }
 
     private static final int STEP = 100;
+    private static final int COMMIT_ROWS = 500;
 
     // Set up the fixture for this testcase: a connection to a database with
     // a table for this test.
@@ -95,6 +96,7 @@ public class DatabaseEncodingTest extends TestCase
         // Create data.
         // NB: we avoid d800-dfff as those are reserved for surrogates in UTF-16
         PreparedStatement insert = con.prepareStatement("INSERT INTO testdbencoding(unicode_ordinal, unicode_string) VALUES (?,?)");
+        int rows = 0;
         for (int i = 1; i < 0xd800; i += STEP)
         {
             int count = (i + STEP) > 0xd800 ? 0xd800 - i : STEP;
@@ -107,8 +109,12 @@ public class DatabaseEncodingTest extends TestCase
             insert.setInt(1, i);
             insert.setString(2, testString);
             assertEquals(1, insert.executeUpdate());
+
+            if(++rows == COMMIT_ROWS) {
+                con.commit();
+                rows = 0;
+            }
         }
-        con.commit();
 
         for (int i = 0xe000; i < 0x10000; i += STEP)
         {
@@ -122,8 +128,12 @@ public class DatabaseEncodingTest extends TestCase
             insert.setInt(1, i);
             insert.setString(2, testString);
             assertEquals(1, insert.executeUpdate());
+
+            if(++rows == COMMIT_ROWS) {
+                con.commit();
+                rows = 0;
+            }
         }
-        con.commit();
 
         if (testHighUnicode) {
             for (int i = 0x10000; i < 0x110000; i += STEP)
@@ -143,6 +153,11 @@ public class DatabaseEncodingTest extends TestCase
                 //System.err.println("Inserting: " + dumpString(testString));
 
                 assertEquals(1, insert.executeUpdate());
+
+                if(++rows == COMMIT_ROWS) {
+                    con.commit();
+                    rows = 0;
+                }
             }
         }            
 
