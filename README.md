@@ -12,8 +12,8 @@ the JDBC 4.0 and 4.1 APIs for use with Java 6 and Java 7, respectively. Both
 the driver and JDBC versions are included in the name of the driver for
 clarity.
 
-The latest release is 1.9-4 with versions named `1.9-4-jdbc4` and
-`1.9-4-jdbc41`.
+The latest release is 1.9-5 with versions named `1.9-5-jdbc4` and
+`1.9-5-jdbc41`.
 
 
 ### SQL Layer
@@ -39,7 +39,7 @@ in the `<dependencies>` section of your project's `pom.xml` file:
 <dependency>
   <groupId>com.foundationdb</groupId>
   <artifactId>fdb-sql-layer-jdbc</artifactId>
-  <version>1.9-4-jdbc41</version>
+  <version>1.9-5-jdbc41</version>
 </dependency>
 ```
 
@@ -48,8 +48,8 @@ in the `<dependencies>` section of your project's `pom.xml` file:
 
 For convenience, direct links to the `jar` files of the latest release are below:
 
-- [1.9-4 - Java 6 / JDBC 4.0](http://search.maven.org/remotecontent?filepath=com/foundationdb/fdb-sql-layer-jdbc/1.9-4-jdbc4/fdb-sql-layer-jdbc-1.9-4-jdbc4.jar)
-- [1.9-4 - Java 7 / JDBC 4.1](http://search.maven.org/remotecontent?filepath=com/foundationdb/fdb-sql-layer-jdbc/1.9-4-jdbc41/fdb-sql-layer-jdbc-1.9-4-jdbc41.jar)
+- [1.9-5 - Java 6 / JDBC 4.0](http://search.maven.org/remotecontent?filepath=com/foundationdb/fdb-sql-layer-jdbc/1.9-5-jdbc4/fdb-sql-layer-jdbc-1.9-5-jdbc4.jar)
+- [1.9-5 - Java 7 / JDBC 4.1](http://search.maven.org/remotecontent?filepath=com/foundationdb/fdb-sql-layer-jdbc/1.9-5-jdbc41/fdb-sql-layer-jdbc-1.9-5-jdbc41.jar)
 
 
 ### Building
@@ -106,7 +106,7 @@ On Linix based systems, the simplest way is to `export` it into the current
 environment. For example, to use the SQL Layer bundled jar file on Linux:
 
 ```
-$ export CLASSPATH=".:/usr/share/foundationdb/sql/client/fdb-sql-layer-jdbc-1.9-4-jdbc41.jar"
+$ export CLASSPATH=".:/usr/share/foundationdb/sql/client/fdb-sql-layer-jdbc-1.9-5-jdbc41.jar"
 $ javac MyClass.java
 $ java MyClass
 ```
