@@ -197,7 +197,7 @@ public class DatabaseMetaDataTest extends TestCase
             String fkName = rs.getString( "FK_NAME" );
             if (TestUtil.isFoundationDBServer(con1)) 
             {
-                assertEquals("ww.__fk_1", fkName);
+                assertEquals("ww_fkey", fkName);
             } 
             else if (TestUtil.haveMinimumServerVersion(con1, "8.0"))
             {
@@ -213,11 +213,7 @@ public class DatabaseMetaDataTest extends TestCase
             }
 
             String pkName = rs.getString( "PK_NAME" );
-            if (TestUtil.isFoundationDBServer(con1)) {
-                assertEquals ("vv.PRIMARY", pkName);
-            } else {
-                assertEquals( "vv_pkey", pkName );
-            }
+            assertEquals( "vv_pkey", pkName );
             int keySeq = rs.getInt( "KEY_SEQ" );
             assertEquals( j, keySeq );
         }
@@ -274,10 +270,7 @@ public class DatabaseMetaDataTest extends TestCase
         {
             assertTrue("pkt".equals(rs.getString("PKTABLE_NAME")));
             assertTrue("fkt".equals(rs.getString("FKTABLE_NAME")));
-            if (TestUtil.isFoundationDBServer(con)) 
-                assertTrue("pkt.pkt_un_b".equals(rs.getString("PK_NAME")));
-            else
-                assertTrue("pkt_un_b".equals(rs.getString("PK_NAME")));
+            assertTrue("pkt_un_b".equals(rs.getString("PK_NAME")));
             assertTrue("b".equals(rs.getString("PKCOLUMN_NAME")));
         }
         assertTrue(j == 1);
@@ -456,17 +449,10 @@ public class DatabaseMetaDataTest extends TestCase
             assertTrue( fkColumnName.equals( "people_id" ) || fkColumnName.equals( "policy_id" ) ) ;
 
             String fkName = rs.getString( "FK_NAME" );
-            if (TestUtil.isFoundationDBServer(con)) {
-                assertTrue (fkName.equals("users.people") || fkName.equals("users.policy") );
-            } else {
-                assertTrue( fkName.startsWith( "people") || fkName.startsWith( "policy" ) );
-            }
+            assertTrue( fkName.startsWith( "people") || fkName.startsWith( "policy" ) );
 
             String pkName = rs.getString( "PK_NAME" );
-            if (TestUtil.isFoundationDBServer(con))
-                assertTrue (pkName.equals("people.PRIMARY") || pkName.equals("policy.PRIMARY") );
-            else
-                assertTrue( pkName.equals( "people_pkey") || pkName.equals( "policy_pkey" ) );
+            assertTrue( pkName.equals( "people_pkey") || pkName.equals( "policy_pkey" ) );
 
         }
 
@@ -483,11 +469,7 @@ public class DatabaseMetaDataTest extends TestCase
         assertEquals( "users", rs.getString( "FKTABLE_NAME" ) );
         assertEquals( "people_id", rs.getString( "FKCOLUMN_NAME" ) );
 
-        if (TestUtil.isFoundationDBServer(con)) {
-            assertTrue(rs.getString("FK_NAME").equals("users.people"));
-        } else {
-            assertTrue( rs.getString( "FK_NAME" ).startsWith( "people" ) );
-        }
+        assertTrue( rs.getString( "FK_NAME" ).startsWith( "people" ) );
 
         TestUtil.dropTable( con1, "users" );
         TestUtil.dropTable( con1, "people" );
