@@ -167,11 +167,6 @@ public class DatabaseMetaDataTest extends TestCase
     {
         Connection con1 = TestUtil.openDB();
         
-        //if (TestUtil.isFoundationDBServer(con1)) {
-        //    TestUtil.closeDB(con1);
-        //    return;
-        //}
-
         TestUtil.createTable( con1, "vv", "a int not null, b int not null, primary key ( a, b )" );
 
         TestUtil.createTable( con1, "ww", "m int not null, n int not null, primary key ( m, n ), foreign key ( m, n ) references vv ( a, b )" );
