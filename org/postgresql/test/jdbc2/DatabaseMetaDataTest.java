@@ -105,6 +105,8 @@ public class DatabaseMetaDataTest extends TestCase
 
         if (TestUtil.isFoundationDBServer(con)) {
             stmt.execute("DROP FUNCTION f1");
+            stmt.execute("DROP FUNCTION f2");
+            stmt.execute("DROP FUNCTION f3");
         } else {
             stmt.execute("DROP FUNCTION f1(int, varchar)");
             if (TestUtil.haveMinimumServerVersion(con, "8.0")) {
@@ -167,11 +169,6 @@ public class DatabaseMetaDataTest extends TestCase
     {
         Connection con1 = TestUtil.openDB();
         
-        if (TestUtil.isFoundationDBServer(con1)) {
-            TestUtil.closeDB(con1);
-            return;
-        }
-
         TestUtil.createTable( con1, "vv", "a int not null, b int not null, primary key ( a, b )" );
 
         TestUtil.createTable( con1, "ww", "m int not null, n int not null, primary key ( m, n ), foreign key ( m, n ) references vv ( a, b )" );
@@ -198,7 +195,11 @@ public class DatabaseMetaDataTest extends TestCase
             assertTrue( fkColumnName.equals( "m" ) || fkColumnName.equals( "n" ) ) ;
 
             String fkName = rs.getString( "FK_NAME" );
-            if (TestUtil.haveMinimumServerVersion(con1, "8.0"))
+            if (TestUtil.isFoundationDBServer(con1)) 
+            {
+                assertEquals("ww.__fk_1", fkName);
+            } 
+            else if (TestUtil.haveMinimumServerVersion(con1, "8.0"))
             {
                 assertEquals("ww_m_fkey", fkName);
             }
@@ -212,15 +213,17 @@ public class DatabaseMetaDataTest extends TestCase
             }
 
             String pkName = rs.getString( "PK_NAME" );
-            assertEquals( "vv_pkey", pkName );
-
+            if (TestUtil.isFoundationDBServer(con1)) {
+                assertEquals ("vv.PRIMARY", pkName);
+            } else {
+                assertEquals( "vv_pkey", pkName );
+            }
             int keySeq = rs.getInt( "KEY_SEQ" );
             assertEquals( j, keySeq );
         }
 
-
-        TestUtil.dropTable( con1, "vv" );
         TestUtil.dropTable( con1, "ww" );
+        TestUtil.dropTable( con1, "vv" );
         TestUtil.closeDB(con1);
     }
 
@@ -331,9 +334,7 @@ public class DatabaseMetaDataTest extends TestCase
 
     public void testSameTableForeignKeys() throws Exception
     {
-        if (TestUtil.isFoundationDBServer(con)) 
-            return;
-        
+       
         Connection con1 = TestUtil.openDB();
         TestUtil.createTable( con1, "person", "FIRST_NAME character varying(100) NOT NULL,"+
           "LAST_NAME character varying(100) NOT NULL,"+
