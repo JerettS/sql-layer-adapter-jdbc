@@ -167,10 +167,10 @@ public class DatabaseMetaDataTest extends TestCase
     {
         Connection con1 = TestUtil.openDB();
         
-        if (TestUtil.isFoundationDBServer(con1)) {
-            TestUtil.closeDB(con1);
-            return;
-        }
+        //if (TestUtil.isFoundationDBServer(con1)) {
+        //    TestUtil.closeDB(con1);
+        //    return;
+        //}
 
         TestUtil.createTable( con1, "vv", "a int not null, b int not null, primary key ( a, b )" );
 
@@ -331,9 +331,7 @@ public class DatabaseMetaDataTest extends TestCase
 
     public void testSameTableForeignKeys() throws Exception
     {
-        if (TestUtil.isFoundationDBServer(con)) 
-            return;
-        
+       
         Connection con1 = TestUtil.openDB();
         TestUtil.createTable( con1, "person", "FIRST_NAME character varying(100) NOT NULL,"+
           "LAST_NAME character varying(100) NOT NULL,"+

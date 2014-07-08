@@ -3716,7 +3716,9 @@ public abstract class AbstractJdbc2DatabaseMetaData
                             " WHEN 'SET DEFAULT' THEN " + DatabaseMetaData.importedKeySetDefault + 
                             " ELSE NULL END AS DELETE_RULE," +
                     "  fk.constraint_name FK_NAME, pk.constraint_name PK_NAME," +
-                    DatabaseMetaData.importedKeyNotDeferrable + " AS DEFERRABILITY" + 
+                    " CASE WHEN fk.is_deferrable = 'YES' AND fk.initially_deferred= 'YES' THEN " + DatabaseMetaData.importedKeyInitiallyDeferred +
+                        " WHEN fk.is_deferrable = 'YES' THEN " + DatabaseMetaData.importedKeyInitiallyImmediate + 
+                        " ELSE " +  DatabaseMetaData.importedKeyNotDeferrable + " END AS DEFERRABILITY" +
                     " from information_schema.table_constraints fk "+
                     " JOIN information_schema.referential_constraints rc ON (fk.constraint_schema = rc.constraint_schema and fk.constraint_name = rc.constraint_name)" +
                     " JOIN information_schema.key_column_usage fkc ON (fk.constraint_schema = fkc.constraint_schema and fk.constraint_name = fkc.constraint_name)" +
