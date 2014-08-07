@@ -6,7 +6,7 @@
  *-------------------------------------------------------------------------
  */
 
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -17,15 +17,16 @@ import java.sql.Types;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
-import org.postgresql.core.Oid;
-import org.postgresql.core.BaseStatement;
-import org.postgresql.core.BaseConnection;
-import org.postgresql.core.QueryExecutor;
-import org.postgresql.core.TypeInfo;
-import org.postgresql.util.GT;
-import org.postgresql.util.PGobject;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
+
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.core.BaseStatement;
+import com.foundationdb.sql.jdbc.core.Oid;
+import com.foundationdb.sql.jdbc.core.QueryExecutor;
+import com.foundationdb.sql.jdbc.core.TypeInfo;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PGobject;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 public class TypeInfoCache implements TypeInfo {
 

@@ -5,12 +5,13 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql;
+package com.foundationdb.sql.jdbc;
 
 import java.sql.*;
-import org.postgresql.copy.CopyManager;
-import org.postgresql.fastpath.Fastpath;
-import org.postgresql.largeobject.LargeObjectManager;
+
+import com.foundationdb.sql.jdbc.copy.CopyManager;
+import com.foundationdb.sql.jdbc.fastpath.Fastpath;
+import com.foundationdb.sql.jdbc.largeobject.LargeObjectManager;
 
 /**
  *  This interface defines the public PostgreSQL extensions to
@@ -81,19 +82,19 @@ public interface PGConnection
      *
      * @param type the PostgreSQL type to register
      * @param klass the class implementing the Java representation of the type;
-     *    this class must implement {@link org.postgresql.util.PGobject}).
+     *    this class must implement {@link com.foundationdb.sql.jdbc.util.PGobject}).
      *
      * @throws SQLException if <code>klass</code> does not implement
-     *    {@link org.postgresql.util.PGobject}).
+     *    {@link com.foundationdb.sql.jdbc.util.PGobject}).
      *
-     * @see org.postgresql.util.PGobject
+     * @see com.foundationdb.sql.jdbc.util.PGobject
      */
     public void addDataType(String type, Class klass)
     throws SQLException;
 
     /**
      * Set the default statement reuse threshold before enabling server-side
-     * prepare. See {@link org.postgresql.PGStatement#setPrepareThreshold(int)} for 
+     * prepare. See {@link com.foundationdb.sql.jdbc.PGStatement#setPrepareThreshold(int)} for 
      * details.
      *
      * @since build 302

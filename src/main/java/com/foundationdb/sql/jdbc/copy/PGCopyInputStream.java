@@ -5,16 +5,16 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.copy;
+package com.foundationdb.sql.jdbc.copy;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 
-import org.postgresql.PGConnection;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * InputStream for reading from a PostgreSQL COPY TO STDOUT operation

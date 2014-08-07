@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,12 +14,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.postgresql.core.BaseConnection;
-import org.postgresql.largeobject.LargeObject;
-import org.postgresql.largeobject.LargeObjectManager;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.largeobject.LargeObject;
+import com.foundationdb.sql.jdbc.largeobject.LargeObjectManager;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * This class holds all of the methods common to both Blobs and Clobs.

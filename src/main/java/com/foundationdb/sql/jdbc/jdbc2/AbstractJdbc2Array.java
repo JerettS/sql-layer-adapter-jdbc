@@ -5,13 +5,13 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
-import org.postgresql.core.*;
-import org.postgresql.util.ByteConverter;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.GT;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.ByteConverter;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 import java.io.IOException;
 import java.math.BigDecimal;

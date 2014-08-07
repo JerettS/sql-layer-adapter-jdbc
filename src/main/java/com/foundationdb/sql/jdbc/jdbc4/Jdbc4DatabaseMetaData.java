@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 
 public class Jdbc4DatabaseMetaData extends AbstractJdbc4DatabaseMetaData implements java.sql.DatabaseMetaData

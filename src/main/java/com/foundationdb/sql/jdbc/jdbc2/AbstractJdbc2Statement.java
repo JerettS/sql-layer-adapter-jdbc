@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 
 import java.io.*;
@@ -20,17 +20,17 @@ import java.util.TimerTask;
 import java.util.TimeZone;
 import java.util.Calendar;
 
-import org.postgresql.DriverBase;
-import org.postgresql.largeobject.*;
-import org.postgresql.core.*;
-import org.postgresql.core.types.*;
-import org.postgresql.util.ByteConverter;
-import org.postgresql.util.HStoreConverter;
-import org.postgresql.util.PGBinaryObject;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PGobject;
-import org.postgresql.util.GT;
+import com.foundationdb.sql.jdbc.DriverBase;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.core.types.*;
+import com.foundationdb.sql.jdbc.largeobject.*;
+import com.foundationdb.sql.jdbc.util.ByteConverter;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.HStoreConverter;
+import com.foundationdb.sql.jdbc.util.PGBinaryObject;
+import com.foundationdb.sql.jdbc.util.PGobject;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * This class defines methods of the jdbc2 specification.

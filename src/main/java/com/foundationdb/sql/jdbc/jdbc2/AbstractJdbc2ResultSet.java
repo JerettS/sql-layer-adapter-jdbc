@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 import java.io.CharArrayReader;
 import java.io.InputStream;
@@ -25,20 +25,21 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Calendar;
 import java.util.Locale;
-import org.postgresql.core.*;
-import org.postgresql.largeobject.*;
-import org.postgresql.util.ByteConverter;
-import org.postgresql.util.HStoreConverter;
-import org.postgresql.util.PGobject;
-import org.postgresql.util.PGbytea;
-import org.postgresql.util.PGtokenizer;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.GT;
-import org.postgresql.PGResultSetMetaData;
+
+import com.foundationdb.sql.jdbc.PGResultSetMetaData;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.largeobject.*;
+import com.foundationdb.sql.jdbc.util.ByteConverter;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.HStoreConverter;
+import com.foundationdb.sql.jdbc.util.PGbytea;
+import com.foundationdb.sql.jdbc.util.PGobject;
+import com.foundationdb.sql.jdbc.util.PGtokenizer;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 
-public abstract class AbstractJdbc2ResultSet implements BaseResultSet, org.postgresql.PGRefCursorResultSet
+public abstract class AbstractJdbc2ResultSet implements BaseResultSet, com.foundationdb.sql.jdbc.PGRefCursorResultSet
 {
 
     //needed for updateable result set support

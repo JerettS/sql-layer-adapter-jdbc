@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ssl.jdbc4;
+package com.foundationdb.sql.jdbc.ssl.jdbc4;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -16,11 +16,11 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import org.postgresql.core.Logger;
-import org.postgresql.core.PGStream;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.core.Logger;
+import com.foundationdb.sql.jdbc.core.PGStream;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 public class AbstractJdbc4MakeSSL {
   

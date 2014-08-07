@@ -6,7 +6,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v2;
+package com.foundationdb.sql.jdbc.core.v2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.*;
 
-import org.postgresql.core.*;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.GT;
-import org.postgresql.copy.CopyOperation;
+import com.foundationdb.sql.jdbc.copy.CopyOperation;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * QueryExecutor implementation for the V2 protocol.
@@ -551,7 +551,7 @@ public class QueryExecutorImpl implements QueryExecutor {
         if (logger.logDebug())
             logger.debug(" <=BE AsyncNotify(pid=" + pid + ",msg=" + msg + ")");
 
-        protoConnection.addNotification(new org.postgresql.core.Notification(msg, pid));
+        protoConnection.addNotification(new com.foundationdb.sql.jdbc.core.Notification(msg, pid));
     }
 
     private SQLException receiveErrorMessage() throws IOException {

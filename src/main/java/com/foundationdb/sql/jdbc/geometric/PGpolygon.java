@@ -5,10 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.geometric;
+package com.foundationdb.sql.jdbc.geometric;
 
-import org.postgresql.util.PGobject;
-import org.postgresql.util.PGtokenizer;
+import com.foundationdb.sql.jdbc.util.PGobject;
+import com.foundationdb.sql.jdbc.util.PGtokenizer;
+
 import java.io.Serializable;
 import java.sql.SQLException;
 

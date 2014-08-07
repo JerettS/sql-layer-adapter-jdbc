@@ -1,4 +1,4 @@
-package org.postgresql.util;
+package com.foundationdb.sql.jdbc.util;
 
 /**
  * This code is a stripped down version of Robert Harder's Public Domain

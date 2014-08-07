@@ -5,20 +5,21 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3g;
+package com.foundationdb.sql.jdbc.jdbc3g;
 
 
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
-import org.postgresql.core.*;
+
+import com.foundationdb.sql.jdbc.core.*;
 
 /**
  * This class implements the java.sql.ResultSet interface for JDBC3.
  * However most of the implementation is really done in
  * org.postgresql.jdbc3.AbstractJdbc3ResultSet or one of it's parents
  */
-public class Jdbc3gResultSet extends org.postgresql.jdbc3g.AbstractJdbc3gResultSet implements java.sql.ResultSet
+public class Jdbc3gResultSet extends com.foundationdb.sql.jdbc.jdbc3g.AbstractJdbc3gResultSet implements java.sql.ResultSet
 {
     Jdbc3gResultSet(Query originalQuery, BaseStatement statement, Field[] fields, List tuples, ResultCursor cursor,
                     int maxRows, int maxFieldSize, int rsType, int rsConcurrency, int rsHoldability) throws SQLException

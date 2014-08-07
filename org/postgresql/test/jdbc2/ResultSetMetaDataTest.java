@@ -7,9 +7,12 @@
 */
 package org.postgresql.test.jdbc2;
 
-import org.postgresql.PGResultSetMetaData;
 import org.postgresql.test.TestUtil;
+
+import com.foundationdb.sql.jdbc.PGResultSetMetaData;
+
 import junit.framework.TestCase;
+
 import java.sql.*;
 
 public class ResultSetMetaDataTest extends TestCase

@@ -6,7 +6,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
+package com.foundationdb.sql.jdbc.core.v3;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -14,12 +14,12 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
 
-import org.postgresql.core.*;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.StreamWrapper;
-import org.postgresql.util.GT;
-import org.postgresql.util.ByteConverter;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.ByteConverter;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
+import com.foundationdb.sql.jdbc.util.StreamWrapper;
 
 
 /**

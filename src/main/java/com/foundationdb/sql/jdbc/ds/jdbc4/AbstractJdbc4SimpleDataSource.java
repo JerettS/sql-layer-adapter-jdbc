@@ -5,12 +5,12 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ds.jdbc4;
+package com.foundationdb.sql.jdbc.ds.jdbc4;
 
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
-import org.postgresql.ds.jdbc23.AbstractJdbc23SimpleDataSource;
+import com.foundationdb.sql.jdbc.ds.jdbc23.AbstractJdbc23SimpleDataSource;
 
 public abstract class AbstractJdbc4SimpleDataSource extends AbstractJdbc23SimpleDataSource
 {

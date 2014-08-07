@@ -5,20 +5,20 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3g;
+package com.foundationdb.sql.jdbc.jdbc3g;
 
 import java.util.Map;
 import java.util.Properties;
 import java.sql.SQLException;
 
-import org.postgresql.util.HostSpec;
+import com.foundationdb.sql.jdbc.util.HostSpec;
 
 /**
  * This class implements the java.sql.Connection interface for JDBC3.
  * However most of the implementation is really done in
  * org.postgresql.jdbc3.AbstractJdbc3Connection or one of it's parents
  */
-public class Jdbc3gConnection extends org.postgresql.jdbc3g.AbstractJdbc3gConnection implements java.sql.Connection
+public class Jdbc3gConnection extends com.foundationdb.sql.jdbc.jdbc3g.AbstractJdbc3gConnection implements java.sql.Connection
 {
     public Jdbc3gConnection(HostSpec[] hostSpecs, String user, String database, Properties info, String url) throws SQLException {
         super(hostSpecs, user, database, info, url);

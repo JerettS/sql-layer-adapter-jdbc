@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -14,9 +14,9 @@ import java.util.Locale;
 import java.util.List;
 import java.util.Map;
 
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * this class stores supported escaped function

@@ -8,10 +8,12 @@
 package org.postgresql.test.jdbc2;
 
 import org.postgresql.test.TestUtil;
+
 import junit.framework.TestCase;
+
 import java.sql.*;
 
-import org.postgresql.PGNotification;
+import com.foundationdb.sql.jdbc.PGNotification;
 
 public class NotifyTest extends TestCase
 {
@@ -38,7 +40,7 @@ public class NotifyTest extends TestCase
         stmt.executeUpdate("LISTEN mynotification");
         stmt.executeUpdate("NOTIFY mynotification");
 
-        PGNotification notifications[] = ((org.postgresql.PGConnection)conn).getNotifications();
+        PGNotification notifications[] = ((com.foundationdb.sql.jdbc.PGConnection)conn).getNotifications();
         assertNotNull(notifications);
         assertEquals(1, notifications.length);
         assertEquals("mynotification", notifications[0].getName());
@@ -56,7 +58,7 @@ public class NotifyTest extends TestCase
         stmt.executeUpdate("LISTEN mynotification");
         stmt.executeUpdate("NOTIFY mynotification, 'message'");
 
-        PGNotification notifications[] = ((org.postgresql.PGConnection)conn).getNotifications();
+        PGNotification notifications[] = ((com.foundationdb.sql.jdbc.PGConnection)conn).getNotifications();
         assertNotNull(notifications);
         assertEquals(1, notifications.length);
         assertEquals("mynotification", notifications[0].getName());
@@ -85,7 +87,7 @@ public class NotifyTest extends TestCase
             Thread.sleep(2000);
         } catch (InterruptedException ie) {}
 
-        PGNotification notifications[] = ((org.postgresql.PGConnection)conn).getNotifications();
+        PGNotification notifications[] = ((com.foundationdb.sql.jdbc.PGConnection)conn).getNotifications();
         assertNotNull(notifications);
         assertEquals(1, notifications.length);
         assertEquals("mynotification", notifications[0].getName());

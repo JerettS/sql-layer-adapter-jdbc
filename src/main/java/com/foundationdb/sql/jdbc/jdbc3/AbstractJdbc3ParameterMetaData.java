@@ -5,16 +5,16 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 import java.sql.SQLException;
 import java.sql.ParameterMetaData;
 
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
-import org.postgresql.core.BaseConnection;
-import org.postgresql.jdbc2.TypeInfoCache;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.jdbc2.TypeInfoCache;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 public abstract class AbstractJdbc3ParameterMetaData {
 

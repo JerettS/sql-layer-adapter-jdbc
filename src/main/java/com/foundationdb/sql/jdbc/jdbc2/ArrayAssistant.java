@@ -1,4 +1,4 @@
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 /**
  * Implement this interface and register the its instance to ArrayAssistantRegistry,

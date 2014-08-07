@@ -5,14 +5,13 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ds.common;
+package com.foundationdb.sql.jdbc.ds.common;
 
 import javax.naming.*;
 
-import org.postgresql.DriverBase;
+import com.foundationdb.sql.jdbc.DriverBase;
 
 import java.sql.*;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.ObjectInputStream;
@@ -292,7 +291,7 @@ public abstract class BaseDataSource implements Referenceable
 
     /**
      * Sets the default threshold for enabling server-side prepare.
-     * See {@link org.postgresql.PGConnection#setPrepareThreshold(int)} for details.
+     * See {@link com.foundationdb.sql.jdbc.PGConnection#setPrepareThreshold(int)} for details.
      *
      * @param count the number of times a statement object must be reused before server-side
      *   prepare is enabled.
@@ -463,7 +462,7 @@ public abstract class BaseDataSource implements Referenceable
     }
 
     /**
-     * Add types to the override set of {@link org.postgresql.core.Oid} values used for binary transfer.
+     * Add types to the override set of {@link com.foundationdb.sql.jdbc.core.Oid} values used for binary transfer.
      *
      * @param oidList The comma separated list of Oids. Either textual or numeric value. 
      */
@@ -483,7 +482,7 @@ public abstract class BaseDataSource implements Referenceable
     }
 
     /**
-     * Add types to the override set of {@link org.postgresql.core.Oid} values that will not be used for binary transfer.
+     * Add types to the override set of {@link com.foundationdb.sql.jdbc.core.Oid} values that will not be used for binary transfer.
      * This overrides any values in the driver detault set or values set with {@link #setBinaryTransferEnable(String)}.
      *
      * @param oidList The comma separated list of Oids. Either textual or numeric value. 

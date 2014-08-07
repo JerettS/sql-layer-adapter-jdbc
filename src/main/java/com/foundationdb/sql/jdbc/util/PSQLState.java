@@ -6,7 +6,7 @@
 *-------------------------------------------------------------------------
 */
 
-package org.postgresql.util;
+package com.foundationdb.sql.jdbc.util;
 
 /**
  * This class is used for holding SQLState codes.

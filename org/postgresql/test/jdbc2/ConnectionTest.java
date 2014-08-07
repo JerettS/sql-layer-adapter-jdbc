@@ -182,13 +182,13 @@ public class ConnectionTest extends TestCase
         String testStr = "This Is OuR TeSt message";
 
         // The connection must be ours!
-        assertTrue(con instanceof org.postgresql.PGConnection);
+        assertTrue(con instanceof com.foundationdb.sql.jdbc.PGConnection);
 
         // Clear any existing warnings
         con.clearWarnings();
 
         // Set the test warning
-        ((org.postgresql.jdbc2.AbstractJdbc2Connection)con).addWarning(new SQLWarning(testStr));
+        ((com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection)con).addWarning(new SQLWarning(testStr));
 
         // Retrieve it
         SQLWarning warning = con.getWarnings();

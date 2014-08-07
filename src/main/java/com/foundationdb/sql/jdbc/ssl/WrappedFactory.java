@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ssl;
+package com.foundationdb.sql.jdbc.ssl;
 
 import java.io.IOException;
 import java.net.Socket;

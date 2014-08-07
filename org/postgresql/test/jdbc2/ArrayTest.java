@@ -8,11 +8,12 @@
 package org.postgresql.test.jdbc2;
 
 import org.postgresql.test.TestUtil;
+
 import java.sql.*;
 import java.math.BigDecimal;
 
-import org.postgresql.geometric.PGbox;
-import org.postgresql.geometric.PGpoint;
+import com.foundationdb.sql.jdbc.geometric.PGbox;
+import com.foundationdb.sql.jdbc.geometric.PGpoint;
 
 import junit.framework.TestCase;
 

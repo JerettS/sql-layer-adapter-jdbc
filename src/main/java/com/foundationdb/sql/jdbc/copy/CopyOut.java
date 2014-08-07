@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.copy;
+package com.foundationdb.sql.jdbc.copy;
 
 import java.sql.SQLException;
 

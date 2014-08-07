@@ -1,4 +1,4 @@
-package org.postgresql.ssl;
+package com.foundationdb.sql.jdbc.ssl;
 
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -6,7 +6,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-abstract public class DbKeyStoreSocketFactory extends org.postgresql.ssl.WrappedFactory {
+abstract public class DbKeyStoreSocketFactory extends com.foundationdb.sql.jdbc.ssl.WrappedFactory {
     /*
      * Populate the WrappedFactory member _factory with an SSL Socket Factory
      * that uses the JKS keystore provided by getKeyStorePassword() and

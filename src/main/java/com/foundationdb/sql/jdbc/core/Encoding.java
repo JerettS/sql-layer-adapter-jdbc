@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

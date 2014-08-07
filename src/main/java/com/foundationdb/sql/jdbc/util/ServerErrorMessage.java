@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.util;
+package com.foundationdb.sql.jdbc.util;
 
 import java.util.HashMap;
 import java.util.Map;

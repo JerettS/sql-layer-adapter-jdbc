@@ -1,16 +1,11 @@
-package org.postgresql.jdbc4;
-
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
-import org.postgresql.core.BaseConnection;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 import java.io.*;
 import java.sql.SQLXML;
 import java.sql.SQLException;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.Result;
-
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.parsers.DocumentBuilder;
@@ -18,18 +13,22 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerException;
-
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXResult;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
+
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
+
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
-
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.stream.StreamResult;
-
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stax.StAXResult;
 import javax.xml.stream.XMLInputFactory;

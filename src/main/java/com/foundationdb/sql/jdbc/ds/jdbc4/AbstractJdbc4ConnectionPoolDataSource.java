@@ -1,8 +1,8 @@
-package org.postgresql.ds.jdbc4;
+package com.foundationdb.sql.jdbc.ds.jdbc4;
 
 import java.sql.SQLFeatureNotSupportedException;
 
-import org.postgresql.ds.jdbc23.AbstractJdbc23ConnectionPoolDataSource;
+import com.foundationdb.sql.jdbc.ds.jdbc23.AbstractJdbc23ConnectionPoolDataSource;
 
 public class AbstractJdbc4ConnectionPoolDataSource
 	extends AbstractJdbc23ConnectionPoolDataSource

@@ -8,9 +8,12 @@
 package org.postgresql.test.jdbc2;
 
 import org.postgresql.test.TestUtil;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.ServerErrorMessage;
+
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.ServerErrorMessage;
+
 import junit.framework.TestCase;
+
 import java.sql.*;
 
 /*

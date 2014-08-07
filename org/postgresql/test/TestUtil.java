@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
-import org.postgresql.jdbc2.AbstractJdbc2Connection;
+import com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection;
 
 /**
  * Utility class for JDBC tests
@@ -165,7 +165,7 @@ public class TestUtil
                 java.sql.DriverManager.setLogWriter(new java.io.PrintWriter(output,true));
             }
             
-            org.postgresql.DriverBase.setLogLevel(getLogLevel()); // Also loads and registers driver.
+            com.foundationdb.sql.jdbc.DriverBase.setLogLevel(getLogLevel()); // Also loads and registers driver.
             initialized = true;
         }
     }        
@@ -475,18 +475,18 @@ public class TestUtil
 
     public static String escapeString(Connection con, String value) throws SQLException
     {
-        if (con instanceof org.postgresql.jdbc2.AbstractJdbc2Connection)
+        if (con instanceof com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection)
         {
-            return ((org.postgresql.jdbc2.AbstractJdbc2Connection)con).escapeString(value);
+            return ((com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection)con).escapeString(value);
         }
         return value;
     }
     
     public static boolean getStandardConformingStrings(Connection con)
     {
-        if (con instanceof org.postgresql.jdbc2.AbstractJdbc2Connection)
+        if (con instanceof com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection)
         {
-            return ((org.postgresql.jdbc2.AbstractJdbc2Connection)con).getStandardConformingStrings();
+            return ((com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection)con).getStandardConformingStrings();
         }
         return false;
     }
@@ -498,16 +498,16 @@ public class TestUtil
      * not an Postgres connection.
      */
     public static boolean haveMinimumServerVersion(Connection con, String version) throws SQLException {
-        if (con instanceof org.postgresql.jdbc2.AbstractJdbc2Connection)
+        if (con instanceof com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection)
         {
-            return ((org.postgresql.jdbc2.AbstractJdbc2Connection)con).haveMinimumServerVersion(version);
+            return ((com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection)con).haveMinimumServerVersion(version);
         }
         return false;
     }
     
     public static boolean isFoundationDBServer (Connection con) throws SQLException {
-        if (con instanceof org.postgresql.jdbc2.AbstractJdbc2Connection) {
-            return ((org.postgresql.jdbc2.AbstractJdbc2Connection)con).isFoundationDBServer();
+        if (con instanceof com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection) {
+            return ((com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection)con).isFoundationDBServer();
         } 
         return false;
     }

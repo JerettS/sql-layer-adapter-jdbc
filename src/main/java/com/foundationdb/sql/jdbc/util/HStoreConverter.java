@@ -1,4 +1,4 @@
-package org.postgresql.util;
+package com.foundationdb.sql.jdbc.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.postgresql.core.Encoding;
+import com.foundationdb.sql.jdbc.core.Encoding;
 
 public class HStoreConverter {
    public static Map fromBytes(byte[] b, Encoding encoding) throws SQLException {

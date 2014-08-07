@@ -5,9 +5,9 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2.optional;
+package com.foundationdb.sql.jdbc.jdbc2.optional;
 
-import org.postgresql.ds.PGPoolingDataSource;
+import com.foundationdb.sql.jdbc.ds.PGPoolingDataSource;
 
 public class PoolingDataSource extends PGPoolingDataSource
 {

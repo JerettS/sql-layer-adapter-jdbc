@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ssl;
+package com.foundationdb.sql.jdbc.ssl;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;

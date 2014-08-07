@@ -5,15 +5,15 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 import java.sql.*;
-
 import java.util.ArrayList;
 import java.util.List;
-import org.postgresql.core.*;
 
-public abstract class AbstractJdbc4DatabaseMetaData extends org.postgresql.jdbc3.AbstractJdbc3DatabaseMetaData
+import com.foundationdb.sql.jdbc.core.*;
+
+public abstract class AbstractJdbc4DatabaseMetaData extends com.foundationdb.sql.jdbc.jdbc3.AbstractJdbc3DatabaseMetaData
 {
 
     public AbstractJdbc4DatabaseMetaData(AbstractJdbc4Connection conn)

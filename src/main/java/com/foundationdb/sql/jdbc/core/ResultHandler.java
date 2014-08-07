@@ -6,7 +6,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
 import java.sql.*;
 import java.util.List;

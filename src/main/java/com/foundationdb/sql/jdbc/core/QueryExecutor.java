@@ -6,11 +6,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
 import java.sql.SQLException;
 
-import org.postgresql.copy.CopyOperation;
+import com.foundationdb.sql.jdbc.copy.CopyOperation;
 
 /**
  * Abstracts the protocol-specific details of executing a query.
@@ -108,7 +108,7 @@ public interface QueryExecutor {
      *  on this QueryExecutor object.
      * @param parameters the parameters for the query. Must be non-<code>null</code>
      *  if the query takes parameters. Must be a parameter object returned by
-     *  {@link org.postgresql.core.Query#createParameterList()}.
+     *  {@link com.foundationdb.sql.jdbc.core.Query#createParameterList()}.
      * @param handler a ResultHandler responsible for handling results generated
      *  by this query
      * @param maxRows the maximum number of rows to retrieve
@@ -134,7 +134,7 @@ public interface QueryExecutor {
      * @param parameterLists the parameter lists for the queries. The parameter lists
      *  correspond 1:1 to the queries passed in the <code>queries</code> array. Each must be
      *  non-<code>null</code> if the corresponding query takes parameters, and must
-     *  be a parameter object returned by {@link org.postgresql.core.Query#createParameterList()}
+     *  be a parameter object returned by {@link com.foundationdb.sql.jdbc.core.Query#createParameterList()}
      *  created by the corresponding query.
      * @param handler a ResultHandler responsible for handling results generated
      *  by this query

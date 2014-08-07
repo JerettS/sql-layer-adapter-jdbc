@@ -6,16 +6,16 @@
 *-------------------------------------------------------------------------
 */
 
-package org.postgresql.jdbc3g;
+package com.foundationdb.sql.jdbc.jdbc3g;
 
 import java.sql.*;
 import java.util.UUID;
 
-import org.postgresql.core.Oid;
-import org.postgresql.jdbc3.AbstractJdbc3Connection;
-import org.postgresql.util.ByteConverter;
+import com.foundationdb.sql.jdbc.core.Oid;
+import com.foundationdb.sql.jdbc.jdbc3.AbstractJdbc3Connection;
+import com.foundationdb.sql.jdbc.util.ByteConverter;
 
-public abstract class AbstractJdbc3gStatement extends org.postgresql.jdbc3.AbstractJdbc3Statement
+public abstract class AbstractJdbc3gStatement extends com.foundationdb.sql.jdbc.jdbc3.AbstractJdbc3Statement
 {
     public AbstractJdbc3gStatement (AbstractJdbc3Connection c, int rsType, int rsConcurrency, int rsHoldability) throws SQLException
     {

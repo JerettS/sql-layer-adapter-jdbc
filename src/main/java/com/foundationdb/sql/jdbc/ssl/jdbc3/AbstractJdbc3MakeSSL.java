@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ssl.jdbc3;
+package com.foundationdb.sql.jdbc.ssl.jdbc3;
 
 import java.util.Properties;
 import java.io.IOException;
@@ -14,11 +14,11 @@ import java.lang.reflect.Constructor;
 
 import javax.net.ssl.SSLSocketFactory;
 
-import org.postgresql.core.PGStream;
-import org.postgresql.core.Logger;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
+import com.foundationdb.sql.jdbc.core.Logger;
+import com.foundationdb.sql.jdbc.core.PGStream;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 public class AbstractJdbc3MakeSSL {
     public static void convert(PGStream stream, Properties info, Logger logger) throws IOException, PSQLException {

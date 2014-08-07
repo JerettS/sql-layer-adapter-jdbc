@@ -6,11 +6,12 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v2;
+package com.foundationdb.sql.jdbc.core.v2;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.postgresql.core.*;
+
+import com.foundationdb.sql.jdbc.core.*;
 
 /**
  * Query implementation for all queries via the V2 protocol.

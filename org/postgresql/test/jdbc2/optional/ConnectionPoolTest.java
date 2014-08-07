@@ -7,10 +7,13 @@
 */
 package org.postgresql.test.jdbc2.optional;
 
-import org.postgresql.jdbc2.optional.ConnectionPool;
-import org.postgresql.ds.PGConnectionPoolDataSource;
 import org.postgresql.test.TestUtil;
+
+import com.foundationdb.sql.jdbc.ds.PGConnectionPoolDataSource;
+import com.foundationdb.sql.jdbc.jdbc2.optional.ConnectionPool;
+
 import javax.sql.*;
+
 import java.sql.*;
 import java.util.*;
 import java.io.*;
@@ -458,13 +461,13 @@ public class ConnectionPoolTest extends BaseDataSourceTest
             con = pc.getConnection();
 
             Statement s = con.createStatement();
-            boolean b = ((org.postgresql.PGStatement)s).isUseServerPrepare();
+            boolean b = ((com.foundationdb.sql.jdbc.PGStatement)s).isUseServerPrepare();
 
             PreparedStatement ps = con.prepareStatement("select 'x'");
-            b = ((org.postgresql.PGStatement)ps).isUseServerPrepare();
+            b = ((com.foundationdb.sql.jdbc.PGStatement)ps).isUseServerPrepare();
 
             CallableStatement cs = con.prepareCall("select 'x'");
-            b = ((org.postgresql.PGStatement)cs).isUseServerPrepare();
+            b = ((com.foundationdb.sql.jdbc.PGStatement)cs).isUseServerPrepare();
 
         }
         catch (SQLException e)

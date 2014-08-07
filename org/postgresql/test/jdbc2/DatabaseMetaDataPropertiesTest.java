@@ -220,7 +220,7 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
 
     public void testDbProductDetails() throws SQLException
     {
-        assertTrue(con instanceof org.postgresql.PGConnection);
+        assertTrue(con instanceof com.foundationdb.sql.jdbc.PGConnection);
 
         DatabaseMetaData dbmd = con.getMetaData();
         assertNotNull(dbmd);

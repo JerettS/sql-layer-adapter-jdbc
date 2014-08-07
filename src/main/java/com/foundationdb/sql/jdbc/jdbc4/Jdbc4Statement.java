@@ -5,11 +5,12 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 import java.sql.*;
 import java.util.List;
-import org.postgresql.core.*;
+
+import com.foundationdb.sql.jdbc.core.*;
 
 /**
  * This class implements the java.sql.Statement interface for JDBC4.

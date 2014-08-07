@@ -5,11 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 import java.sql.SQLException;
 
-import org.postgresql.core.BaseConnection;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
 
 public abstract class AbstractJdbc2Blob extends AbstractJdbc2BlobClob
 {

@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.util;
+package com.foundationdb.sql.jdbc.util;
 
 import java.io.Serializable;
 import java.sql.SQLException;

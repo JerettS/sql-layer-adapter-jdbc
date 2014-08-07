@@ -8,10 +8,12 @@
 package org.postgresql.test.jdbc3;
 
 import java.sql.*;
+
 import junit.framework.TestCase;
 
-import org.postgresql.jdbc2.AbstractJdbc2Connection;
 import org.postgresql.test.TestUtil;
+
+import com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection;
 
 public class SendRecvBufferSizeTest extends TestCase {
 

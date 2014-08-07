@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 
 import java.sql.*;
@@ -13,7 +13,7 @@ import java.sql.*;
 public class Jdbc4Blob extends AbstractJdbc4Blob implements java.sql.Blob
 {
 
-    public Jdbc4Blob(org.postgresql.core.BaseConnection conn, long oid) throws SQLException
+    public Jdbc4Blob(com.foundationdb.sql.jdbc.core.BaseConnection conn, long oid) throws SQLException
     {
         super(conn, oid);
     }

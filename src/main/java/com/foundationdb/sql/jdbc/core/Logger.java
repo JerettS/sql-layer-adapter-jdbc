@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
 import java.text.SimpleDateFormat;
 import java.text.FieldPosition;
@@ -13,7 +13,7 @@ import java.sql.DriverManager;
 import java.io.PrintWriter;
 import java.util.Date;
 
-import org.postgresql.DriverBase;
+import com.foundationdb.sql.jdbc.DriverBase;
 
 /**
  * Poor man's logging infrastructure. This just deals with maintaining a per-

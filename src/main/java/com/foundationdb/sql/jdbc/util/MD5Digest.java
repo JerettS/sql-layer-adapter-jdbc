@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.util;
+package com.foundationdb.sql.jdbc.util;
 
 /**
  * MD5-based utility function to obfuscate passwords before network 

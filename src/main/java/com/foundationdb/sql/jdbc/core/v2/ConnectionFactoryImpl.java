@@ -6,23 +6,22 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v2;
+package com.foundationdb.sql.jdbc.core.v2;
 
 import java.util.Properties;
 import java.util.StringTokenizer;
-
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.io.IOException;
 import java.net.ConnectException;
 
-import org.postgresql.core.*;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.UnixCrypt;
-import org.postgresql.util.MD5Digest;
-import org.postgresql.util.GT;
-import org.postgresql.util.HostSpec;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.HostSpec;
+import com.foundationdb.sql.jdbc.util.MD5Digest;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
+import com.foundationdb.sql.jdbc.util.UnixCrypt;
 
 /**
  * ConnectionFactory implementation for version 2 (pre-7.4) connections.
@@ -216,7 +215,7 @@ public class ConnectionFactoryImpl extends ConnectionFactory {
                 logger.debug(" <=BE SSLOk");
 
             // Server supports ssl
-            org.postgresql.ssl.MakeSSL.convert(pgStream, info, logger);
+            com.foundationdb.sql.jdbc.ssl.MakeSSL.convert(pgStream, info, logger);
             return pgStream;
 
         default:

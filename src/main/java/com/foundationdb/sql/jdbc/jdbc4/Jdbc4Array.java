@@ -5,17 +5,18 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 import java.util.Map;
-import org.postgresql.core.*;
-import org.postgresql.jdbc2.ArrayAssistantRegistry;
-import org.postgresql.jdbc4.array.UUIDArrayAssistant;
+
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.jdbc2.ArrayAssistantRegistry;
+import com.foundationdb.sql.jdbc.jdbc4.array.UUIDArrayAssistant;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
-public class Jdbc4Array extends org.postgresql.jdbc2.AbstractJdbc2Array implements java.sql.Array
+public class Jdbc4Array extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Array implements java.sql.Array
 {
     static {
         ArrayAssistantRegistry.register(Oid.UUID, new UUIDArrayAssistant());

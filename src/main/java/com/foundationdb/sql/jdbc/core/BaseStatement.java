@@ -5,9 +5,10 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
-import org.postgresql.PGStatement;
+import com.foundationdb.sql.jdbc.PGStatement;
+
 import java.sql.*;
 import java.util.List;
 

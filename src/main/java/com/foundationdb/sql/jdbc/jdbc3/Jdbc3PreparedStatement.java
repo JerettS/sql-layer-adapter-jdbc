@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 import java.sql.*;
 

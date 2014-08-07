@@ -5,14 +5,14 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.copy;
+package com.foundationdb.sql.jdbc.copy;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 
-import org.postgresql.PGConnection;
-import org.postgresql.util.GT;
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.util.GT;
 
 /**
  * OutputStream for buffered input into a PostgreSQL COPY FROM STDIN operation

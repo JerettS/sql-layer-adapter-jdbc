@@ -5,10 +5,10 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 
-public class Jdbc3DatabaseMetaData extends org.postgresql.jdbc3.AbstractJdbc3DatabaseMetaData implements java.sql.DatabaseMetaData
+public class Jdbc3DatabaseMetaData extends com.foundationdb.sql.jdbc.jdbc3.AbstractJdbc3DatabaseMetaData implements java.sql.DatabaseMetaData
 {
 
     public Jdbc3DatabaseMetaData(Jdbc3Connection conn)

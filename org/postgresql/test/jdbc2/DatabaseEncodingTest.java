@@ -8,9 +8,13 @@
 package org.postgresql.test.jdbc2;
 
 import org.postgresql.test.TestUtil;
+
 import junit.framework.TestCase;
+
 import java.sql.*;
-import org.postgresql.core.Encoding;
+
+import com.foundationdb.sql.jdbc.core.Encoding;
+
 import java.io.IOException;
 import java.util.Arrays;
 

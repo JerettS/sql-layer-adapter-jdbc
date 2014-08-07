@@ -5,13 +5,13 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
-import org.postgresql.core.*;
+import com.foundationdb.sql.jdbc.core.*;
 
 import java.sql.SQLException;
 
-abstract class AbstractJdbc4ResultSetMetaData extends org.postgresql.jdbc2.AbstractJdbc2ResultSetMetaData
+abstract class AbstractJdbc4ResultSetMetaData extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2ResultSetMetaData
 {
 
     public AbstractJdbc4ResultSetMetaData(BaseConnection connection, Field[] fields)

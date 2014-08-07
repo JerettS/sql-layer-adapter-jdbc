@@ -5,18 +5,19 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.largeobject;
+package com.foundationdb.sql.jdbc.largeobject;
 
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.postgresql.core.BaseConnection;
-import org.postgresql.fastpath.Fastpath;
-import org.postgresql.fastpath.FastpathArg;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
-import org.postgresql.jdbc2.AbstractJdbc2Connection;
+
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.fastpath.Fastpath;
+import com.foundationdb.sql.jdbc.fastpath.FastpathArg;
+import com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 /**
  * This class implements the large object interface to org.postgresql.
  *

@@ -5,12 +5,13 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 
 import java.sql.*;
 import java.util.List;
-import org.postgresql.core.*;
+
+import com.foundationdb.sql.jdbc.core.*;
 
 
 /**
@@ -18,7 +19,7 @@ import org.postgresql.core.*;
  * org.postgresql.jdbc2.AbstractJdbc2ResultSet which provides the jdbc2
  * methods.  The real Statement class (for jdbc3) is org.postgresql.jdbc3.Jdbc3ResultSet
  */
-public abstract class AbstractJdbc3ResultSet extends org.postgresql.jdbc2.AbstractJdbc2ResultSet
+public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2ResultSet
 {
     public AbstractJdbc3ResultSet(Query originalQuery, BaseStatement statement, Field[] fields, List tuples,
                                   ResultCursor cursor, int maxRows, int maxFieldSize, int rsType, int rsConcurrency, int rsHoldability) throws SQLException

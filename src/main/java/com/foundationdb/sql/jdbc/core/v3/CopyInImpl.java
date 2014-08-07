@@ -5,11 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
+package com.foundationdb.sql.jdbc.core.v3;
 
 import java.sql.SQLException;
 
-import org.postgresql.copy.CopyIn;
+import com.foundationdb.sql.jdbc.copy.CopyIn;
 
 /**
  * Anticipated flow of a COPY FROM STDIN operation:

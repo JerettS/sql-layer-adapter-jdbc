@@ -6,19 +6,19 @@
 *-------------------------------------------------------------------------
 */
 
-package org.postgresql.jdbc3g;
+package com.foundationdb.sql.jdbc.jdbc3g;
 
 import java.sql.*;
 import java.util.List;
 import java.util.UUID;
 
-import org.postgresql.core.*;
-import org.postgresql.util.ByteConverter;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.ByteConverter;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
-public abstract class AbstractJdbc3gResultSet extends org.postgresql.jdbc3.AbstractJdbc3ResultSet
+public abstract class AbstractJdbc3gResultSet extends com.foundationdb.sql.jdbc.jdbc3.AbstractJdbc3ResultSet
 {
 
     public AbstractJdbc3gResultSet(Query originalQuery, BaseStatement statement, Field[] fields, List tuples,

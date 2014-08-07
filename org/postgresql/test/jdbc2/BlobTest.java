@@ -8,11 +8,13 @@
 package org.postgresql.test.jdbc2;
 
 import org.postgresql.test.TestUtil;
+
 import junit.framework.TestCase;
+
 import java.io.*;
 import java.sql.*;
 
-import org.postgresql.largeobject.*;
+import com.foundationdb.sql.jdbc.largeobject.*;
 
 /**
  * Some simple tests based on problems reported by users. Hopefully these will
@@ -206,7 +208,7 @@ public class BlobTest extends TestCase
      */
     private long uploadFile(String file, int method) throws Exception
     {
-        LargeObjectManager lom = ((org.postgresql.PGConnection)con).getLargeObjectAPI();
+        LargeObjectManager lom = ((com.foundationdb.sql.jdbc.PGConnection)con).getLargeObjectAPI();
 
         FileInputStream fis = new FileInputStream(file);
 
@@ -264,7 +266,7 @@ public class BlobTest extends TestCase
     {
         boolean result = true;
 
-        LargeObjectManager lom = ((org.postgresql.PGConnection)con).getLargeObjectAPI();
+        LargeObjectManager lom = ((com.foundationdb.sql.jdbc.PGConnection)con).getLargeObjectAPI();
 
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery(TestUtil.selectSQL("testblob", "id,lo"));

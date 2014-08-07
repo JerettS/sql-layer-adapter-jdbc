@@ -5,19 +5,19 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.fastpath;
+package com.foundationdb.sql.jdbc.fastpath;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.postgresql.core.BaseConnection;
-import org.postgresql.core.QueryExecutor;
-import org.postgresql.core.ParameterList;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.GT;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.core.ParameterList;
+import com.foundationdb.sql.jdbc.core.QueryExecutor;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * This class implements the Fastpath api.
@@ -105,7 +105,7 @@ public class Fastpath
      * @return null if no data, Integer if an integer result, or byte[] otherwise
      * @exception SQLException if name is unknown or if a database-access error
      * occurs.
-     * @see org.postgresql.largeobject.LargeObject
+     * @see com.foundationdb.sql.jdbc.largeobject.LargeObject
      */
     public Object fastpath(String name, boolean resulttype, FastpathArg[] args) throws SQLException
     {
@@ -202,7 +202,7 @@ public class Fastpath
      *
      * @param rs ResultSet
      * @exception SQLException if a database-access error occurs.
-     * @see org.postgresql.largeobject.LargeObjectManager
+     * @see com.foundationdb.sql.jdbc.largeobject.LargeObjectManager
      */
     public void addFunctions(ResultSet rs) throws SQLException
     {

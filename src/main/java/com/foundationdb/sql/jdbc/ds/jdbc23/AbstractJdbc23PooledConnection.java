@@ -5,16 +5,18 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ds.jdbc23;
+package com.foundationdb.sql.jdbc.ds.jdbc23;
 
 import javax.sql.*;
+
 import java.sql.*;
 import java.util.*;
 import java.lang.reflect.*;
-import org.postgresql.PGConnection;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * PostgreSQL implementation of the PooledConnection interface.  This shouldn't
@@ -333,17 +335,17 @@ public abstract class AbstractJdbc23PooledConnection
                 if (method.getName().equals("createStatement"))
                 {
                     Statement st = (Statement)method.invoke(con, args);
-                    return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Statement.class, org.postgresql.PGStatement.class}, new StatementHandler(this, st));
+                    return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Statement.class, com.foundationdb.sql.jdbc.PGStatement.class}, new StatementHandler(this, st));
                 }
                 else if (method.getName().equals("prepareCall"))
                 {
                     Statement st = (Statement)method.invoke(con, args);
-                    return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{CallableStatement.class, org.postgresql.PGStatement.class}, new StatementHandler(this, st));
+                    return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{CallableStatement.class, com.foundationdb.sql.jdbc.PGStatement.class}, new StatementHandler(this, st));
                 }
                 else if (method.getName().equals("prepareStatement"))
                 {
                     Statement st = (Statement)method.invoke(con, args);
-                    return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{PreparedStatement.class, org.postgresql.PGStatement.class}, new StatementHandler(this, st));
+                    return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{PreparedStatement.class, com.foundationdb.sql.jdbc.PGStatement.class}, new StatementHandler(this, st));
                 }
                 else
                 {

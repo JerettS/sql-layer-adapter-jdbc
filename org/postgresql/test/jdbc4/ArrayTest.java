@@ -11,8 +11,10 @@ import java.sql.*;
 import java.util.UUID;
 
 import junit.framework.TestCase;
+
 import org.postgresql.test.TestUtil;
-import org.postgresql.geometric.PGbox;
+
+import com.foundationdb.sql.jdbc.geometric.PGbox;
 
 public class ArrayTest extends TestCase {
 
@@ -223,7 +225,7 @@ public class ArrayTest extends TestCase {
             pstmt.setObject(1, strArray, Types.ARRAY);
             pstmt.executeUpdate();
             fail("setObject() with a Java array parameter and Types.ARRAY shouldn't succeed");
-        } catch (org.postgresql.util.PSQLException ex) {
+        } catch (com.foundationdb.sql.jdbc.util.PSQLException ex) {
             // Expected failure.
         }
 
@@ -232,7 +234,7 @@ public class ArrayTest extends TestCase {
             pstmt.setObject(1, strArray);
             pstmt.executeUpdate();
             fail("setObject() with a Java array parameter and no Types argument shouldn't succeed");
-        } catch (org.postgresql.util.PSQLException ex) {
+        } catch (com.foundationdb.sql.jdbc.util.PSQLException ex) {
             // Expected failure.
         }
 

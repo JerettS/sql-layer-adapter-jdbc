@@ -9,7 +9,7 @@
 /**
  * Bulk data copy for PostgreSQL
  */
-package org.postgresql.copy;
+package com.foundationdb.sql.jdbc.copy;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,12 +18,12 @@ import java.io.Reader;
 import java.io.Writer;
 import java.sql.SQLException;
 
-import org.postgresql.core.Encoding;
-import org.postgresql.core.QueryExecutor;
-import org.postgresql.core.BaseConnection;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.core.Encoding;
+import com.foundationdb.sql.jdbc.core.QueryExecutor;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * API for PostgreSQL COPY bulk data transfer

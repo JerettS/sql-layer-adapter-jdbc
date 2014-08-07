@@ -5,14 +5,14 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
+package com.foundationdb.sql.jdbc.core.v3;
 
 import java.sql.SQLException;
 
-import org.postgresql.copy.CopyOperation;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.copy.CopyOperation;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 public class CopyOperationImpl implements CopyOperation {
     QueryExecutorImpl queryExecutor;

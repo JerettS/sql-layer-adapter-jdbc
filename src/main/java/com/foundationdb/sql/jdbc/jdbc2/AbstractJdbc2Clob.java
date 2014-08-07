@@ -5,10 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 
-import org.postgresql.core.BaseConnection;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;

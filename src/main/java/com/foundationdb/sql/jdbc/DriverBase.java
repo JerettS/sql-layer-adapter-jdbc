@@ -1,4 +1,4 @@
-package org.postgresql;
+package com.foundationdb.sql.jdbc;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,11 +17,11 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.postgresql.core.Logger;
-import org.postgresql.util.GT;
-import org.postgresql.util.HostSpec;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.core.Logger;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.HostSpec;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 public abstract class DriverBase implements Driver {
 

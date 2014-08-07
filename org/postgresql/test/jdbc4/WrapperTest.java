@@ -8,11 +8,13 @@
 package org.postgresql.test.jdbc4;
 
 import java.sql.*;
+
 import junit.framework.TestCase;
 
-import org.postgresql.PGConnection;
-import org.postgresql.PGStatement;
 import org.postgresql.test.TestUtil;
+
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.PGStatement;
 
 public class WrapperTest extends TestCase {
 

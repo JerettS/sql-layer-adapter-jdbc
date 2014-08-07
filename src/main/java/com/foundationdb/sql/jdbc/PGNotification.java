@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql;
+package com.foundationdb.sql.jdbc;
 
 /**
  *    This interface defines the public PostgreSQL extension for Notifications

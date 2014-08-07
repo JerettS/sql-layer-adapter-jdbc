@@ -4,12 +4,13 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.xa;
+package com.foundationdb.sql.jdbc.xa;
 
 import java.util.Arrays;
+
 import javax.transaction.xa.Xid;
 
-import org.postgresql.util.Base64;
+import com.foundationdb.sql.jdbc.util.Base64;
 
 class RecoveredXid implements Xid {
     int formatId;

@@ -1,7 +1,7 @@
-package org.postgresql.jdbc4.array;
+package com.foundationdb.sql.jdbc.jdbc4.array;
 
-import org.postgresql.jdbc2.ArrayAssistant;
-import org.postgresql.util.ByteConverter;
+import com.foundationdb.sql.jdbc.jdbc2.ArrayAssistant;
+import com.foundationdb.sql.jdbc.util.ByteConverter;
 
 import java.util.UUID;
 

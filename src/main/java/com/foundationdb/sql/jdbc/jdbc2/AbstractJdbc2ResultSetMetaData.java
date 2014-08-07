@@ -5,14 +5,15 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
-import org.postgresql.PGResultSetMetaData;
-import org.postgresql.core.*;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
 import java.sql.*;
-import org.postgresql.util.GT;
+
+import com.foundationdb.sql.jdbc.PGResultSetMetaData;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 public abstract class AbstractJdbc2ResultSetMetaData implements PGResultSetMetaData
 {

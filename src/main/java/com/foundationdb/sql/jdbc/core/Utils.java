@@ -7,17 +7,16 @@
 *-------------------------------------------------------------------------
 */
 
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
 import java.sql.SQLException;
-
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * Collection of utilities used by the protocol-level code.

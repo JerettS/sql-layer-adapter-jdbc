@@ -5,14 +5,16 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 import java.util.Map;
-import org.postgresql.core.*;
+
+import com.foundationdb.sql.jdbc.core.*;
+
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
-public class Jdbc3Array extends org.postgresql.jdbc2.AbstractJdbc2Array implements java.sql.Array
+public class Jdbc3Array extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Array implements java.sql.Array
 {
     public Jdbc3Array(BaseConnection conn, int oid, String fieldString) throws SQLException
     {

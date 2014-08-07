@@ -5,21 +5,20 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 import java.sql.*;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.SimpleTimeZone;
 
-import org.postgresql.PGStatement;
-import org.postgresql.core.Oid;
-import org.postgresql.util.ByteConverter;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
+import com.foundationdb.sql.jdbc.PGStatement;
+import com.foundationdb.sql.jdbc.core.Oid;
+import com.foundationdb.sql.jdbc.util.ByteConverter;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 
 /**

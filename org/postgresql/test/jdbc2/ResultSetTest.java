@@ -188,7 +188,7 @@ public class ResultSetTest extends TestCase
     {
         java.sql.PreparedStatement pstmt = con.prepareStatement("insert into testbool values (?)");
         if (useServerPrepare)
-            ((org.postgresql.PGStatement)pstmt).setUseServerPrepare(true);
+            ((com.foundationdb.sql.jdbc.PGStatement)pstmt).setUseServerPrepare(true);
 
         pstmt.setObject(1, new Float(0), java.sql.Types.BIT);
         pstmt.executeUpdate();

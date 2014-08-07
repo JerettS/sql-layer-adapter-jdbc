@@ -6,9 +6,10 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
+package com.foundationdb.sql.jdbc.core.v3;
 
-import org.postgresql.core.*;
+import com.foundationdb.sql.jdbc.core.*;
+
 import java.lang.ref.PhantomReference;
 
 /**

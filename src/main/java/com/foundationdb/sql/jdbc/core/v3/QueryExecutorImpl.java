@@ -6,25 +6,23 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
-
-import org.postgresql.core.*;
+package com.foundationdb.sql.jdbc.core.v3;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Properties;
-
 import java.lang.ref.*;
-
 import java.io.IOException;
 import java.sql.*;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLWarning;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.ServerErrorMessage;
-import org.postgresql.util.GT;
-import org.postgresql.copy.CopyOperation;
+
+import com.foundationdb.sql.jdbc.copy.CopyOperation;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
+import com.foundationdb.sql.jdbc.util.PSQLWarning;
+import com.foundationdb.sql.jdbc.util.ServerErrorMessage;
 
 /**
  * QueryExecutor implementation for the V3 protocol.
@@ -2139,7 +2137,7 @@ public class QueryExecutorImpl implements QueryExecutor {
         int pid = pgStream.ReceiveInteger4();
         String msg = pgStream.ReceiveString();
         String param = pgStream.ReceiveString();
-        protoConnection.addNotification(new org.postgresql.core.Notification(msg, pid, param));
+        protoConnection.addNotification(new com.foundationdb.sql.jdbc.core.Notification(msg, pid, param));
 
         if (logger.logDebug())
             logger.debug(" <=BE AsyncNotify(" + pid + "," + msg + "," + param + ")");

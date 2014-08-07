@@ -9,7 +9,9 @@
 package org.postgresql.test.jdbc2;
 
 import junit.framework.*;
-import org.postgresql.core.Encoding;
+
+import com.foundationdb.sql.jdbc.core.Encoding;
+
 import java.io.*;
 import java.util.Locale;
 

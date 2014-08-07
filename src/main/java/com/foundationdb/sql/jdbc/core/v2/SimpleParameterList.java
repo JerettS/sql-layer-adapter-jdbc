@@ -6,19 +6,19 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v2;
-
-import org.postgresql.core.*;
+package com.foundationdb.sql.jdbc.core.v2;
 
 import java.io.InputStream;
 import java.io.Writer;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.StreamWrapper;
-import org.postgresql.util.GT;
+
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
+import com.foundationdb.sql.jdbc.util.StreamWrapper;
 
 /**
  * Parameter list for query parameters in the V2 protocol.

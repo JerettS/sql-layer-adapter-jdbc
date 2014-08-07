@@ -5,11 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
-import org.postgresql.core.*;
+import com.foundationdb.sql.jdbc.core.*;
 
-public class Jdbc3ResultSetMetaData extends org.postgresql.jdbc2.AbstractJdbc2ResultSetMetaData implements java.sql.ResultSetMetaData
+public class Jdbc3ResultSetMetaData extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2ResultSetMetaData implements java.sql.ResultSetMetaData
 {
 
     public Jdbc3ResultSetMetaData(BaseConnection connection, Field[] fields)

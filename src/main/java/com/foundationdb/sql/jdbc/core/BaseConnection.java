@@ -5,11 +5,12 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
 import java.sql.*;
-import org.postgresql.PGConnection;
-import org.postgresql.jdbc2.TimestampUtils;
+
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.jdbc2.TimestampUtils;
 
 /**
  * Driver-internal connection interface. Application code should not use
@@ -55,11 +56,11 @@ public interface BaseConnection extends PGConnection, Connection
     /**
      * Construct and return an appropriate object for the given
      * type and value. This only considers the types registered via
-     * {@link org.postgresql.PGConnection#addDataType(String,Class)} and
-     * {@link org.postgresql.PGConnection#addDataType(String,String)}.
+     * {@link com.foundationdb.sql.jdbc.PGConnection#addDataType(String,Class)} and
+     * {@link com.foundationdb.sql.jdbc.PGConnection#addDataType(String,String)}.
      *<p>
      * If no class is registered as handling the given type, then a generic
-     * {@link org.postgresql.util.PGobject} instance is returned.
+     * {@link com.foundationdb.sql.jdbc.util.PGobject} instance is returned.
      *
      * @param type the backend typename
      * @param value the type-specific string representation of the value

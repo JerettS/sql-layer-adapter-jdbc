@@ -6,15 +6,15 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
 import java.util.Properties;
 import java.sql.SQLException;
 
-import org.postgresql.util.HostSpec;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.HostSpec;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * Handles protocol-specific connection setup.
@@ -29,8 +29,8 @@ public abstract class ConnectionFactory {
      * connection is returned.
      */
     private static final Object[][] versions = {
-                { "3", new org.postgresql.core.v3.ConnectionFactoryImpl() },
-                { "2", new org.postgresql.core.v2.ConnectionFactoryImpl() },
+                { "3", new com.foundationdb.sql.jdbc.core.v3.ConnectionFactoryImpl() },
+                { "2", new com.foundationdb.sql.jdbc.core.v2.ConnectionFactoryImpl() },
             };
 
     /**

@@ -7,11 +7,14 @@
 */
 package org.postgresql.test.jdbc2;
 
-import org.postgresql.PGConnection;
-import org.postgresql.core.BaseConnection;
-import org.postgresql.core.TypeInfo;
 import org.postgresql.test.TestUtil;
+
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.core.TypeInfo;
+
 import junit.framework.TestCase;
+
 import java.sql.*;
 
 /*

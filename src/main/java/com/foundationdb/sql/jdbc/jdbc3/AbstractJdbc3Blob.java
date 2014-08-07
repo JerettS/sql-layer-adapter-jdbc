@@ -5,14 +5,14 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 import java.sql.SQLException;
 
-public abstract class AbstractJdbc3Blob extends org.postgresql.jdbc2.AbstractJdbc2Blob
+public abstract class AbstractJdbc3Blob extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Blob
 {
 
-    public AbstractJdbc3Blob(org.postgresql.core.BaseConnection conn, long oid) throws SQLException
+    public AbstractJdbc3Blob(com.foundationdb.sql.jdbc.core.BaseConnection conn, long oid) throws SQLException
     {
         super(conn, oid);
     }

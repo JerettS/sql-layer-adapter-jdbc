@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
@@ -18,10 +18,10 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.sql.SQLException;
 
-import org.postgresql.util.GT;
-import org.postgresql.util.HostSpec;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.HostSpec;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * Wrapper around the raw connection to the server that implements some basic

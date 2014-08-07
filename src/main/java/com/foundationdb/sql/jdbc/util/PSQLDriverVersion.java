@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.util;
+package com.foundationdb.sql.jdbc.util;
 
 import org.postgresql.Driver;
 

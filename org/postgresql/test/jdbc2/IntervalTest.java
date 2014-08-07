@@ -14,8 +14,9 @@ import java.sql.*;
 
 import junit.framework.TestCase;
 
-import org.postgresql.util.PGInterval;
 import org.postgresql.test.TestUtil;
+
+import com.foundationdb.sql.jdbc.util.PGInterval;
 
 public class IntervalTest extends TestCase
 {

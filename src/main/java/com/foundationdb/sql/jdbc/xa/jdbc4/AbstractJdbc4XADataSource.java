@@ -4,11 +4,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.xa.jdbc4;
+package com.foundationdb.sql.jdbc.xa.jdbc4;
 
 import java.sql.SQLFeatureNotSupportedException;
 
-import org.postgresql.xa.jdbc3.AbstractJdbc3XADataSource;
+import com.foundationdb.sql.jdbc.xa.jdbc3.AbstractJdbc3XADataSource;
 
 public class AbstractJdbc4XADataSource
     extends AbstractJdbc3XADataSource

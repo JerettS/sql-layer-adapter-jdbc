@@ -5,22 +5,22 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 import java.util.Properties;
 import java.sql.*;
 
-import org.postgresql.util.HostSpec;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.GT;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.HostSpec;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * This class defines methods of the jdbc3 specification.  This class extends
  * org.postgresql.jdbc2.AbstractJdbc2Connection which provides the jdbc2
  * methods.  The real Connection class (for jdbc3) is org.postgresql.jdbc3.Jdbc3Connection
  */
-public abstract class AbstractJdbc3Connection extends org.postgresql.jdbc2.AbstractJdbc2Connection
+public abstract class AbstractJdbc3Connection extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection
 {
     private int rsHoldability = ResultSet.CLOSE_CURSORS_AT_COMMIT;
     private int savepointId = 0;

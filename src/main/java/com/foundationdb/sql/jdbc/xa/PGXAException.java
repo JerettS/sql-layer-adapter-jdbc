@@ -4,7 +4,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.xa;
+package com.foundationdb.sql.jdbc.xa;
 
 import javax.transaction.xa.XAException;
 

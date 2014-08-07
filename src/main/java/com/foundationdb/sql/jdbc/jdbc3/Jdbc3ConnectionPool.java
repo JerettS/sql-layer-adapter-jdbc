@@ -5,9 +5,9 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
-import org.postgresql.ds.PGConnectionPoolDataSource;
+import com.foundationdb.sql.jdbc.ds.PGConnectionPoolDataSource;
 
 public class Jdbc3ConnectionPool extends PGConnectionPoolDataSource
 {

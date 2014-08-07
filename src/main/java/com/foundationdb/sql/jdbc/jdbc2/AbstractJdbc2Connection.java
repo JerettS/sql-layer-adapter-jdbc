@@ -5,22 +5,20 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.*;
 
-import org.postgresql.core.*;
-
-import org.postgresql.DriverBase;
-import org.postgresql.PGNotification;
-import org.postgresql.fastpath.Fastpath;
-import org.postgresql.largeobject.LargeObjectManager;
-import org.postgresql.util.*;
-import org.postgresql.util.HostSpec;
-import org.postgresql.copy.*;
+import com.foundationdb.sql.jdbc.DriverBase;
+import com.foundationdb.sql.jdbc.PGNotification;
+import com.foundationdb.sql.jdbc.copy.*;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.fastpath.Fastpath;
+import com.foundationdb.sql.jdbc.largeobject.LargeObjectManager;
+import com.foundationdb.sql.jdbc.util.*;
 
 /**
  * This class defines methods of the jdbc2 specification.
@@ -625,15 +623,15 @@ public abstract class AbstractJdbc2Connection implements BaseConnection
     {
         // Add in the types that come packaged with the driver.
         // These can be overridden later if desired.
-        addDataType("box", org.postgresql.geometric.PGbox.class);
-        addDataType("circle", org.postgresql.geometric.PGcircle.class);
-        addDataType("line", org.postgresql.geometric.PGline.class);
-        addDataType("lseg", org.postgresql.geometric.PGlseg.class);
-        addDataType("path", org.postgresql.geometric.PGpath.class);
-        addDataType("point", org.postgresql.geometric.PGpoint.class);
-        addDataType("polygon", org.postgresql.geometric.PGpolygon.class);
-        addDataType("money", org.postgresql.util.PGmoney.class);
-        addDataType("interval", org.postgresql.util.PGInterval.class);
+        addDataType("box", com.foundationdb.sql.jdbc.geometric.PGbox.class);
+        addDataType("circle", com.foundationdb.sql.jdbc.geometric.PGcircle.class);
+        addDataType("line", com.foundationdb.sql.jdbc.geometric.PGline.class);
+        addDataType("lseg", com.foundationdb.sql.jdbc.geometric.PGlseg.class);
+        addDataType("path", com.foundationdb.sql.jdbc.geometric.PGpath.class);
+        addDataType("point", com.foundationdb.sql.jdbc.geometric.PGpoint.class);
+        addDataType("polygon", com.foundationdb.sql.jdbc.geometric.PGpolygon.class);
+        addDataType("money", com.foundationdb.sql.jdbc.util.PGmoney.class);
+        addDataType("interval", com.foundationdb.sql.jdbc.util.PGInterval.class);
 
         for (Enumeration e = info.propertyNames(); e.hasMoreElements(); )
         {

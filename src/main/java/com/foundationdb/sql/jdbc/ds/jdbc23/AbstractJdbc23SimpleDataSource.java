@@ -5,14 +5,14 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ds.jdbc23;
+package com.foundationdb.sql.jdbc.ds.jdbc23;
 
 import java.io.Serializable;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 
-import org.postgresql.ds.common.*;
+import com.foundationdb.sql.jdbc.ds.common.*;
 
 /**
  * Simple DataSource which does not perform connection pooling.  In order to use

@@ -8,9 +8,12 @@
 package org.postgresql.test.jdbc2;
 
 import org.postgresql.test.TestUtil;
-import org.postgresql.util.PGobject;
-import org.postgresql.geometric.*;
+
+import com.foundationdb.sql.jdbc.geometric.*;
+import com.foundationdb.sql.jdbc.util.PGobject;
+
 import junit.framework.TestCase;
+
 import java.sql.*;
 
 /*

@@ -5,11 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql;
+package com.foundationdb.sql.jdbc;
 
 import java.sql.SQLException;
 
-import org.postgresql.core.Field;
+import com.foundationdb.sql.jdbc.core.Field;
 
 public interface PGResultSetMetaData
 {

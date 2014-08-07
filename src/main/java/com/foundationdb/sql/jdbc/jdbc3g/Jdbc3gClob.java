@@ -5,13 +5,13 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3g;
+package com.foundationdb.sql.jdbc.jdbc3g;
 
 
-public class Jdbc3gClob extends org.postgresql.jdbc3.AbstractJdbc3Clob implements java.sql.Clob
+public class Jdbc3gClob extends com.foundationdb.sql.jdbc.jdbc3.AbstractJdbc3Clob implements java.sql.Clob
 {
 
-    public Jdbc3gClob(org.postgresql.core.BaseConnection conn, long oid) throws java.sql.SQLException
+    public Jdbc3gClob(com.foundationdb.sql.jdbc.core.BaseConnection conn, long oid) throws java.sql.SQLException
     {
         super(conn, oid);
     }

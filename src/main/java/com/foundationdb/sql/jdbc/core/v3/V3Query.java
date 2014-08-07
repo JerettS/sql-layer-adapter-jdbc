@@ -6,9 +6,9 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
+package com.foundationdb.sql.jdbc.core.v3;
 
-import org.postgresql.core.Query;
+import com.foundationdb.sql.jdbc.core.Query;
 
 /**
  * Common interface for all V3 query implementations.

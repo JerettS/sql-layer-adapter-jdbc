@@ -5,10 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.fastpath;
+package com.foundationdb.sql.jdbc.fastpath;
 
 import java.sql.SQLException;
-import org.postgresql.core.ParameterList;
+
+import com.foundationdb.sql.jdbc.core.ParameterList;
 
 // Not a very clean mapping to the new QueryExecutor/ParameterList
 // stuff, but it seems hard to support both v2 and v3 cleanly with

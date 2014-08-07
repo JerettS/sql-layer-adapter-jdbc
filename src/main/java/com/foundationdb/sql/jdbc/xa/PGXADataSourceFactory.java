@@ -5,11 +5,12 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.xa;
+package com.foundationdb.sql.jdbc.xa;
 
-import org.postgresql.ds.common.*;
+import com.foundationdb.sql.jdbc.ds.common.*;
 
 import javax.naming.*;
+
 import java.util.Hashtable;
 
 /**

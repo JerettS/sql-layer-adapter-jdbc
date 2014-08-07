@@ -6,7 +6,7 @@
 *-------------------------------------------------------------------------
 */
 
-package org.postgresql.gss;
+package com.foundationdb.sql.jdbc.gss;
 
 import java.io.IOException;
 import javax.security.auth.callback.*;

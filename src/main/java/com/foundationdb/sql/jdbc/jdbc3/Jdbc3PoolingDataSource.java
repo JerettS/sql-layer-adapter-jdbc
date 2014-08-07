@@ -5,9 +5,9 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
-import org.postgresql.ds.PGPoolingDataSource;
+import com.foundationdb.sql.jdbc.ds.PGPoolingDataSource;
 
 public class Jdbc3PoolingDataSource extends PGPoolingDataSource
 {

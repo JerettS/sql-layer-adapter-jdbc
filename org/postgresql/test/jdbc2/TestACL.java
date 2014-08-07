@@ -1,7 +1,7 @@
 package org.postgresql.test.jdbc2;
 
-import org.postgresql.jdbc2.AbstractJdbc2Connection;
-import org.postgresql.jdbc2.AbstractJdbc2DatabaseMetaData;
+import com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Connection;
+import com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2DatabaseMetaData;
 
 import junit.framework.TestCase;
 

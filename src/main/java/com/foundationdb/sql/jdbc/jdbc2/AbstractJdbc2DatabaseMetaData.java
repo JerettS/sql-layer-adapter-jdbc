@@ -5,16 +5,16 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2;
+package com.foundationdb.sql.jdbc.jdbc2;
 
 import java.sql.*;
 import java.util.*;
 
-import org.postgresql.core.*;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.DriverBase;
-import org.postgresql.util.GT;
+import com.foundationdb.sql.jdbc.DriverBase;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 public abstract class AbstractJdbc2DatabaseMetaData
 {

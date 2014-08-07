@@ -5,11 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.postgresql.PGConnection;
-import org.postgresql.PGResultSetMetaData;
-import org.postgresql.PGStatement;
-import org.postgresql.core.Field;
 import org.postgresql.test.TestUtil;
+
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.PGResultSetMetaData;
+import com.foundationdb.sql.jdbc.PGStatement;
+import com.foundationdb.sql.jdbc.core.Field;
 
 import junit.framework.TestCase;
 

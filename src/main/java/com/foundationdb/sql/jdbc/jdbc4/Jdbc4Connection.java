@@ -5,13 +5,13 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 import java.util.Map;
 import java.util.Properties;
 import java.sql.SQLException;
 
-import org.postgresql.util.HostSpec;
+import com.foundationdb.sql.jdbc.util.HostSpec;
 
 /**
  * This class implements the java.sql.Connection interface for JDBC4.

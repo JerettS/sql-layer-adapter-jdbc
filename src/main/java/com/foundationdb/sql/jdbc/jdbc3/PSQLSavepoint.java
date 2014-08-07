@@ -5,14 +5,15 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import org.postgresql.core.Utils;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
+
+import com.foundationdb.sql.jdbc.core.Utils;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 public class PSQLSavepoint implements Savepoint {
 

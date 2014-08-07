@@ -6,7 +6,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v2;
+package com.foundationdb.sql.jdbc.core.v2;
 
 import java.sql.SQLException;
 import java.sql.SQLWarning;
@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
-import org.postgresql.PGNotification;
-import org.postgresql.core.*;
-import org.postgresql.util.HostSpec;
+import com.foundationdb.sql.jdbc.PGNotification;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.HostSpec;
 
 /**
  * V2 implementation of ProtocolConnection.

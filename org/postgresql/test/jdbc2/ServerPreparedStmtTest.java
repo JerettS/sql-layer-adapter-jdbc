@@ -7,9 +7,11 @@
 */
 package org.postgresql.test.jdbc2;
 
-import org.postgresql.PGStatement;
-import org.postgresql.jdbc2.AbstractJdbc2Statement;
 import org.postgresql.test.TestUtil;
+
+import com.foundationdb.sql.jdbc.PGStatement;
+import com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Statement;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

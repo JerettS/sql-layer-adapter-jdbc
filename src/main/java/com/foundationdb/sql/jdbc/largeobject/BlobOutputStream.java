@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.largeobject;
+package com.foundationdb.sql.jdbc.largeobject;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -5,16 +5,17 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 
 import java.sql.*;
 import java.io.Reader;
 import java.io.InputStream;
 import java.util.List;
-import org.postgresql.core.*;
 
-abstract class AbstractJdbc4ResultSet extends org.postgresql.jdbc3g.AbstractJdbc3gResultSet
+import com.foundationdb.sql.jdbc.core.*;
+
+abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.AbstractJdbc3gResultSet
 {
     AbstractJdbc4ResultSet(Query originalQuery, BaseStatement statement, Field[] fields, List tuples, ResultCursor cursor,
                     int maxRows, int maxFieldSize, int rsType, int rsConcurrency, int rsHoldability) throws SQLException

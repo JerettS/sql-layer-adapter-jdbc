@@ -17,7 +17,8 @@ import java.sql.Statement;
 import java.sql.Types;
 
 import org.postgresql.test.TestUtil;
-import org.postgresql.util.PSQLState;
+
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 import junit.framework.TestCase;
 

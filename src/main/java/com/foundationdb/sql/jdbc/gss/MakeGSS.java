@@ -6,19 +6,20 @@
 *-------------------------------------------------------------------------
 */
 
-package org.postgresql.gss;
+package com.foundationdb.sql.jdbc.gss;
 
 import org.ietf.jgss.*;
+
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
-import java.security.PrivilegedAction;
 
+import java.security.PrivilegedAction;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.postgresql.core.PGStream;
-import org.postgresql.core.Logger;
-import org.postgresql.util.*;
+import com.foundationdb.sql.jdbc.core.Logger;
+import com.foundationdb.sql.jdbc.core.PGStream;
+import com.foundationdb.sql.jdbc.util.*;
 
 
 public class MakeGSS

@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql;
+package com.foundationdb.sql.jdbc;
 
 /**
  * A ref cursor based result set.

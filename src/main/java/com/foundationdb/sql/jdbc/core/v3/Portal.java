@@ -6,10 +6,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
+package com.foundationdb.sql.jdbc.core.v3;
 
 import java.lang.ref.PhantomReference;
-import org.postgresql.core.*;
+
+import com.foundationdb.sql.jdbc.core.*;
 
 /**
  * V3 ResultCursor implementation in terms of backend Portals.

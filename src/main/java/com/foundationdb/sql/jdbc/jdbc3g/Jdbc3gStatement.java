@@ -5,18 +5,19 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3g;
+package com.foundationdb.sql.jdbc.jdbc3g;
 
 import java.sql.*;
 import java.util.List;
-import org.postgresql.core.*;
+
+import com.foundationdb.sql.jdbc.core.*;
 
 /**
  * This class implements the java.sql.Statement interface for JDBC3.
  * However most of the implementation is really done in
  * org.postgresql.jdbc3.AbstractJdbc3Statement or one of it's parents
  */
-class Jdbc3gStatement extends org.postgresql.jdbc3g.AbstractJdbc3gStatement implements Statement
+class Jdbc3gStatement extends com.foundationdb.sql.jdbc.jdbc3g.AbstractJdbc3gStatement implements Statement
 {
     Jdbc3gStatement (Jdbc3gConnection c, int rsType, int rsConcurrency, int rsHoldability) throws SQLException
     {

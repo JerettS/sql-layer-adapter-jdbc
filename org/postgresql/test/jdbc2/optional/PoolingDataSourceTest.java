@@ -8,9 +8,11 @@
 package org.postgresql.test.jdbc2.optional;
 
 import java.sql.*;
+
 import org.postgresql.test.TestUtil;
-import org.postgresql.jdbc2.optional.PoolingDataSource;
-import org.postgresql.ds.common.BaseDataSource;
+
+import com.foundationdb.sql.jdbc.ds.common.BaseDataSource;
+import com.foundationdb.sql.jdbc.jdbc2.optional.PoolingDataSource;
 
 /**
  * Minimal tests for pooling DataSource.  Needs many more.

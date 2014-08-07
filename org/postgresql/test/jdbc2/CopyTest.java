@@ -21,10 +21,11 @@ import java.io.StringReader;
 
 import junit.framework.TestCase;
 
-import org.postgresql.PGConnection;
-import org.postgresql.copy.*;
 import org.postgresql.test.TestUtil;
-import org.postgresql.util.PSQLState;
+
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.copy.*;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * @author kato@iki.fi

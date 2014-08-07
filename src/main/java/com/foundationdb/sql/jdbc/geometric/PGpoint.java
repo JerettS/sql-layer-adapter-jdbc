@@ -5,15 +5,15 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.geometric;
+package com.foundationdb.sql.jdbc.geometric;
 
-import org.postgresql.util.ByteConverter;
-import org.postgresql.util.GT;
-import org.postgresql.util.PGBinaryObject;
-import org.postgresql.util.PGobject;
-import org.postgresql.util.PGtokenizer;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.util.ByteConverter;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PGBinaryObject;
+import com.foundationdb.sql.jdbc.util.PGobject;
+import com.foundationdb.sql.jdbc.util.PGtokenizer;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 import java.awt.Point;
 import java.io.Serializable;

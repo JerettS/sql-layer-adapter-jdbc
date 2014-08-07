@@ -5,10 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
 import java.io.IOException;
-import org.postgresql.util.GT;
+
+import com.foundationdb.sql.jdbc.util.GT;
 
 class UTF8Encoding extends Encoding {
     UTF8Encoding(String jvmEncoding) {

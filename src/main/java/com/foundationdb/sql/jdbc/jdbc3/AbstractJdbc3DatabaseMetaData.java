@@ -5,12 +5,12 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 
 import java.sql.*;
 
-public abstract class AbstractJdbc3DatabaseMetaData extends org.postgresql.jdbc2.AbstractJdbc2DatabaseMetaData
+public abstract class AbstractJdbc3DatabaseMetaData extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2DatabaseMetaData
 {
 
     public AbstractJdbc3DatabaseMetaData(AbstractJdbc3Connection conn)

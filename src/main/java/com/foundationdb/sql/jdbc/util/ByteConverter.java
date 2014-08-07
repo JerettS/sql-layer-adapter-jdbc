@@ -5,7 +5,7 @@
  *
  *-------------------------------------------------------------------------
  */
-package org.postgresql.util;
+package com.foundationdb.sql.jdbc.util;
 
 /**
  * Helper methods to parse java base types from byte arrays.

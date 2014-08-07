@@ -5,13 +5,14 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ds.jdbc4;
+package com.foundationdb.sql.jdbc.ds.jdbc4;
 
 import java.sql.Connection;
 import java.sql.SQLFeatureNotSupportedException;
+
 import javax.sql.StatementEventListener;
 
-import org.postgresql.ds.jdbc23.AbstractJdbc23PooledConnection;
+import com.foundationdb.sql.jdbc.ds.jdbc23.AbstractJdbc23PooledConnection;
 
 public abstract class AbstractJdbc4PooledConnection extends AbstractJdbc23PooledConnection
 {

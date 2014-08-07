@@ -75,7 +75,7 @@ public class GetXXXTest extends TestCase
             Object obj = rs.getObject(1, new HashMap());
 
             // it should not be an instance of PGInterval
-            assertTrue(obj instanceof org.postgresql.util.PGInterval);
+            assertTrue(obj instanceof com.foundationdb.sql.jdbc.util.PGInterval);
 
         }
 

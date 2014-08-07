@@ -5,17 +5,18 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ds.jdbc23;
+package com.foundationdb.sql.jdbc.ds.jdbc23;
 
 import javax.sql.PooledConnection;
+
 import java.sql.SQLException;
 import java.io.Serializable;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 
-import org.postgresql.ds.common.*;
-import org.postgresql.ds.PGPooledConnection;
+import com.foundationdb.sql.jdbc.ds.PGPooledConnection;
+import com.foundationdb.sql.jdbc.ds.common.*;
 
 /**
  * PostgreSQL implementation of ConnectionPoolDataSource.  The app server or

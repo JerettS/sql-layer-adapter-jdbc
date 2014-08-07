@@ -8,6 +8,7 @@
 package org.postgresql.test.jdbc2;
 
 import org.postgresql.test.TestUtil;
+
 import junit.framework.TestCase;
 
 import java.sql.*;
@@ -15,9 +16,9 @@ import java.util.TimeZone;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.postgresql.PGStatement;
-import org.postgresql.jdbc2.TimestampUtils;
-import org.postgresql.core.BaseConnection;
+import com.foundationdb.sql.jdbc.PGStatement;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.jdbc2.TimestampUtils;
 
 /*
  * Test get/setTimestamp for both timestamp with time zone and

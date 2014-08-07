@@ -6,10 +6,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
+package com.foundationdb.sql.jdbc.core.v3;
 
 import java.sql.SQLException;
-import org.postgresql.core.ParameterList;
+
+import com.foundationdb.sql.jdbc.core.ParameterList;
 
 /**
  * Common interface for all V3 parameter list implementations.

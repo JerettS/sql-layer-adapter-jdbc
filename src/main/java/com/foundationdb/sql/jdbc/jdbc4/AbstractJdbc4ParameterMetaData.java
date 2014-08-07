@@ -5,12 +5,13 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 import java.sql.SQLException;
-import org.postgresql.core.BaseConnection;
 
-public abstract class AbstractJdbc4ParameterMetaData extends org.postgresql.jdbc3.AbstractJdbc3ParameterMetaData
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+
+public abstract class AbstractJdbc4ParameterMetaData extends com.foundationdb.sql.jdbc.jdbc3.AbstractJdbc3ParameterMetaData
 {
 
     public AbstractJdbc4ParameterMetaData(BaseConnection connection, int oids[])

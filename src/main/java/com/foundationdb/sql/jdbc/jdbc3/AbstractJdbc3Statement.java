@@ -5,27 +5,27 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc3;
+package com.foundationdb.sql.jdbc.jdbc3;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.core.Utils;
-import org.postgresql.core.QueryExecutor;
-import org.postgresql.core.Field;
-import org.postgresql.core.BaseConnection;
-import org.postgresql.util.GT;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.core.Field;
+import com.foundationdb.sql.jdbc.core.QueryExecutor;
+import com.foundationdb.sql.jdbc.core.Utils;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * This class defines methods of the jdbc3 specification.  This class extends
  * org.postgresql.jdbc2.AbstractJdbc2Statement which provides the jdbc2
  * methods.  The real Statement class (for jdbc2) is org.postgresql.jdbc3.Jdbc3Statement
  */
-public abstract class AbstractJdbc3Statement extends org.postgresql.jdbc2.AbstractJdbc2Statement
+public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Statement
 {
     private final int rsHoldability;
 

@@ -5,19 +5,20 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ds.jdbc23;
+package com.foundationdb.sql.jdbc.ds.jdbc23;
 
 import javax.sql.*;
 import javax.naming.*;
+
 import java.util.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
-import org.postgresql.ds.*;
-import org.postgresql.ds.common.*;
+import com.foundationdb.sql.jdbc.ds.*;
+import com.foundationdb.sql.jdbc.ds.common.*;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * DataSource which uses connection pooling.  <font color="red">Don't use this if

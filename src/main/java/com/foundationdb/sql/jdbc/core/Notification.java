@@ -5,9 +5,9 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core;
+package com.foundationdb.sql.jdbc.core;
 
-import org.postgresql.PGNotification;
+import com.foundationdb.sql.jdbc.PGNotification;
 
 public class Notification implements PGNotification
 {

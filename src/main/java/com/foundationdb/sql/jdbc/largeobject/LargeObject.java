@@ -5,17 +5,18 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.largeobject;
+package com.foundationdb.sql.jdbc.largeobject;
 
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
-import org.postgresql.core.BaseConnection;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
-import org.postgresql.fastpath.Fastpath;
-import org.postgresql.fastpath.FastpathArg;
+
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.fastpath.Fastpath;
+import com.foundationdb.sql.jdbc.fastpath.FastpathArg;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * This class provides the basic methods required to run the interface, plus
@@ -33,7 +34,7 @@ import org.postgresql.fastpath.FastpathArg;
  * <p>Refer to org.postgresql.largeobject.LargeObjectManager on how to gain access
  * to a Large Object, or how to create one.
  *
- * @see org.postgresql.largeobject.LargeObjectManager
+ * @see com.foundationdb.sql.jdbc.largeobject.LargeObjectManager
  * @see java.sql.ResultSet#getAsciiStream
  * @see java.sql.ResultSet#getBinaryStream
  * @see java.sql.ResultSet#getUnicodeStream
@@ -83,7 +84,7 @@ public class LargeObject
      * @param commitOnClose commit the transaction when this LOB will be closed
      * (defined in LargeObjectManager)
      * @exception SQLException if a database-access error occurs.
-     * @see org.postgresql.largeobject.LargeObjectManager
+     * @see com.foundationdb.sql.jdbc.largeobject.LargeObjectManager
      */
     protected LargeObject(Fastpath fp, long oid, int mode, BaseConnection conn, boolean commitOnClose) throws SQLException
     {
@@ -116,7 +117,7 @@ public class LargeObject
      * @param mode Mode of opening the large object
      * (defined in LargeObjectManager)
      * @exception SQLException if a database-access error occurs.
-     * @see org.postgresql.largeobject.LargeObjectManager
+     * @see com.foundationdb.sql.jdbc.largeobject.LargeObjectManager
      */
     protected LargeObject(Fastpath fp, long oid, int mode) throws SQLException
     {

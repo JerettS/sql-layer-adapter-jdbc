@@ -8,13 +8,16 @@
 package org.postgresql.test.jdbc2.optional;
 
 import junit.framework.TestCase;
+
 import org.postgresql.test.TestUtil;
 import org.postgresql.test.util.MiniJndiContextFactory;
-import org.postgresql.ds.common.BaseDataSource;
-import org.postgresql.PGConnection;
+
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.ds.common.BaseDataSource;
 
 import java.sql.*;
 import java.util.*;
+
 import javax.naming.*;
 
 /**

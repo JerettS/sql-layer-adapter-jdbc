@@ -19,10 +19,10 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-
 import org.postgresql.test.TestUtil;
 import org.postgresql.test.jdbc2.optional.BaseDataSourceTest;
-import org.postgresql.xa.PGXADataSource;
+
+import com.foundationdb.sql.jdbc.xa.PGXADataSource;
 
 import junit.framework.TestCase;
 

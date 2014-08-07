@@ -6,11 +6,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
+package com.foundationdb.sql.jdbc.core.v3;
 
-import org.postgresql.PGNotification;
-import org.postgresql.core.*;
-import org.postgresql.util.HostSpec;
+import com.foundationdb.sql.jdbc.PGNotification;
+import com.foundationdb.sql.jdbc.core.*;
+import com.foundationdb.sql.jdbc.util.HostSpec;
 
 import java.sql.SQLException;
 import java.sql.SQLWarning;

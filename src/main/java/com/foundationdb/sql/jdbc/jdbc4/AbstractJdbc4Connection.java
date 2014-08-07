@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 import java.sql.*;
 import java.util.Map;
@@ -14,16 +14,16 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-import org.postgresql.core.Oid;
-import org.postgresql.core.Utils;
-import org.postgresql.core.TypeInfo;
-import org.postgresql.util.GT;
-import org.postgresql.util.HostSpec;
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLException;
-import org.postgresql.jdbc2.AbstractJdbc2Array;
+import com.foundationdb.sql.jdbc.core.Oid;
+import com.foundationdb.sql.jdbc.core.TypeInfo;
+import com.foundationdb.sql.jdbc.core.Utils;
+import com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Array;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.HostSpec;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
-abstract class AbstractJdbc4Connection extends org.postgresql.jdbc3g.AbstractJdbc3gConnection
+abstract class AbstractJdbc4Connection extends com.foundationdb.sql.jdbc.jdbc3g.AbstractJdbc3gConnection
 {
     private final Properties _clientInfo;
 

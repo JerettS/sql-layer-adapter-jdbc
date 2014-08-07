@@ -5,13 +5,14 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ds.common;
+package com.foundationdb.sql.jdbc.ds.common;
 
 import javax.naming.*;
 import javax.naming.spi.ObjectFactory;
+
 import java.util.Hashtable;
 
-import org.postgresql.ds.*;
+import com.foundationdb.sql.jdbc.ds.*;
 
 /**
  * Returns a DataSource-ish thing based on a JNDI reference.  In the case of a

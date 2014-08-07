@@ -6,9 +6,9 @@
 *-------------------------------------------------------------------------
 */
 
-package org.postgresql.jdbc2.optional;
+package com.foundationdb.sql.jdbc.jdbc2.optional;
 
-import org.postgresql.ds.PGConnectionPoolDataSource;
+import com.foundationdb.sql.jdbc.ds.PGConnectionPoolDataSource;
 
 public class ConnectionPool extends PGConnectionPoolDataSource
 {

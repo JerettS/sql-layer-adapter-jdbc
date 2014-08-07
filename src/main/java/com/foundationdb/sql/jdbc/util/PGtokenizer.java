@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.util;
+package com.foundationdb.sql.jdbc.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.List;
  * It's mainly used by the geometric classes, but is useful in parsing any
  * output from custom data types output from org.postgresql.
  *
- * @see org.postgresql.geometric.PGbox
- * @see org.postgresql.geometric.PGcircle
- * @see org.postgresql.geometric.PGlseg
- * @see org.postgresql.geometric.PGpath
- * @see org.postgresql.geometric.PGpoint
- * @see org.postgresql.geometric.PGpolygon
+ * @see com.foundationdb.sql.jdbc.geometric.PGbox
+ * @see com.foundationdb.sql.jdbc.geometric.PGcircle
+ * @see com.foundationdb.sql.jdbc.geometric.PGlseg
+ * @see com.foundationdb.sql.jdbc.geometric.PGpath
+ * @see com.foundationdb.sql.jdbc.geometric.PGpoint
+ * @see com.foundationdb.sql.jdbc.geometric.PGpolygon
  */
 public class PGtokenizer
 {

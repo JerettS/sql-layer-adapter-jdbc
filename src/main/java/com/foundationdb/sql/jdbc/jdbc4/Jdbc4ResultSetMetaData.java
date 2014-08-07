@@ -5,9 +5,9 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
-import org.postgresql.core.*;
+import com.foundationdb.sql.jdbc.core.*;
 
 public class Jdbc4ResultSetMetaData extends AbstractJdbc4ResultSetMetaData implements java.sql.ResultSetMetaData
 {

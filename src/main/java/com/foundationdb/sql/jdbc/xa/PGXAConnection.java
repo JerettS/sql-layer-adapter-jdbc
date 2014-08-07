@@ -4,21 +4,23 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.xa;
+package com.foundationdb.sql.jdbc.xa;
 
-import org.postgresql.PGConnection;
-import org.postgresql.ds.PGPooledConnection;
-import org.postgresql.core.BaseConnection;
-import org.postgresql.core.ProtocolConnection;
-import org.postgresql.core.Logger;
-import org.postgresql.util.GT;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import com.foundationdb.sql.jdbc.PGConnection;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.core.Logger;
+import com.foundationdb.sql.jdbc.core.ProtocolConnection;
+import com.foundationdb.sql.jdbc.ds.PGPooledConnection;
+import com.foundationdb.sql.jdbc.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLException;
+import com.foundationdb.sql.jdbc.util.PSQLState;
 
 import javax.sql.*;
+
 import java.sql.*;
 import java.util.*;
 import java.lang.reflect.*;
+
 import javax.transaction.xa.Xid;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.XAException;

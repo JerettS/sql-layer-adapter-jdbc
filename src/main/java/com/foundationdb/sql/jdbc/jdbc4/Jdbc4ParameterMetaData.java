@@ -5,10 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc4;
+package com.foundationdb.sql.jdbc.jdbc4;
 
 import java.sql.ParameterMetaData;
-import org.postgresql.core.BaseConnection;
+
+import com.foundationdb.sql.jdbc.core.BaseConnection;
 
 public class Jdbc4ParameterMetaData extends AbstractJdbc4ParameterMetaData implements ParameterMetaData {
 

@@ -4,7 +4,7 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.xa.jdbc3;
+package com.foundationdb.sql.jdbc.xa.jdbc3;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,10 +13,9 @@ import javax.naming.Referenceable;
 import javax.naming.Reference;
 import javax.sql.XAConnection;
 
-import org.postgresql.xa.*;
-
-import org.postgresql.core.BaseConnection;
-import org.postgresql.ds.common.BaseDataSource;
+import com.foundationdb.sql.jdbc.core.BaseConnection;
+import com.foundationdb.sql.jdbc.ds.common.BaseDataSource;
+import com.foundationdb.sql.jdbc.xa.*;
 
 /**
  * XA-enabled DataSource implementation.

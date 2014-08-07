@@ -6,9 +6,9 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.core.v3;
+package com.foundationdb.sql.jdbc.core.v3;
 
-import org.postgresql.core.*;
+import com.foundationdb.sql.jdbc.core.*;
 
 /**
  * V3 Query implementation for queries that involve multiple statements.

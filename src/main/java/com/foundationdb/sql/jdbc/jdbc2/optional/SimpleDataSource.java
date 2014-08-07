@@ -5,9 +5,9 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.jdbc2.optional;
+package com.foundationdb.sql.jdbc.jdbc2.optional;
 
-import org.postgresql.ds.PGSimpleDataSource;
+import com.foundationdb.sql.jdbc.ds.PGSimpleDataSource;
 
 public class SimpleDataSource extends PGSimpleDataSource
 {
