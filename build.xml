@@ -18,11 +18,13 @@
 <project name="postgresqlJDBC" default="all" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
   <!-- set global properties for this build -->
-  <property name="srcdir"  value="." />
+  <property name="srcdir"  value="src/main/java" />
+  <property name="testdir" value="src/test/java" />
+  <property name="resdir"  value="src/main/resources"/>
   <property name="jardir"  value="jars" />
   <property name="builddir" value="build" />
-  <property name="package" value="org/postgresql" />
-  <property name="fdbpackage" value="com/foundationdb/sql/jdbc"/>
+  <property name="package" value="com/foundationdb/sql/jdbc" />
+  <!--<property name="fdbpackage" value="com/foundationdb/sql/jdbc"/>-->
   <property name="debug" value="on" />
 
   <!-- default build parameters are in build.properties, these may be
@@ -108,7 +110,7 @@
     <include name="${package}/xa/jdbc4/*.java" if="jdbc4any"/>
       
     <!-- FDB Driver -->
-    <include name="${fdbpackage}/*.java" />
+    <!--<include name="${fdbpackage}/*.java" />-->
   </patternset>
 
   <target name="check_versions">
@@ -212,7 +214,7 @@
     <jar jarfile="${jardir}/postgresql.jar">
       <fileset dir="${builddir}">
         <include name="${package}/**/*.class" />
-        <include name="${fdbpackage}/**/*.class" />
+        <!--<include name="${fdbpackage}/**/*.class" /> -->
       </fileset>
 
       <fileset dir="${srcdir}">
@@ -227,7 +229,7 @@
 
   <target name="compile" depends="prepare,check_versions,driver">
 
-    <available classname="org.postgresql.Driver" property="old.driver.present" />
+    <available classname="com.foundationdb.sql.jdbc.Driver" property="old.driver.present" />
     <fail message="Old driver was detected on classpath or in jre/lib/ext, please remove and try again." if="old.driver.present" />
 
     <javac classpath="${srcdir}" srcdir="${srcdir}" destdir="${builddir}" debug="${debug}" source="${java.target}" target="${java.target}">
@@ -271,13 +273,13 @@
     </condition>
 
     <!-- determine the connection class -->
-    <condition property="connectclass" value="org.postgresql.jdbc3.Jdbc3Connection">
+    <condition property="connectclass" value="com.foundationdb.sql.jdbc.jdbc3.Jdbc3Connection">
         <equals arg1="${jdbc3}" arg2="true"/>
     </condition>
-    <condition property="connectclass" value="org.postgresql.jdbc3g.Jdbc3gConnection">
+    <condition property="connectclass" value="com.foundationdb.sql.jdbc.jdbc3g.Jdbc3gConnection">
         <equals arg1="${jdbc3g}" arg2="true"/>
     </condition>
-    <condition property="connectclass" value="org.postgresql.jdbc4.Jdbc4Connection">
+    <condition property="connectclass" value="com.foundationdb.sql.jdbc.jdbc4.Jdbc4Connection">
         <equals arg1="${jdbc4any}" arg2="true" />
     </condition>
 
@@ -288,44 +290,44 @@
         <equals arg1="${jdbc4any}" arg2="true" />
     </condition>
 
-    <condition property="simpledsclass" value="org.postgresql.ds.jdbc23.AbstractJdbc23SimpleDataSource">
+    <condition property="simpledsclass" value="com.foundationdb.sql.jdbc.ds.jdbc23.AbstractJdbc23SimpleDataSource">
         <equals arg1="${jdbc3any}" arg2="true" />
     </condition>
-    <condition property="simpledsclass" value="org.postgresql.ds.jdbc4.AbstractJdbc4SimpleDataSource">
+    <condition property="simpledsclass" value="com.foundationdb.sql.jdbc.ds.jdbc4.AbstractJdbc4SimpleDataSource">
         <equals arg1="${jdbc4any}" arg2="true" />
     </condition>
 
-    <condition property="poolingdsclass" value="org.postgresql.ds.jdbc23.AbstractJdbc23PoolingDataSource">
+    <condition property="poolingdsclass" value="com.foundationdb.sql.jdbc.ds.jdbc23.AbstractJdbc23PoolingDataSource">
         <equals arg1="${jdbc3any}" arg2="true" />
     </condition>
-    <condition property="poolingdsclass" value="org.postgresql.ds.jdbc4.AbstractJdbc4PoolingDataSource">
+    <condition property="poolingdsclass" value="com.foundationdb.sql.jdbc.ds.jdbc4.AbstractJdbc4PoolingDataSource">
         <equals arg1="${jdbc4any}" arg2="true" />
 </condition>
 
-    <condition property="pooledconnclass" value="org.postgresql.ds.jdbc23.AbstractJdbc23PooledConnection">
+    <condition property="pooledconnclass" value="com.foundationdb.sql.jdbc.ds.jdbc23.AbstractJdbc23PooledConnection">
         <equals arg1="${jdbc3any}" arg2="true" />
     </condition>
-    <condition property="pooledconnclass" value="org.postgresql.ds.jdbc4.AbstractJdbc4PooledConnection">
+    <condition property="pooledconnclass" value="com.foundationdb.sql.jdbc.ds.jdbc4.AbstractJdbc4PooledConnection">
         <equals arg1="${jdbc4any}" arg2="true" />
     </condition>
 
-    <condition property="connpooldsclass" value="org.postgresql.ds.jdbc23.AbstractJdbc23ConnectionPoolDataSource">
+    <condition property="connpooldsclass" value="com.foundationdb.sql.jdbc.ds.jdbc23.AbstractJdbc23ConnectionPoolDataSource">
         <equals arg1="${jdbc3any}" arg2="true" />
     </condition>
-    <condition property="connpooldsclass" value="org.postgresql.ds.jdbc4.AbstractJdbc4ConnectionPoolDataSource">
+    <condition property="connpooldsclass" value="com.foundationdb.sql.jdbc.ds.jdbc4.AbstractJdbc4ConnectionPoolDataSource">
         <equals arg1="${jdbc4any}" arg2="true" />
     </condition>
 
-    <condition property="xadsclass" value="org.postgresql.xa.jdbc3.AbstractJdbc3XADataSource">
+    <condition property="xadsclass" value="com.foundationdb.sql.jdbc.xa.jdbc3.AbstractJdbc3XADataSource">
         <equals arg1="${jdbc3any}" arg2="true" />
     </condition>
-    <condition property="xadsclass" value="org.postgresql.xa.jdbc4.AbstractJdbc4XADataSource">
+    <condition property="xadsclass" value="com.foundationdb.sql.jdbc.xa.jdbc4.AbstractJdbc4XADataSource">
         <equals arg1="${jdbc4any}" arg2="true" />
     </condition>
-    <condition property="makesslclass" value="org.postgresql.ssl.jdbc3.AbstractJdbc3MakeSSL">
+    <condition property="makesslclass" value="com.foundationdb.sql.jdbc.ssl.jdbc3.AbstractJdbc3MakeSSL">
         <equals arg1="${jdbc3any}" arg2="true" />
     </condition>
-    <condition property="makesslclass" value="org.postgresql.ssl.jdbc4.AbstractJdbc4MakeSSL">
+    <condition property="makesslclass" value="com.foundationdb.sql.jdbc.ssl.jdbc4.AbstractJdbc4MakeSSL">
         <equals arg1="${jdbc4any}" arg2="true" />
     </condition>
 	
@@ -385,10 +387,10 @@
           overwrite="true"
           tofile="${srcdir}/${package}/ssl/MakeSSL.java"
           filtering="yes" />
-    <copy file="${srcdir}/${fdbpackage}/Driver.java.in"
+    <!--<copy file="${srcdir}/${fdbpackage}/Driver.java.in"
           overwrite="true"
           tofile="${srcdir}/${fdbpackage}/Driver.java"
-          filtering="yes"/>
+          filtering="yes"/>-->
   <echo message="Configured build for the ${edition} edition driver." />
   </target>
 
@@ -417,7 +419,7 @@
     <delete quiet="true" file="${srcdir}/${package}/ds/PGConnectionPoolDataSource.java" />
     <delete quiet="true" file="${srcdir}/${package}/xa/PGXADataSource.java" />
     <delete quiet="true" file="${srcdir}/${package}/ssl/MakeSSL.java" />
-    <delete quiet="true" file="${srcdir}/${fdbpackage}/Driver.java"/>
+    <!--<delete quiet="true" file="${srcdir}/${fdbpackage}/Driver.java"/> -->
   </target>
 
   <!-- This compiles and executes the JUnit tests -->
@@ -442,11 +444,11 @@
   <target name="testjar" depends="jar">
     <fail message="JUnit 3.8.1 could not be found in your classpath.  You must download and install it from http://junit.org to build and run the test suite." unless="junit" />
     <mkdir dir="${builddir}/tests"/>
-    <javac srcdir="${srcdir}" destdir="${builddir}/tests" debug="${debug}" source="${java.target}" target="${java.target}">
-      <include name="${package}/test/**" />
+    <javac srcdir="${testdir}" destdir="${builddir}/tests" debug="${debug}" source="${java.target}" target="${java.target}">
+      <include name="${package}/**" />
 
-      <exclude name="${package}/test/jdbc4/**" unless="jdbc4tests" />
-      <exclude name="${package}/test/ssl/**" unless="jdbc4tests" />
+      <exclude name="${package}/jdbc4/**" unless="jdbc4tests" />
+      <exclude name="${package}/ssl/**" unless="jdbc4tests" />
 
       <classpath>
         <pathelement location="${jardir}/postgresql.jar"/>
@@ -484,13 +486,13 @@
         <pathelement location="${jardir}/postgresql-tests.jar" />
         <pathelement path="${java.class.path}" />
       </classpath>
-      <test name="org.postgresql.test.jdbc2.Jdbc2TestSuite" outfile="${testResultsDir}/jdbc2"/>
-      <test name="org.postgresql.test.jdbc2.optional.OptionalTestSuite" outfile="${testResultsDir}/jdbc2optional"/>
-      <test name="org.postgresql.test.jdbc3.Jdbc3TestSuite" outfile="${testResultsDir}/jdbc3"/>
-      <test name="org.postgresql.test.xa.XATestSuite" outfile="${testResultsDir}/xa"/>
-      <test name="org.postgresql.test.extensions.ExtensionsSuite" outfile="${testResultsDir}/extensions"/>
-      <test name="org.postgresql.test.jdbc4.Jdbc4TestSuite" if="jdbc4tests" outfile="${testResultsDir}/jdbc4"/>
-      <test name="org.postgresql.test.ssl.SslTestSuite" if="jdbc4tests" outfile="${testResultsDir}/ssl"/>
+      <test name="com.foundationdb.sql.jdbc.jdbc2.Jdbc2TestSuite" outfile="${testResultsDir}/jdbc2"/>
+      <test name="com.foundationdb.sql.jdbc.jdbc2.optional.OptionalTestSuite" outfile="${testResultsDir}/jdbc2optional"/>
+      <test name="com.foundationdb.sql.jdbc.jdbc3.Jdbc3TestSuite" outfile="${testResultsDir}/jdbc3"/>
+      <test name="com.foundationdb.sql.jdbc.xa.XATestSuite" outfile="${testResultsDir}/xa"/>
+      <test name="com.foundationdb.sql.jdbc.extensions.ExtensionsSuite" outfile="${testResultsDir}/extensions"/>
+      <test name="com.foundationdb.sql.jdbc.jdbc4.Jdbc4TestSuite" if="jdbc4tests" outfile="${testResultsDir}/jdbc4"/>
+      <test name="com.foundationdb.sql.jdbc.ssl.SslTestSuite" if="jdbc4tests" outfile="${testResultsDir}/ssl"/>
     </junit>
   </target>
     
