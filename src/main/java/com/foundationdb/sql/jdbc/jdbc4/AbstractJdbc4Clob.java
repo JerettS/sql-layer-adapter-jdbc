@@ -21,7 +21,7 @@ public abstract class AbstractJdbc4Clob extends com.foundationdb.sql.jdbc.jdbc3.
     public synchronized Reader getCharacterStream(long pos, long length) throws SQLException
     {
         checkFreed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getCharacterStream(long, long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getCharacterStream(long, long)");
     }
 
 }

@@ -23,7 +23,7 @@ public abstract class AbstractJdbc4DatabaseMetaData extends com.foundationdb.sql
 
     public RowIdLifetime getRowIdLifetime() throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getRowIdLifetime()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getRowIdLifetime()");
     }
 
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException
@@ -84,12 +84,12 @@ public abstract class AbstractJdbc4DatabaseMetaData extends com.foundationdb.sql
 
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getFunction(String, String, String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getFunction(String, String, String)");
     }
 
     public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getFunctionColumns(String, String, String, String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getFunctionColumns(String, String, String, String)");
     }
 
     public int getJDBCMajorVersion() throws SQLException
@@ -114,7 +114,7 @@ public abstract class AbstractJdbc4DatabaseMetaData extends com.foundationdb.sql
 
     public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getPseudoColumns(String, String, String, String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getPseudoColumns(String, String, String, String)");
     }
 
     public boolean generatedKeyAlwaysReturned() throws SQLException {

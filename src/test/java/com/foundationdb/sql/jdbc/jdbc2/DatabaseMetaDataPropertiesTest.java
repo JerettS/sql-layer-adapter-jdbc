@@ -15,7 +15,7 @@ import java.sql.*;
 
 /*
  * TestCase to test the internal functionality of
- * org.postgresql.jdbc2.DatabaseMetaData's various properties.
+ * com.foundationdb.sql.jdbc.jdbc2.DatabaseMetaData's various properties.
  * Methods which return a ResultSet are tested elsewhere.
  * This avoids a complicated setUp/tearDown for something like
  * assertTrue(dbmd.nullPlusNonNullIsNull());
@@ -240,9 +240,9 @@ public class DatabaseMetaDataPropertiesTest extends TestCase
         assertNotNull(dbmd);
         
         if (dbmd.getDriverVersion().startsWith("PostgreSQL")) {
-            assertTrue(dbmd.getDriverVersion().equals(org.postgresql.Driver.getVersion()));
-            assertTrue(dbmd.getDriverMajorVersion() == org.postgresql.Driver.MAJORVERSION);
-            assertTrue("dbmd minor version is: " + dbmd.getDriverMinorVersion() , dbmd.getDriverMinorVersion() == org.postgresql.Driver.MINORVERSION);
+            assertTrue(dbmd.getDriverVersion().equals(com.foundationdb.sql.jdbc.Driver.getVersion()));
+            assertTrue(dbmd.getDriverMajorVersion() == com.foundationdb.sql.jdbc.Driver.MAJORVERSION);
+            assertTrue("dbmd minor version is: " + dbmd.getDriverMinorVersion() , dbmd.getDriverMinorVersion() == com.foundationdb.sql.jdbc.Driver.MINORVERSION);
         } else if (dbmd.getDriverVersion().startsWith("FoundationDB")) {
             assertTrue(dbmd.getDriverVersion().equals(com.foundationdb.sql.jdbc.Driver.getVersion()));
             assertTrue(dbmd.getDriverMajorVersion() == com.foundationdb.sql.jdbc.Driver.MAJORVERSION);

@@ -55,7 +55,7 @@ public class Jdbc4Array extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Arr
 
     public void free() throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "free()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "free()");
     }
 
 }

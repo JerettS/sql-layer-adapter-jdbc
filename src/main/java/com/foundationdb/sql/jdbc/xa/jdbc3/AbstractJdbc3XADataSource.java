@@ -55,7 +55,7 @@ public class AbstractJdbc3XADataSource extends BaseDataSource implements Referen
     }
 
     public String getDescription() {
-        return "JDBC3 XA-enabled DataSource from " + org.postgresql.Driver.getVersion();
+        return "JDBC3 XA-enabled DataSource from " + com.foundationdb.sql.jdbc.Driver.getVersion();
     }
 
     /**

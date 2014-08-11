@@ -5,11 +5,11 @@
 *
 *-------------------------------------------------------------------------
 */
-package org.postgresql.ds;
+package com.foundationdb.sql.jdbc.ds;
 
 import javax.sql.ConnectionPoolDataSource;
 
-import org.postgresql.ds.common.*;
+import com.foundationdb.sql.jdbc.ds.common.*;
 
 /**
  * PostgreSQL implementation of ConnectionPoolDataSource.  The app server or

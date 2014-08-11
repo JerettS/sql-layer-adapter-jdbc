@@ -16,7 +16,7 @@ import com.foundationdb.sql.jdbc.TestUtil;
 
 public class XATestSuite extends TestSuite {
     public static TestSuite suite() throws Exception {
-        Class.forName("org.postgresql.Driver");
+        //Class.forName("org.postgresql.Driver");
         Class.forName("com.foundationdb.sql.jdbc.Driver");
         TestSuite suite = new TestSuite();
         Connection connection = TestUtil.openDB();

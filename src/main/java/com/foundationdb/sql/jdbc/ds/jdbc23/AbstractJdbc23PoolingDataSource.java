@@ -74,7 +74,7 @@ public abstract class AbstractJdbc23PoolingDataSource extends BaseDataSource
      */
     public String getDescription()
     {
-        return "Pooling DataSource '" + dataSourceName + " from " + org.postgresql.Driver.getVersion();
+        return "Pooling DataSource '" + dataSourceName + " from " + com.foundationdb.sql.jdbc.Driver.getVersion();
     }
 
     /**

@@ -1,4 +1,4 @@
-package org.postgresql.xa;
+package com.foundationdb.sql.jdbc.xa;
 
 import javax.sql.XADataSource;
 

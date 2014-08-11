@@ -38,7 +38,7 @@ public class ResultSetMetaDataTest extends TestCase
         TestUtil.dropSequence( conn, "serialtest_a_seq");
         TestUtil.dropSequence( conn, "serialtest_b_seq");
         if (TestUtil.isFoundationDBServer(conn)) {
-            TestUtil.createTable(conn, "serialtest", "a serial, b bigint, c int");
+            TestUtil.createTable(conn, "serialtest", "a serial primary key, b bigint, c int");
             TestUtil.createTable(conn, "alltypes", "bool boolean, i2 smallint, i4 int, i8 bigint, num numeric(10,2), re real, fl float, ch char(3), vc varchar(3), tx text, d date, t time, tz time, ts timestamp, tsz timestamp, bt tinyblob");
             TestUtil.createTable(conn, "sizetest", "fixedchar char(5), fixedvarchar varchar(5), unfixedvarchar text, txt text, bytearr tinyblob, num64 numeric(6,4), num60 numeric(6,0), num numeric, ip int");
         } else {

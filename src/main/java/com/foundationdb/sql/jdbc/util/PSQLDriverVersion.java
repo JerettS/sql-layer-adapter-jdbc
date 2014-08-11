@@ -7,7 +7,7 @@
 */
 package com.foundationdb.sql.jdbc.util;
 
-import org.postgresql.Driver;
+import com.foundationdb.sql.jdbc.Driver;
 
 /**
  * This class holds the current build number and a utility program to print
@@ -22,7 +22,7 @@ public class PSQLDriverVersion {
     public final static int buildNumber = 6;
 
     public static void main(String args[]) {
-        java.net.URL url = Driver.class.getResource("/org/postgresql/Driver.class");
+        java.net.URL url = Driver.class.getResource("/com/foundationdb/sql/jdbc/Driver.class");
         System.out.println(Driver.getVersion());
         System.out.println("Found in: " + url);
     }

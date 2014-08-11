@@ -294,7 +294,7 @@ public class QueryExecutorImpl implements QueryExecutor {
     }
 
     public void fetch(ResultCursor cursor, ResultHandler handler, int rows) throws SQLException {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "fetch(ResultCursor,ResultHandler,int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "fetch(ResultCursor,ResultHandler,int)");
     }
 
     private void execute(V2Query query,

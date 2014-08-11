@@ -27,7 +27,7 @@ public class DatabaseMetaDataTest extends TestCase
     {
         _conn = TestUtil.openDB();
         TestUtil.dropSequence(_conn, "sercoltest_a_seq");
-        TestUtil.createTable(_conn, "sercoltest", "a serial, b int");
+        TestUtil.createTable(_conn, "sercoltest", "a serial primary key, b int");
     }
 
     protected void tearDown() throws Exception

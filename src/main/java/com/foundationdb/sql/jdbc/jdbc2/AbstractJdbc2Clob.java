@@ -47,7 +47,7 @@ public abstract class AbstractJdbc2Clob extends AbstractJdbc2BlobClob
     public synchronized long position(String pattern, long start) throws SQLException
     {
         checkFreed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "position(String,long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "position(String,long)");
     }
 
     /*
@@ -56,7 +56,7 @@ public abstract class AbstractJdbc2Clob extends AbstractJdbc2BlobClob
     public synchronized long position(Clob pattern, long start) throws SQLException
     {
         checkFreed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "position(Clob,start)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "position(Clob,start)");
     }
 
 }

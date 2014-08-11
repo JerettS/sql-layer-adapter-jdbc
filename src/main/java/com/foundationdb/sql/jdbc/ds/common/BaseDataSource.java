@@ -33,7 +33,7 @@ public abstract class BaseDataSource implements Referenceable
     static {
         try
         {
-            Class.forName("org.postgresql.Driver");
+            //Class.forName("org.postgresql.Driver");
             Class.forName("com.foundationdb.Driver");
         }
         catch (ClassNotFoundException e)

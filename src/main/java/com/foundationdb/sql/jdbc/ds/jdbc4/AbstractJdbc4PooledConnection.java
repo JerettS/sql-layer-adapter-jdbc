@@ -32,7 +32,7 @@ public abstract class AbstractJdbc4PooledConnection extends AbstractJdbc23Pooled
 
     public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getParentLogger()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getParentLogger()");
     }
 
 }

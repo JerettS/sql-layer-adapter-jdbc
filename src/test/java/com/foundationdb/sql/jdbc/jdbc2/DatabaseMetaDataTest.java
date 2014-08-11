@@ -42,7 +42,7 @@ public class DatabaseMetaDataTest extends TestCase
         }
         TestUtil.dropSequence( con, "sercoltest_b_seq");
         if (TestUtil.isFoundationDBServer(con)) {
-            TestUtil.createTable( con, "sercoltest", "a int, b serial");
+            TestUtil.createTable( con, "sercoltest", "a int, b serial primary key");
         } else {
             TestUtil.dropSequence( con, "sercoltest_c_seq");
             TestUtil.createTable( con, "sercoltest", "a int, b serial, c bigserial");

@@ -36,7 +36,7 @@ public abstract class AbstractJdbc3Clob extends com.foundationdb.sql.jdbc.jdbc2.
     public synchronized int setString(long pos, String str) throws SQLException
     {
         checkFreed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setString(long,str)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "setString(long,str)");
     }
 
     /**
@@ -60,7 +60,7 @@ public abstract class AbstractJdbc3Clob extends com.foundationdb.sql.jdbc.jdbc2.
     public synchronized int setString(long pos, String str, int offset, int len) throws SQLException
     {
         checkFreed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setString(long,String,int,int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "setString(long,String,int,int)");
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class AbstractJdbc3Clob extends com.foundationdb.sql.jdbc.jdbc2.
     public synchronized java.io.OutputStream setAsciiStream(long pos) throws SQLException
     {
         checkFreed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setAsciiStream(long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "setAsciiStream(long)");
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class AbstractJdbc3Clob extends com.foundationdb.sql.jdbc.jdbc2.
     public synchronized java.io.Writer setCharacterStream(long pos) throws SQLException
     {
         checkFreed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setCharacteStream(long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "setCharacteStream(long)");
     }
 
 }

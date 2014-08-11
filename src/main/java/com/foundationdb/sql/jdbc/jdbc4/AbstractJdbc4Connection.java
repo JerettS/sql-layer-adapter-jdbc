@@ -48,19 +48,19 @@ abstract class AbstractJdbc4Connection extends com.foundationdb.sql.jdbc.jdbc3g.
     public Clob createClob() throws SQLException
     {
         checkClosed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "createClob()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "createClob()");
     }
 
     public Blob createBlob() throws SQLException
     {
         checkClosed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "createBlob()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "createBlob()");
     }
 
     public NClob createNClob() throws SQLException
     {
         checkClosed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "createNClob()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "createNClob()");
     }
 
     public SQLXML createSQLXML() throws SQLException
@@ -72,7 +72,7 @@ abstract class AbstractJdbc4Connection extends com.foundationdb.sql.jdbc.jdbc3g.
     public Struct createStruct(String typeName, Object[] attributes) throws SQLException
     {
         checkClosed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "createStruct(String, Object[])");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "createStruct(String, Object[])");
     }
 
     public Array createArrayOf(String typeName, Object[] elements) throws SQLException
@@ -203,7 +203,7 @@ abstract class AbstractJdbc4Connection extends com.foundationdb.sql.jdbc.jdbc3g.
     public <T> T createQueryObject(Class<T> ifc) throws SQLException
     {
         checkClosed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "createQueryObject(Class<T>)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "createQueryObject(Class<T>)");
     }
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException
@@ -224,30 +224,30 @@ abstract class AbstractJdbc4Connection extends com.foundationdb.sql.jdbc.jdbc3g.
 
     public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getParentLogger()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getParentLogger()");
     }
 
     public void setSchema(String schema) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setSchema(String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "setSchema(String)");
     }
 
     public String getSchema() throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getSchema()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getSchema()");
     }
 
     public void abort(Executor executor) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "abort(Executor)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "abort(Executor)");
     }
 
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setNetworkTimeout(Executor, int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "setNetworkTimeout(Executor, int)");
     }
 
     public int getNetworkTimeout() throws SQLException {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getNetworkTimeout()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getNetworkTimeout()");
     }
 
 }

@@ -16,8 +16,8 @@ import com.foundationdb.sql.jdbc.core.*;
 
 /**
  * This class defines methods of the jdbc3 specification.  This class extends
- * org.postgresql.jdbc2.AbstractJdbc2ResultSet which provides the jdbc2
- * methods.  The real Statement class (for jdbc3) is org.postgresql.jdbc3.Jdbc3ResultSet
+ * jdbc2.AbstractJdbc2ResultSet which provides the jdbc2
+ * methods.  The real Statement class (for jdbc3) is jdbc3.Jdbc3ResultSet
  */
 public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2ResultSet
 {
@@ -53,7 +53,7 @@ public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.j
      */
     public java.net.URL getURL(int columnIndex) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getURL(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getURL(int)");
     }
 
     /**
@@ -71,7 +71,7 @@ public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.j
      */
     public java.net.URL getURL(String columnName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getURL(String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getURL(String)");
     }
 
     /**
@@ -88,7 +88,7 @@ public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.j
      */
     public void updateRef(int columnIndex, java.sql.Ref x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateRef(int,Ref)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateRef(int,Ref)");
     }
 
     /**
@@ -105,7 +105,7 @@ public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.j
      */
     public void updateRef(String columnName, java.sql.Ref x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateRef(String,Ref)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateRef(String,Ref)");
     }
 
     /**
@@ -122,7 +122,7 @@ public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.j
      */
     public void updateBlob(int columnIndex, java.sql.Blob x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateBlob(int,Blob)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateBlob(int,Blob)");
     }
 
     /**
@@ -139,7 +139,7 @@ public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.j
      */
     public void updateBlob(String columnName, java.sql.Blob x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateBlob(String,Blob)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateBlob(String,Blob)");
     }
 
     /**
@@ -156,7 +156,7 @@ public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.j
      */
     public void updateClob(int columnIndex, java.sql.Clob x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateClob(int,Clob)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateClob(int,Clob)");
     }
 
     /**
@@ -173,7 +173,7 @@ public abstract class AbstractJdbc3ResultSet extends com.foundationdb.sql.jdbc.j
      */
     public void updateClob(String columnName, java.sql.Clob x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateClob(String,Clob)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateClob(String,Clob)");
     }
 
     /**

@@ -119,7 +119,7 @@ public abstract class AbstractJdbc2ResultSet implements BaseResultSet, com.found
     public java.net.URL getURL(int columnIndex) throws SQLException
     {
         checkClosed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getURL(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getURL(int)");
     }
 
 
@@ -583,7 +583,7 @@ public abstract class AbstractJdbc2ResultSet implements BaseResultSet, com.found
         if (map == null || map.isEmpty()) {
             return getObject(i);
         }
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getObjectImpl(int,Map)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getObjectImpl(int,Map)");
     }
 
 
@@ -597,7 +597,7 @@ public abstract class AbstractJdbc2ResultSet implements BaseResultSet, com.found
     {
         checkClosed();
         //The backend doesn't yet have SQL3 REF types
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getRef(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getRef(int)");
     }
 
 

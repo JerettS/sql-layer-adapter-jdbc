@@ -144,7 +144,7 @@ public abstract class AbstractJdbc2Array
         // for now maps aren't supported.
         if (map != null && !map.isEmpty())
         {
-            throw org.postgresql.Driver.notImplemented(this.getClass(), "getArrayImpl(long,int,Map)");
+            throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getArrayImpl(long,int,Map)");
         }
 
         // array index is out of range
@@ -361,7 +361,7 @@ public abstract class AbstractJdbc2Array
                     return arrElemBuilder.baseType();
                 }
 
-                throw org.postgresql.Driver.notImplemented(this.getClass(),
+                throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(),
                         "readBinaryArray(data,oid)");
         }
     }
@@ -768,7 +768,7 @@ public abstract class AbstractJdbc2Array
             if (connection.getLogger().logDebug())
                 connection.getLogger().debug("getArrayImpl(long,int,Map) with " + getBaseTypeName());
 
-            throw org.postgresql.Driver.notImplemented(this.getClass(), "getArrayImpl(long,int,Map)");
+            throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getArrayImpl(long,int,Map)");
         }
 
         return ret;
@@ -807,7 +807,7 @@ public abstract class AbstractJdbc2Array
         // for now maps aren't supported.
         if (map != null && !map.isEmpty())
         {
-            throw org.postgresql.Driver.notImplemented(this.getClass(), "getResultSetImpl(long,int,Map)");
+            throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getResultSetImpl(long,int,Map)");
         }
 
         // array index is out of range

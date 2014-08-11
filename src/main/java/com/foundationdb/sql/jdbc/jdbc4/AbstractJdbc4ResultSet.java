@@ -25,7 +25,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public RowId getRowId(int columnIndex) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getRowId(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getRowId(int)");
     }
 
     public RowId getRowId(String columnName) throws SQLException
@@ -35,7 +35,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateRowId(int columnIndex, RowId x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateRowId(int, RowId)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateRowId(int, RowId)");
     }
 
     public void updateRowId(String columnName, RowId x) throws SQLException
@@ -45,7 +45,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public int getHoldability() throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getHoldability()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getHoldability()");
     }
 
     public boolean isClosed() throws SQLException
@@ -55,7 +55,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateNString(int columnIndex, String nString) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateNString(int, String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateNString(int, String)");
     }
 
     public void updateNString(String columnName, String nString) throws SQLException
@@ -65,7 +65,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateNClob(int columnIndex, NClob nClob) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateNClob(int, NClob)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateNClob(int, NClob)");
     }
 
     public void updateNClob(String columnName, NClob nClob) throws SQLException
@@ -75,7 +75,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateNClob(int columnIndex, Reader reader) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateNClob(int, Reader)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateNClob(int, Reader)");
     }
 
     public void updateNClob(String columnName, Reader reader) throws SQLException
@@ -85,7 +85,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateNClob(int, Reader, long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateNClob(int, Reader, long)");
     }
 
     public void updateNClob(String columnName, Reader reader, long length) throws SQLException
@@ -95,7 +95,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public NClob getNClob(int columnIndex) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getNClob(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getNClob(int)");
     }
 
     public NClob getNClob(String columnName) throws SQLException
@@ -105,7 +105,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateBlob(int, InputStream, long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateBlob(int, InputStream, long)");
     }
 
     public void updateBlob(String columnName, InputStream inputStream, long length) throws SQLException
@@ -115,7 +115,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateBlob(int, InputStream)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateBlob(int, InputStream)");
     }
 
     public void updateBlob(String columnName, InputStream inputStream) throws SQLException
@@ -125,7 +125,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateClob(int columnIndex, Reader reader, long length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateClob(int, Reader, long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateClob(int, Reader, long)");
     }
 
     public void updateClob(String columnName, Reader reader, long length) throws SQLException
@@ -135,7 +135,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateClob(int columnIndex, Reader reader) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateClob(int, Reader)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateClob(int, Reader)");
     }
 
     public void updateClob(String columnName, Reader reader) throws SQLException
@@ -169,7 +169,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public String getNString(int columnIndex) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getNString(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getNString(int)");
     }
 
     public String getNString(String columnName) throws SQLException
@@ -179,7 +179,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public Reader getNCharacterStream(int columnIndex) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getNCharacterStream(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getNCharacterStream(int)");
     }
 
     public Reader getNCharacterStream(String columnName) throws SQLException
@@ -189,7 +189,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateNCharacterStream(int columnIndex, Reader x, int length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateNCharacterStream(int, Reader, int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateNCharacterStream(int, Reader, int)");
     }
 
     public void updateNCharacterStream(String columnName, Reader x, int length) throws SQLException
@@ -199,7 +199,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateNCharacterStream(int columnIndex, Reader x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateNCharacterStream(int, Reader)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateNCharacterStream(int, Reader)");
     }
 
     public void updateNCharacterStream(String columnName, Reader x) throws SQLException
@@ -209,7 +209,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateNCharacterStream(int columnIndex, Reader x, long length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateNCharacterStream(int, Reader, long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateNCharacterStream(int, Reader, long)");
     }
 
     public void updateNCharacterStream(String columnName, Reader x, long length) throws SQLException
@@ -219,7 +219,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateCharacterStream(int columnIndex, Reader reader, long length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateCharaceterStream(int, Reader, long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateCharaceterStream(int, Reader, long)");
     }
 
     public void updateCharacterStream(String columnName, Reader reader, long length) throws SQLException
@@ -229,7 +229,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateCharacterStream(int columnIndex, Reader reader) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateCharaceterStream(int, Reader)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateCharaceterStream(int, Reader)");
     }
 
     public void updateCharacterStream(String columnName, Reader reader) throws SQLException
@@ -239,7 +239,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateBinaryStream(int columnIndex, InputStream inputStream, long length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateBinaryStream(int, InputStream, long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateBinaryStream(int, InputStream, long)");
     }
 
     public void updateBinaryStream(String columnName, InputStream inputStream, long length) throws SQLException
@@ -249,7 +249,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateBinaryStream(int columnIndex, InputStream inputStream) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateBinaryStream(int, InputStream)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateBinaryStream(int, InputStream)");
     }
 
     public void updateBinaryStream(String columnName, InputStream inputStream) throws SQLException
@@ -259,7 +259,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateAsciiStream(int columnIndex, InputStream inputStream, long length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateAsciiStream(int, InputStream, long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateAsciiStream(int, InputStream, long)");
     }
 
     public void updateAsciiStream(String columnName, InputStream inputStream, long length) throws SQLException
@@ -269,7 +269,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public void updateAsciiStream(int columnIndex, InputStream inputStream) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "updateAsciiStream(int, InputStream)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "updateAsciiStream(int, InputStream)");
     }
 
     public void updateAsciiStream(String columnName, InputStream inputStream) throws SQLException
@@ -303,7 +303,7 @@ abstract class AbstractJdbc4ResultSet extends com.foundationdb.sql.jdbc.jdbc3g.A
 
     public <T> T getObject(int columnIndex, Class<T> type) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getObject(int, Class<T>)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getObject(int, Class<T>)");
     }
 
     public <T> T getObject(String columnLabel, Class<T> type) throws SQLException

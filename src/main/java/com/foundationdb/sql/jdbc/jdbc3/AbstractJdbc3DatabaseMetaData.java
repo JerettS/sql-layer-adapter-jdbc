@@ -122,7 +122,7 @@ public abstract class AbstractJdbc3DatabaseMetaData extends com.foundationdb.sql
     public ResultSet getSuperTypes(String catalog, String schemaPattern,
                                    String typeNamePattern) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getSuperTypes(String,String,String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getSuperTypes(String,String,String)");
     }
 
     /**
@@ -161,7 +161,7 @@ public abstract class AbstractJdbc3DatabaseMetaData extends com.foundationdb.sql
     public ResultSet getSuperTables(String catalog, String schemaPattern,
                                     String tableNamePattern) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getSuperTables(String,String,String,String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getSuperTables(String,String,String,String)");
     }
 
     /**
@@ -238,7 +238,7 @@ public abstract class AbstractJdbc3DatabaseMetaData extends com.foundationdb.sql
                                    String typeNamePattern, String attributeNamePattern)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getAttributes(String,String,String,String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getAttributes(String,String,String,String)");
     }
 
     /**

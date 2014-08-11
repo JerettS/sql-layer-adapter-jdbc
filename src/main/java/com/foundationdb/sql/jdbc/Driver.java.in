@@ -10,9 +10,9 @@ package com.foundationdb.sql.jdbc;
 import java.sql.*;
 import java.util.*;
 
-import org.postgresql.util.PSQLState;
-import org.postgresql.util.PSQLDriverVersion;
-import org.postgresql.util.GT;
+import com.foundationdb.sql.jdbc.util.PSQLState;
+import com.foundationdb.sql.jdbc.util.PSQLDriverVersion;
+import com.foundationdb.sql.jdbc.util.GT;
 
 /**
  * The Java SQL framework allows for multiple database drivers.  Each
@@ -30,10 +30,10 @@ import org.postgresql.util.GT;
  * and register it with the DriverManager. This means that a user can load
  * and register a driver by doing Class.forName("foo.bah.Driver")
  *
- * @see org.postgresql.PGConnection
+ * @see com.foundationdb.sql.jdbc.PGConnection
  * @see java.sql.Driver
  */
-public class Driver extends org.postgresql.DriverBase
+public class Driver extends com.foundationdb.sql.jdbc.DriverBase
 {
 
     static

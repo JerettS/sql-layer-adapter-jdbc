@@ -44,7 +44,7 @@ public class AbstractJdbc23ConnectionPoolDataSource extends BaseDataSource imple
      */
     public String getDescription()
     {
-        return "ConnectionPoolDataSource from " + org.postgresql.Driver.getVersion();
+        return "ConnectionPoolDataSource from " + com.foundationdb.sql.jdbc.Driver.getVersion();
     }
 
     /**

@@ -21,7 +21,7 @@ public abstract class AbstractJdbc4Blob extends com.foundationdb.sql.jdbc.jdbc3.
     public synchronized java.io.InputStream getBinaryStream(long pos, long length) throws SQLException
     {
         checkFreed();
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getBinaryStream(long, long)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getBinaryStream(long, long)");
     }
 
 }

@@ -7,7 +7,7 @@
 */
 package com.foundationdb.sql.jdbc.jdbc2;
 
-import org.postgresql.Driver;
+import com.foundationdb.sql.jdbc.Driver;
 
 import com.foundationdb.sql.jdbc.TestUtil;
 
@@ -17,7 +17,7 @@ import java.sql.*;
 import java.util.Properties;
 
 /*
- * Tests the dynamically created class org.postgresql.Driver
+ * Tests the dynamically created class com.foundationdb.sql.jdbc.Driver
  *
  */
 public class DriverTest extends TestCase
@@ -37,14 +37,14 @@ public class DriverTest extends TestCase
         TestUtil.initDriver(); // Set up log levels, etc.
 
         // Load the driver (note clients should never do it this way!)
-        org.postgresql.Driver drv = new org.postgresql.Driver();
+        com.foundationdb.sql.jdbc.Driver drv = new com.foundationdb.sql.jdbc.Driver();
         assertNotNull(drv);
 
         // These are always correct
-        verifyUrl(drv, drv.getProtocol() + "test", "localhost", "5432", "test");
-        verifyUrl(drv, drv.getProtocol() + "//localhost/test", "localhost", "5432", "test");
+        verifyUrl(drv, drv.getProtocol() + "test", "localhost", "15432", "test");
+        verifyUrl(drv, drv.getProtocol() + "//localhost/test", "localhost", "15432", "test");
         verifyUrl(drv, drv.getProtocol() + "//localhost:5432/test", "localhost", "5432", "test");
-        verifyUrl(drv, drv.getProtocol() + "//127.0.0.1/anydbname", "127.0.0.1", "5432", "anydbname");
+        verifyUrl(drv, drv.getProtocol() + "//127.0.0.1/anydbname", "127.0.0.1", "15432", "anydbname");
         verifyUrl(drv, drv.getProtocol() + "//127.0.0.1:5433/hidden", "127.0.0.1", "5433", "hidden");
         verifyUrl(drv, drv.getProtocol() + "//[::1]:5740/db", "[::1]", "5740", "db");
 
@@ -55,9 +55,9 @@ public class DriverTest extends TestCase
         assertTrue(!drv.acceptsURL("jdbc:postgresql://localhost:5432a/test"));
         
         // failover urls
-        verifyUrl(drv, drv.getProtocol() + "//localhost,127.0.0.1:5432/test", "localhost,127.0.0.1", "5432,5432", "test");
+        verifyUrl(drv, drv.getProtocol() + "//localhost,127.0.0.1:5432/test", "localhost,127.0.0.1", "15432,5432", "test");
         verifyUrl(drv, drv.getProtocol() + "//localhost:5433,127.0.0.1:5432/test", "localhost,127.0.0.1", "5433,5432", "test");
-        verifyUrl(drv, drv.getProtocol() + "//[::1],[::1]:5432/db", "[::1],[::1]", "5432,5432", "db");
+        verifyUrl(drv, drv.getProtocol() + "//[::1],[::1]:5432/db", "[::1],[::1]", "15432,5432", "db");
         verifyUrl(drv, drv.getProtocol() + "//[::1]:5740,127.0.0.1:5432/db", "[::1],127.0.0.1", "5740,5432", "db");
     }
 

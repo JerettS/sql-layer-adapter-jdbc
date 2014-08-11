@@ -34,12 +34,12 @@ import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * This class defines methods of the jdbc2 specification.
- * The real Statement class (for jdbc2) is org.postgresql.jdbc2.Jdbc2Statement
+ * The real Statement class (for jdbc2) is com.foundationdb.sql.jdbc.jdbc2.Jdbc2Statement
  */
 public abstract class AbstractJdbc2Statement implements BaseStatement
 {
     // only for testing purposes. even single shot statements will use binary transfers
-    public static final boolean ForceBinaryTransfers = Boolean.getBoolean("org.postgresql.forcebinary");
+    public static final boolean ForceBinaryTransfers = Boolean.getBoolean("com.foundationdb.sql.jdbc.forcebinary");
 
     protected ArrayList batchStatements = null;
     protected ArrayList batchParameters = null;
@@ -1431,7 +1431,7 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
      * it to the database.
      *
      * <p>Implementation note:
-     * <br>With org.postgresql, this creates a large object, and stores the
+     * <br>With com.foundationdb.sql.jdbc, this creates a large object, and stores the
      * objects oid in this column.
      *
      * @param parameterIndex the first parameter is 1...
@@ -3247,7 +3247,7 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
 
     public void setRef(int i, Ref x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setRef(int,Ref)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "setRef(int,Ref)");
     }
 
     public void setDate(int i, java.sql.Date d, java.util.Calendar cal) throws SQLException
@@ -3372,12 +3372,12 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
 
     public Blob getBlob(int i) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getBlob(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getBlob(int)");
     }
 
     public Clob getClob(int i) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getClob(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getClob(int)");
     }
 
     public Object getObjectImpl(int i, java.util.Map map) throws SQLException
@@ -3385,12 +3385,12 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
         if (map == null || map.isEmpty()) {
             return getObject(i);
         }
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getObjectImpl(int,Map)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getObjectImpl(int,Map)");
     }
 
     public Ref getRef(int i) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getRef(int)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getRef(int)");
     }
 
     public java.sql.Date getDate(int i, java.util.Calendar cal) throws SQLException
@@ -3441,7 +3441,7 @@ public abstract class AbstractJdbc2Statement implements BaseStatement
     // no custom types allowed yet..
     public void registerOutParameter(int parameterIndex, int sqlType, String typeName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "registerOutParameter(int,int,String)");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "registerOutParameter(int,int,String)");
     }
 
     private synchronized void killTimer()

@@ -29,7 +29,7 @@ public abstract class AbstractJdbc23SimpleDataSource extends BaseDataSource impl
      */
     public String getDescription()
     {
-        return "Non-Pooling DataSource from " + org.postgresql.Driver.getVersion();
+        return "Non-Pooling DataSource from " + com.foundationdb.sql.jdbc.Driver.getVersion();
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException

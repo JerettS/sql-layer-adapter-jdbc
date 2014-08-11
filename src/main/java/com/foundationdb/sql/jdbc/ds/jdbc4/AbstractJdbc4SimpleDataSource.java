@@ -30,7 +30,7 @@ public abstract class AbstractJdbc4SimpleDataSource extends AbstractJdbc23Simple
 
     public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getParentLogger()");
+        throw com.foundationdb.sql.jdbc.Driver.notImplemented(this.getClass(), "getParentLogger()");
     }
 
 }

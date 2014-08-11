@@ -34,7 +34,7 @@ public class DatabaseEncodingTest extends TestCase
     }
 
     private static final int STEP = 100;
-    private static final int COMMIT_ROWS = 500;
+    private static final int COMMIT_ROWS = 100;
 
     // Set up the fixture for this testcase: a connection to a database with
     // a table for this test.

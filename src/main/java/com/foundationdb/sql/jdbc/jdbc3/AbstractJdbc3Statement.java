@@ -12,6 +12,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.foundationdb.sql.jdbc.Driver;
 import com.foundationdb.sql.jdbc.core.BaseConnection;
 import com.foundationdb.sql.jdbc.core.Field;
 import com.foundationdb.sql.jdbc.core.QueryExecutor;
@@ -22,8 +23,8 @@ import com.foundationdb.sql.jdbc.util.PSQLState;
 
 /**
  * This class defines methods of the jdbc3 specification.  This class extends
- * org.postgresql.jdbc2.AbstractJdbc2Statement which provides the jdbc2
- * methods.  The real Statement class (for jdbc2) is org.postgresql.jdbc3.Jdbc3Statement
+ * jdbc2.AbstractJdbc2Statement which provides the jdbc2
+ * methods.  The real Statement class (for jdbc2) is jdbc3.Jdbc3Statement
  */
 public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.jdbc2.AbstractJdbc2Statement
 {
@@ -391,7 +392,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setURL(int parameterIndex, java.net.URL x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setURL(int,URL)");
+        throw Driver.notImplemented(this.getClass(), "setURL(int,URL)");
     }
 
     /**
@@ -448,7 +449,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void registerOutParameter(String parameterName, int sqlType)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "registerOutParameter(String,int)");
+        throw Driver.notImplemented(this.getClass(), "registerOutParameter(String,int)");
     }
 
     /**
@@ -475,7 +476,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void registerOutParameter(String parameterName, int sqlType, int scale)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "registerOutParameter(String,int,int)");
+        throw Driver.notImplemented(this.getClass(), "registerOutParameter(String,int,int)");
     }
 
     /**
@@ -515,7 +516,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void registerOutParameter (String parameterName, int sqlType, String typeName)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "registerOutParameter(String,int,String)");
+        throw Driver.notImplemented(this.getClass(), "registerOutParameter(String,int,String)");
     }
 
     /**
@@ -534,7 +535,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public java.net.URL getURL(int parameterIndex) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getURL(String)");
+        throw Driver.notImplemented(this.getClass(), "getURL(String)");
     }
 
     /**
@@ -551,7 +552,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setURL(String parameterName, java.net.URL val) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setURL(String,URL)");
+        throw Driver.notImplemented(this.getClass(), "setURL(String,URL)");
     }
 
     /**
@@ -566,7 +567,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setNull(String parameterName, int sqlType) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setNull(String,int)");
+        throw Driver.notImplemented(this.getClass(), "setNull(String,int)");
     }
 
     /**
@@ -582,7 +583,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setBoolean(String parameterName, boolean x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setBoolean(String,boolean)");
+        throw Driver.notImplemented(this.getClass(), "setBoolean(String,boolean)");
     }
 
     /**
@@ -598,7 +599,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setByte(String parameterName, byte x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setByte(String,byte)");
+        throw Driver.notImplemented(this.getClass(), "setByte(String,byte)");
     }
 
     /**
@@ -614,7 +615,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setShort(String parameterName, short x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setShort(String,short)");
+        throw Driver.notImplemented(this.getClass(), "setShort(String,short)");
     }
 
     /**
@@ -630,7 +631,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setInt(String parameterName, int x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setInt(String,int)");
+        throw Driver.notImplemented(this.getClass(), "setInt(String,int)");
     }
 
     /**
@@ -646,7 +647,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setLong(String parameterName, long x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setLong(String,long)");
+        throw Driver.notImplemented(this.getClass(), "setLong(String,long)");
     }
 
     /**
@@ -662,7 +663,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setFloat(String parameterName, float x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setFloat(String,float)");
+        throw Driver.notImplemented(this.getClass(), "setFloat(String,float)");
     }
 
     /**
@@ -678,7 +679,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setDouble(String parameterName, double x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setDouble(String,double)");
+        throw Driver.notImplemented(this.getClass(), "setDouble(String,double)");
     }
 
     /**
@@ -695,7 +696,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setBigDecimal(String parameterName, BigDecimal x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setBigDecimal(String,BigDecimal)");
+        throw Driver.notImplemented(this.getClass(), "setBigDecimal(String,BigDecimal)");
     }
 
     /**
@@ -714,7 +715,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setString(String parameterName, String x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setString(String,String)");
+        throw Driver.notImplemented(this.getClass(), "setString(String,String)");
     }
 
     /**
@@ -732,7 +733,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setBytes(String parameterName, byte x[]) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setBytes(String,byte)");
+        throw Driver.notImplemented(this.getClass(), "setBytes(String,byte)");
     }
 
     /**
@@ -749,7 +750,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setDate(String parameterName, java.sql.Date x)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setDate(String,Date)");
+        throw Driver.notImplemented(this.getClass(), "setDate(String,Date)");
     }
 
     /**
@@ -766,7 +767,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setTime(String parameterName, java.sql.Time x)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setTime(String,Time)");
+        throw Driver.notImplemented(this.getClass(), "setTime(String,Time)");
     }
 
     /**
@@ -784,7 +785,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setTimestamp(String parameterName, java.sql.Timestamp x)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setTimestamp(String,Timestamp)");
+        throw Driver.notImplemented(this.getClass(), "setTimestamp(String,Timestamp)");
     }
 
     /**
@@ -809,7 +810,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setAsciiStream(String parameterName, java.io.InputStream x, int length)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setAsciiStream(String,InputStream,int)");
+        throw Driver.notImplemented(this.getClass(), "setAsciiStream(String,InputStream,int)");
     }
 
     /**
@@ -833,7 +834,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setBinaryStream(String parameterName, java.io.InputStream x,
                                 int length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setBinaryStream(String,InputStream,int)");
+        throw Driver.notImplemented(this.getClass(), "setBinaryStream(String,InputStream,int)");
     }
 
     /**
@@ -871,7 +872,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setObject(String parameterName, Object x, int targetSqlType, int scale)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setObject(String,Object,int,int)");
+        throw Driver.notImplemented(this.getClass(), "setObject(String,Object,int,int)");
     }
 
     /**
@@ -890,7 +891,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setObject(String parameterName, Object x, int targetSqlType)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setObject(String,Object,int)");
+        throw Driver.notImplemented(this.getClass(), "setObject(String,Object,int)");
     }
 
     /**
@@ -927,7 +928,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public void setObject(String parameterName, Object x) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setObject(String,Object)");
+        throw Driver.notImplemented(this.getClass(), "setObject(String,Object)");
     }
 
 
@@ -955,7 +956,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
                                    java.io.Reader reader,
                                    int length) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setCharacterStream(String,Reader,int)");
+        throw Driver.notImplemented(this.getClass(), "setCharacterStream(String,Reader,int)");
     }
 
     /**
@@ -979,7 +980,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setDate(String parameterName, java.sql.Date x, Calendar cal)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setDate(String,Date,Calendar)");
+        throw Driver.notImplemented(this.getClass(), "setDate(String,Date,Calendar)");
     }
 
     /**
@@ -1003,7 +1004,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setTime(String parameterName, java.sql.Time x, Calendar cal)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setTime(String,Time,Calendar)");
+        throw Driver.notImplemented(this.getClass(), "setTime(String,Time,Calendar)");
     }
 
     /**
@@ -1027,7 +1028,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setTimestamp(String parameterName, java.sql.Timestamp x, Calendar cal)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setTimestamp(String,Timestamp,Calendar)");
+        throw Driver.notImplemented(this.getClass(), "setTimestamp(String,Timestamp,Calendar)");
     }
 
     /**
@@ -1062,7 +1063,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public void setNull (String parameterName, int sqlType, String typeName)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "setNull(String,int,String)");
+        throw Driver.notImplemented(this.getClass(), "setNull(String,int,String)");
     }
 
     /**
@@ -1084,7 +1085,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public String getString(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getString(String)");
+        throw Driver.notImplemented(this.getClass(), "getString(String)");
     }
 
     /**
@@ -1099,7 +1100,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public boolean getBoolean(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getBoolean(String)");
+        throw Driver.notImplemented(this.getClass(), "getBoolean(String)");
     }
 
     /**
@@ -1114,7 +1115,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public byte getByte(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getByte(String)");
+        throw Driver.notImplemented(this.getClass(), "getByte(String)");
     }
 
     /**
@@ -1129,7 +1130,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public short getShort(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getShort(String)");
+        throw Driver.notImplemented(this.getClass(), "getShort(String)");
     }
 
     /**
@@ -1145,7 +1146,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public int getInt(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getInt(String)");
+        throw Driver.notImplemented(this.getClass(), "getInt(String)");
     }
 
     /**
@@ -1161,7 +1162,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public long getLong(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getLong(String)");
+        throw Driver.notImplemented(this.getClass(), "getLong(String)");
     }
 
     /**
@@ -1176,7 +1177,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public float getFloat(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getFloat(String)");
+        throw Driver.notImplemented(this.getClass(), "getFloat(String)");
     }
 
     /**
@@ -1191,7 +1192,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public double getDouble(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getDouble(String)");
+        throw Driver.notImplemented(this.getClass(), "getDouble(String)");
     }
 
     /**
@@ -1207,7 +1208,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public byte[] getBytes(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getBytes(String)");
+        throw Driver.notImplemented(this.getClass(), "getBytes(String)");
     }
 
     /**
@@ -1222,7 +1223,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public java.sql.Date getDate(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getDate(String)");
+        throw Driver.notImplemented(this.getClass(), "getDate(String)");
     }
 
     /**
@@ -1237,7 +1238,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public java.sql.Time getTime(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getTime(String)");
+        throw Driver.notImplemented(this.getClass(), "getTime(String)");
     }
 
     /**
@@ -1252,7 +1253,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public java.sql.Timestamp getTimestamp(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getTimestamp(String)");
+        throw Driver.notImplemented(this.getClass(), "getTimestamp(String)");
     }
 
     /**
@@ -1274,7 +1275,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public Object getObject(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getObject(String)");
+        throw Driver.notImplemented(this.getClass(), "getObject(String)");
     }
 
     /**
@@ -1290,7 +1291,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public BigDecimal getBigDecimal(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getBigDecimal(String)");
+        throw Driver.notImplemented(this.getClass(), "getBigDecimal(String)");
     }
 
     /**
@@ -1312,7 +1313,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public Object getObjectImpl (String parameterName, java.util.Map map) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getObject(String,Map)");
+        throw Driver.notImplemented(this.getClass(), "getObject(String,Map)");
     }
 
     /**
@@ -1328,7 +1329,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public Ref getRef (String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getRef(String)");
+        throw Driver.notImplemented(this.getClass(), "getRef(String)");
     }
 
     /**
@@ -1344,7 +1345,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public Blob getBlob (String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getBlob(String)");
+        throw Driver.notImplemented(this.getClass(), "getBlob(String)");
     }
 
     /**
@@ -1359,7 +1360,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public Clob getClob (String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getClob(String)");
+        throw Driver.notImplemented(this.getClass(), "getClob(String)");
     }
 
     /**
@@ -1375,7 +1376,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public Array getArray (String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getArray(String)");
+        throw Driver.notImplemented(this.getClass(), "getArray(String)");
     }
 
     /**
@@ -1400,7 +1401,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public java.sql.Date getDate(String parameterName, Calendar cal)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getDate(String,Calendar)");
+        throw Driver.notImplemented(this.getClass(), "getDate(String,Calendar)");
     }
 
     /**
@@ -1425,7 +1426,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public java.sql.Time getTime(String parameterName, Calendar cal)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getTime(String,Calendar)");
+        throw Driver.notImplemented(this.getClass(), "getTime(String,Calendar)");
     }
 
     /**
@@ -1451,7 +1452,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
     public java.sql.Timestamp getTimestamp(String parameterName, Calendar cal)
     throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getTimestamp(String,Calendar)");
+        throw Driver.notImplemented(this.getClass(), "getTimestamp(String,Calendar)");
     }
 
     /**
@@ -1469,7 +1470,7 @@ public abstract class AbstractJdbc3Statement extends com.foundationdb.sql.jdbc.j
      */
     public java.net.URL getURL(String parameterName) throws SQLException
     {
-        throw org.postgresql.Driver.notImplemented(this.getClass(), "getURL(String)");
+        throw Driver.notImplemented(this.getClass(), "getURL(String)");
     }
 
     public void setObject(int parameterIndex, Object x, int targetSqlType, int scale) throws SQLException
