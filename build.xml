@@ -12,10 +12,10 @@
 -->
 
 <!DOCTYPE project [
-  <!ENTITY jarfiles "postgresql.jar">
+  <!ENTITY jarfiles "fdb-sql-layer-jdbc.jar">
 ]>
 
-<project name="postgresqlJDBC" default="all" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project name="fdb-sql-layer-JDBC" default="all" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
   <!-- set global properties for this build -->
   <property name="srcdir"  value="src/main/java" />
@@ -441,10 +441,10 @@
       <exclude name="${package}/ssl/**" unless="jdbc4tests" />
 
       <classpath>
-        <pathelement location="${jardir}/postgresql.jar"/>
+        <pathelement location="${jardir}/fdb-sql-layer-jdbc.jar"/>
       </classpath>
     </javac>
-    <jar jarfile="${jardir}/postgresql-tests.jar" basedir="${builddir}/tests"/>
+    <jar jarfile="${jardir}/fdb-sql-layer-jdbc-tests.jar" basedir="${builddir}/tests"/>
   </target>
     
   <!-- This actually runs the tests -->
@@ -472,8 +472,8 @@
       <sysproperty key="protocol" value="${protocol}"/>
 
       <classpath>
-        <pathelement location="${jardir}/postgresql.jar" />
-        <pathelement location="${jardir}/postgresql-tests.jar" />
+        <pathelement location="${jardir}/fdb-sql-layer-jdbc.jar" />
+        <pathelement location="${jardir}/fdb-sql-layer-jdbc-tests.jar" />
         <pathelement path="${java.class.path}" />
       </classpath>
       <test name="com.foundationdb.sql.jdbc.jdbc2.Jdbc2TestSuite" outfile="${testResultsDir}/jdbc2"/>
@@ -509,8 +509,8 @@
             <sysproperty key="protocol" value="${protocol}"/>
         
             <classpath>
-              <pathelement location="${jardir}/postgresql.jar" />
-              <pathelement location="${jardir}/postgresql-tests.jar" />
+              <pathelement location="${jardir}/fdb-sql-layer-jdbc.jar" />
+              <pathelement location="${jardir}/fdb-sql-layer-jdbc-tests.jar" />
               <pathelement path="${java.class.path}" />
             </classpath>
             <batchtest>
@@ -688,7 +688,7 @@
   <!-- create jar files for distribution to maven central -->
   <target name="maven-jar" depends="jar, publicapi">
     <!-- Copy the built jar into a maven compatible name -->
-    <copy file="${jardir}/postgresql.jar" tofile="${maven.jar}"/>
+    <copy file="${jardir}/fdb-sql-layer-jdbc.jar" tofile="${maven.jar}"/>
     <!-- Create a jar of the javadoc public api -->
     <jar jarfile="${maven.javadoc.jar}">
       <fileset dir="${builddir}/publicapi">
