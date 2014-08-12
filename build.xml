@@ -207,7 +207,7 @@
 
   <!-- create the jar file -->
   <target name="jar" depends="compile">
-    <jar jarfile="${jardir}/postgresql.jar">
+    <jar jarfile="${jardir}/fdb-sql-layer-jdbc.jar">
       <fileset dir="${builddir}">
         <include name="${package}/**/*.class" />
       </fileset>
